@@ -1,0 +1,20 @@
+[core]
+	excludesfile = /Users/Cliff/.gitignore_global
+        filemode = false
+[user]
+	name = cliff xuan
+	email = cliff.xuan@gmail.com
+
+[color]
+    ui = auto
+
+[alias]
+    st = status
+    ci = commit
+    br = branch
+    co = checkout
+    df = diff
+    lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    log-timeline = log --format='%h %an %ar - %s'
+    panic = !tar cvf ../git_panic.tar .
+    conflicts = !git ls-files -u | cut -f 2 | sort -u
