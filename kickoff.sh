@@ -22,3 +22,9 @@ echo "checkout vimfiles submodules"
 cd $BASE_DIR/vimfiles
 git submodule init
 git submodule update
+
+echo "symlink .gitconfig"
+ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
+
+echo "change default shell to zsh"
+chsh -s $(which zsh)
