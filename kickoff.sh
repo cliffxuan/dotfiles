@@ -6,6 +6,7 @@ git submodule init
 git submodule update
 
 echo "symlink .zshrc"
+ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
 ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
 
 echo "symlink .vim"
@@ -27,4 +28,4 @@ echo "symlink .gitconfig"
 ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
 
 echo "change default shell to zsh"
-chsh -s $(which zsh)
+sudo chsh -s $(which zsh) $(whoami)
