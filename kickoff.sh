@@ -27,5 +27,8 @@ git submodule update
 echo "symlink .gitconfig"
 ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
 
-echo "change default shell to zsh"
-sudo chsh -s $(which zsh) $(whoami)
+if [[ $SHELL != *zsh* ]]
+then
+    echo "change default shell to zsh"
+    sudo chsh -s $(which zsh) $(whoami)
+fi
