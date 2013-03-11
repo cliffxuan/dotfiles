@@ -6,7 +6,9 @@ git submodule init
 git submodule update
 
 echo "symlink .zshrc"
+rm -rf $HOME/.oh-my-zsh
 ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
+rm -rf $HOME/.zshrc
 ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
 
 echo "symlink .vim"
