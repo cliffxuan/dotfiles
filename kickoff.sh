@@ -24,6 +24,9 @@ vim +BundleInstall +qall
 echo "symlink .gitconfig"
 ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
 
+echo "symlink .tmux.conf"
+ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
+
 if hash zsh 2>/dev/null
 then
     echo "zsh present. set it up."

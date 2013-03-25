@@ -24,3 +24,9 @@ then
     echo "remove .zshrc"
     rm -rf ~/.zshrc
 fi
+
+if [ $(readlink -f $HOME/.tmux.conf) == "$HOME/dotfiles/tmux.conf" ]
+then
+    echo "remove .tmux.conf"
+    rm -rf ~/.tmux.conf
+fi
