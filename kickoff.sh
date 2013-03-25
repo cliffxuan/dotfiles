@@ -32,7 +32,7 @@ then
     ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
     rm -rf $HOME/.zshrc
     ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
-    if [[ $SHELL != *zsh* ]]
+    if [ $SHELL != *zsh* ]
     then
         echo "change default shell to zsh"
         sudo chsh -s $(which zsh) $(whoami)
