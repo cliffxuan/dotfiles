@@ -47,5 +47,5 @@ else
     ln -fs $BASE_DIR/bash-it $HOME/.bash_it
     rm -rf $HOME/.bash_profile
     ln -fs $BASE_DIR/bash-it/template/bash_profile.cliff.template.bash $HOME/.bash_profile
-    source $HOME/.bash_profile
+    echo 'run `source ~/.bash_profile` to activate new profile'
 fi
