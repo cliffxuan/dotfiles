@@ -40,4 +40,12 @@ then
         echo "change default shell to zsh"
         sudo chsh -s $(which zsh) $(whoami)
     fi
+else
+    echo "zsh not present. stick with bash."
+    echo "symlink .bash_profile"
+    rm -rf $HOME/.bash_it
+    ln -fs $BASE_DIR/bash-it $HOME/.bash_it
+    rm -rf $HOME/.bash_profile
+    ln -fs $BASE_DIR/bash-it/template/bash_profile.cliff.template.bash $HOME/.bash_profile
+    source $HOME/.bash_profile
 fi
