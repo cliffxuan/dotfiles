@@ -1,5 +1,5 @@
 [core]
-	excludesfile = /Users/Cliff/.gitignore_global
+	excludesfile = ~/.gitignore_global
         filemode = false
 [user]
 	name = cliff xuan

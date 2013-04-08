@@ -24,6 +24,9 @@ vim +BundleInstall +qall
 echo "symlink .gitconfig"
 ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
 
+echo "symlink .gitignore_global"
+ln -fs $BASE_DIR/gitignore_global $HOME/.gitignore_global
+
 echo "symlink .tmux.conf"
 ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
 
