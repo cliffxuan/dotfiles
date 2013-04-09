@@ -1,9 +1,9 @@
 [core]
-	excludesfile = ~/.gitignore_global
+    excludesfile = ~/.gitignore_global
         filemode = false
 [user]
-	name = cliff xuan
-	email = cliff.xuan@gmail.com
+    name = cliff xuan
+    email = cliff.xuan@gmail.com
 
 [color]
     ui = auto
@@ -20,5 +20,8 @@
     conflicts = !git ls-files -u | cut -f 2 | sort -u
     gl  = log -12 --color=always --all --graph --topo-order --pretty='format:%Cgreen%h%Creset %s %C(black bold)(by %an)%Creset%C(yellow bold)%d%Creset%n'
 
+[diff]
+    algorithm = patience
+
 [github]
-	user = cliffxuan
+    user = cliffxuan
