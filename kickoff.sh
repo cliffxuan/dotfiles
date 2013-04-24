@@ -47,8 +47,12 @@ then
     ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
     if [ $SHELL != *zsh* ]
     then
-        echo "change default shell to zsh"
-        sudo chsh -s $(which zsh) $(whoami)
+        if ! 'sudo chsh -s $(which zsh) $(whoami)'
+        then
+            echo "unabled to change default shell to zsh"
+        else
+            echo "changed default shell to zsh"
+        fi
     fi
 else
     echo "zsh not present. stick with bash."
