@@ -1,6 +1,8 @@
 #!/bin/sh
 BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 
+$BASE_DIR/softlink.sh
+
 echo "checkout dotfiles submodules"
 git submodule init
 git submodule update
@@ -27,15 +29,6 @@ cd $BASE_DIR/vimfiles
 git submodule init
 git submodule update
 vim +BundleInstall +qall
-
-echo "symlink .gitconfig"
-ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
-
-echo "symlink .gitignore_global"
-ln -fs $BASE_DIR/gitignore_global $HOME/.gitignore_global
-
-echo "symlink .tmux.conf"
-ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
 
 if hash zsh 2>/dev/null
 then
