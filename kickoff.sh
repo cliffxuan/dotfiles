@@ -28,7 +28,12 @@ echo "checkout vimfiles submodules"
 cd $BASE_DIR/vimfiles
 git submodule init
 git submodule update
-vim +BundleInstall +qall
+if hash vim 2>/dev/null
+then
+    vim +BundleInstall +qall
+else
+    echo "vim not found. install it!"
+fi
 
 if hash zsh 2>/dev/null
 then
@@ -40,11 +45,11 @@ then
     ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
     if [ $SHELL != *zsh* ]
     then
-        if ! 'sudo chsh -s $(which zsh) $(whoami)'
+	if sudo chsh -s $(which zsh) $(whoami)
         then
-            echo "unabled to change default shell to zsh"
-        else
             echo "changed default shell to zsh"
+        else
+            echo "unabled to change default shell to zsh"
         fi
     fi
 else
