@@ -1,6 +1,7 @@
 [core]
     excludesfile = ~/.gitignore_global
-        filemode = false
+    filemode = false
+    editor = vim
 [user]
     name = cliff xuan
     email = cliff.xuan@gmail.com
