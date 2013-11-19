@@ -1,9 +1,12 @@
 [submodule "vimfiles"]
 	path = vimfiles
 	url = git@github.com:cliffxuan/vimfiles.git
+	branch = master
 [submodule "oh-my-zsh"]
 	path = oh-my-zsh
 	url = git@github.com:cliffxuan/oh-my-zsh.git
+	branch = master
 [submodule "bash-it"]
 	path = bash-it
 	url = git@github.com:cliffxuan/bash-it.git
+	branch = master
