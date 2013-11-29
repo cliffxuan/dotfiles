@@ -10,19 +10,20 @@
     ui = auto
 
 [alias]
-    st = status
-    ci = commit
     br = branch
+    ci = commit
     co = checkout
-    df = diff
-    lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
-    log-timeline = log --format='%h %an %ar - %s'
-    panic = !tar cvf ../git_panic.tar .
     conflicts = !git ls-files -u | cut -f 2 | sort -u
-    gl  = log -12 --color=always --all --graph --topo-order --pretty='format:%Cgreen%h%Creset %s %C(black bold)(by %an)%Creset%C(yellow bold)%d%Creset%n'
-    fm = merge --ff-only
-    nfm = merge --no-ff
     ct = checkout -t
+    df = diff
+    fm = merge --ff-only
+    gl  = log -12 --color=always --all --graph --topo-order --pretty='format:%Cgreen%h%Creset %s %C(black bold)(by %an)%Creset%C(yellow bold)%d%Creset%n'
+    log-timeline = log --format='%h %an %ar - %s'
+    lol = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    nfm = merge --no-ff
+    panic = !tar cvf ../git_panic.tar .
+    st = status
+    ud = ls-files --other --exclude-standard --directory
 
 [diff]
     algorithm = patience
