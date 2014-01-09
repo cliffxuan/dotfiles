@@ -24,6 +24,7 @@
     panic = !tar cvf ../git_panic.tar .
     st = status
     ud = ls-files --other --exclude-standard --directory
+    wipe = !sh -c 'git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all' -
 
 [diff]
     algorithm = patience
