@@ -25,6 +25,8 @@
     st = status
     ud = ls-files --other --exclude-standard --directory
     wipe = !sh -c 'git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all' -
+    dm = !git branch --merged | grep -v \"*\" | xargs -n 1 git branch -d
+
 
 [diff]
     algorithm = patience
