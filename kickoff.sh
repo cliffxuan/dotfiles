@@ -4,15 +4,9 @@ BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 $BASE_DIR/softlink.sh
 
 echo "checkout dotfiles submodules"
-git submodule init
-git submodule update
-
-echo "checkout vim submodules"
-cd vimfiles
-git submodule init
-git submodule update
 cd $BASE_DIR
-
+git submodule init
+git submodule update
 
 echo "symlink .vim"
 if [ -d "$HOME/.vim" ]
