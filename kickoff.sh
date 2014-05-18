@@ -3,10 +3,8 @@ BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 
 $BASE_DIR/softlink.sh
 
-echo "checkout dotfiles submodules"
-cd $BASE_DIR
-git submodule init
-git submodule update
+echo "clone vimfiles"
+git clone git@github.com:cliffxuan/vimfiles $BASE_DIR/vimfiles
 
 echo "symlink .vim"
 if [ -d "$HOME/.vim" ]
@@ -31,7 +29,8 @@ fi
 
 if hash zsh 2>/dev/null
 then
-    echo "zsh present. set it up."
+    echo "zsh present. clone oh-my-zsh and set it up."
+    git clone git@github.com:cliffxuan/oh-my-zsh $BASE_DIR/oh-my-zsh
     echo "symlink .zshrc"
     rm -rf $HOME/.oh-my-zsh
     ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
@@ -39,7 +38,7 @@ then
     ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
     if [ $SHELL != *zsh* ]
     then
-	if sudo chsh -s $(which zsh) $(whoami)
+        if sudo chsh -s $(which zsh) $(whoami)
         then
             echo "changed default shell to zsh"
         else
@@ -47,7 +46,8 @@ then
         fi
     fi
 else
-    echo "zsh not present. stick with bash."
+    echo "zsh not present. clone bash_it."
+    git clone git@github.com:cliffxuan/bash-it.git
     echo "symlink .bash_profile"
     rm -rf $HOME/.bash_it
     ln -fs $BASE_DIR/bash-it $HOME/.bash_it
