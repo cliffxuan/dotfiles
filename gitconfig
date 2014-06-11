@@ -27,6 +27,7 @@
     wipe = !sh -c 'git filter-branch --force --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all' -
     dm = !git branch --merged | grep -v \"*\" | xargs -n 1 git branch -d
     ss = !git submodule foreach git pull --rebase origin master
+    ignored = !git clean -ndX
 
 
 [diff]
