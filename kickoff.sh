@@ -16,6 +16,13 @@ ln -fs $BASE_DIR/vimfiles $HOME/.vim
 echo "symlink .vimrc"
 ln -fs $BASE_DIR/vimfiles/_vimrc $HOME/.vimrc
 
+if [[ "$OSTYPE" == "darwin"* ]]
+then
+    echo "symlink .slate"
+    ln -fs $BASE_DIR/slate $HOME/.slate
+fi
+
+
 echo "checkout vimfiles submodules"
 cd $BASE_DIR/vimfiles
 git submodule init
