@@ -43,6 +43,7 @@ then
     ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
     rm -rf $HOME/.zshrc
     ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
+    ln -fs $BASE_DIR/shrc $HOME/.shrc
     if [ $SHELL != *zsh* ]
     then
         if sudo chsh -s $(which zsh) $(whoami)
