@@ -57,7 +57,7 @@ bind p:cmd;shift focus 'Preview'
 
 # Layout Message
 # layout message 'HipChat' push right bar-resize:screenSizeX/2
-bind m:cmd;shift sequence focus 'Mail' | push left bar-resize:screenSizeX/2 | focus "HipChat" | push right bar-resize:screenSizeX/2
+bind m:cmd;shift sequence focus 'Microsoft Outlook' | push left bar-resize:screenSizeX/2 | focus "HipChat" | push right bar-resize:screenSizeX/2
 
 # Relaunch
 bind 1:ctrl relaunch
