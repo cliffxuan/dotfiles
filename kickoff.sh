@@ -34,16 +34,13 @@ else
     echo "vim not found. install it!"
 fi
 
+echo "install some common settings shared between bash and zsh"
+ln -fs $BASE_DIR/shrc $HOME/.shrc
+
 if hash zsh 2>/dev/null
 then
     echo "zsh present. clone oh-my-zsh and set it up."
-    git clone git@github.com:cliffxuan/oh-my-zsh $BASE_DIR/oh-my-zsh
-    echo "symlink .zshrc"
-    rm -rf $HOME/.oh-my-zsh
-    ln -fs $BASE_DIR/oh-my-zsh $HOME/.oh-my-zsh
-    rm -rf $HOME/.zshrc
-    ln -fs $BASE_DIR/oh-my-zsh/zshrc $HOME/.zshrc
-    ln -fs $BASE_DIR/shrc $HOME/.shrc
+    $BASE_DIR/oh-my-zsh/install.sh
     if [ $SHELL != *zsh* ]
     then
         if sudo chsh -s $(which zsh) $(whoami)

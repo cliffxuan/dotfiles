@@ -12,6 +12,9 @@ fi
 echo "install $HOME/.zshrc"
 ln -fs "$SCRIPT_DIR/zshrc" "$HOME/.zshrc"
 
+echo "install $HOME/.shrc"
+ln -fs "$SCRIPT_DIR/../shrc" $HOME/.shrc
+
 echo "install themes"
 for themefile in $SCRIPT_DIR/themes/*-theme
 do

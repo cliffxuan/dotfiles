@@ -9,6 +9,9 @@ else
     git clone --recursive https://github.com/sorin-ionescu/prezto.git $INSTALL_DIR
 fi
 
+echo "install $HOME/.shrc"
+ln -fs "$SCRIPT_DIR/../shrc" $HOME/.shrc
+
 for rcfile in zlogin zlogout zshenv zshrc
 do
     echo "install $HOME/.${rcfile}"
