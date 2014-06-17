@@ -1,33 +1,42 @@
-# cliff-mac.zsh-theme
-#
-# Author: Cliff Xuan
-#
-# Created on:		6 Jan, 2013
+# Fino-time theme by Aexander Berezovsky (http://berezovsky.me) based on Fino by Max Masnick (http://max.masnick.me)
 
-# color vars
-eval my_gray='$FG[237]'
-eval my_orange='$FG[214]'
+# Use with a dark background and 256-color terminal!
+# Meant for people with RVM and git. Tested only on OS X 10.7.
 
-if [ $UID -eq 0 ]
-then
-    NCOLOR="red"
-else
-    NCOLOR="green"
-fi
+# You can set your computer name in the ~/.box-name file if you want.
+
+# Borrowing shamelessly from these oh-my-zsh themes:
+#   bira
+#   robbyrussell
+#
+# Also borrowing from http://stevelosh.com/blog/2010/02/my-extravagant-zsh-prompt/
+
+function virtualenv_info {
+    [ $VIRTUAL_ENV ] && echo '('`basename $VIRTUAL_ENV`') '
+}
+
+function prompt_char {
+    echo '○'
+}
+
+function box_name {
+    [ -f ~/.box-name ] && cat ~/.box-name || hostname
+}
+
+
+local rvm_ruby='‹$(rvm-prompt i v g)›%{$reset_color%}'
+local current_dir='${PWD/#$HOME/~}'
+local git_info='$(git_prompt_info)'
 local return_code="%(?..%{$fg[red]%}[%?]%{$reset_color%})"
 
-# primary prompt
-PROMPT='$my_gray------------------------------------------------------------%{$reset_color%}
-$FG[032]%~\
-$(git_prompt_info) \
-${return_code}$FG[105]%(!.#.»)%{$reset_color%} '
-PROMPT2='%{$fg[red]%}\ %{$reset_color%}'
 
+PROMPT="$(virtualenv_info)
+╭─%{$FG[040]%}%n%{$reset_color%} %{$FG[239]%}at%{$reset_color%} %{$FG[033]%}$(box_name)%{$reset_color%} %{$FG[239]%}in%{$reset_color%} %{$terminfo[bold]$FG[226]%}${current_dir}%{$reset_color%}${git_info}
+╰─$(prompt_char)${return_code} "
+
+ZSH_THEME_GIT_PROMPT_PREFIX=" %{$FG[239]%}on%{$reset_color%} %{$fg[255]%}"
+ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%{$FG[202]%}✘✘✘"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$FG[040]%}✔"
 # right prompt
-RPROMPT='$my_gray%n@%m[%*]%{$reset_color%}%'
-
-# git settings
-ZSH_THEME_GIT_PROMPT_PREFIX="$FG[075] ("
-ZSH_THEME_GIT_PROMPT_CLEAN=""
-ZSH_THEME_GIT_PROMPT_DIRTY="$my_orange*%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="$FG[075])%{$reset_color%}"
+RPROMPT='[%*]%{$reset_color%}%'
