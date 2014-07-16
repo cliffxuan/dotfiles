@@ -34,6 +34,12 @@ else
     echo "vim not found. install it!"
 fi
 
+if [ -d "$HOME/.ipython/profile_default/" ]
+then
+    echo "symlink ipython_config.py"
+    ln -fs $BASE_DIR/ipython_config.py $HOME/.ipython/profile_default/ipython_config.py
+fi
+
 echo "install some common settings shared between bash and zsh"
 ln -fs $BASE_DIR/shrc $HOME/.shrc
 
