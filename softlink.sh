@@ -10,3 +10,5 @@ ln -fs $BASE_DIR/gitignore_global $HOME/.gitignore_global
 echo "symlink .tmux.conf"
 ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
 
+echo "symlink .gemrc"
+ln -fs $BASE_DIR/gemrc $HOME/.gemrc
