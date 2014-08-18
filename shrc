@@ -64,7 +64,7 @@ fi
 #rbenv
 if [[ -d $HOME/.rbenv ]]
 then
-    PATH=$HOME/.rbenv/shims:$PATH
+    PATH=$HOME/.rbenv/bin:$PATH
     eval "$(rbenv init -)"
 fi
 
