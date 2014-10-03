@@ -54,6 +54,7 @@ bind l:cmd;shift focus 'MacVim'
 bind h:cmd;shift focus 'Emacs'
 bind ;:cmd;shift focus 'Dash'
 bind p:cmd;shift focus 'Preview'
+bind s:cmd;shift focus 'Spotify'
 bind m:cmd;shift focus 'HipChat'
 
 # Layout Message
