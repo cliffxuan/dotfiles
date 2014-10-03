@@ -74,6 +74,12 @@ then
     PATH=/usr/local/share/npm/bin:$PATH
 fi
 
+#android sdk
+if [[ -d $HOME/lib/android-sdk/ ]]
+then
+    PATH=$HOME/lib/android-sdk/tools:$HOME/lib/android-sdk/platform-tools:$PATH
+fi
+
 
 function _all_vms() {
     reply=(`VBoxManage list vms | awk '{gsub("\"",""); print $1}'`)
