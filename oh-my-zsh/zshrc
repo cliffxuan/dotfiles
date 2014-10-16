@@ -3,26 +3,31 @@ ZSH=$HOME/.oh-my-zsh
 
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-if [[ $OSTYPE == darwin* ]]
+if [[ -n $EMACS ]]
 then
-    ZSH_THEME="cliff-mac"
+    ZSH_THEME="arrow"
 else
-    prof_file=$(print /etc/*-release) 2>/dev/null
-    if [[ -z $prof_file ]]
+    if [[ $OSTYPE == darwin* ]]
     then
-        ZSH_THEME="cliff-linux"
+        ZSH_THEME="cliff-mac"
     else
-        if [[ $(cat `echo $prof_file`) =~ .*Ubuntu.* ]]
+        prof_file=$(print /etc/*-release) 2>/dev/null
+        if [[ -z $prof_file ]]
         then
-            ZSH_THEME="cliff-ubuntu"
-        elif [[ $(cat `echo $prof_file`) =~ .*Arch.* ]]
-        then
-            ZSH_THEME="cliff-arch"
-        else
             ZSH_THEME="cliff-linux"
+        else
+            if [[ $(cat `echo $prof_file`) =~ .*Ubuntu.* ]]
+            then
+                ZSH_THEME="cliff-ubuntu"
+            elif [[ $(cat `echo $prof_file`) =~ .*Arch.* ]]
+            then
+                ZSH_THEME="cliff-arch"
+            else
+                ZSH_THEME="cliff-linux"
+            fi
         fi
+        unset prof_file
     fi
-    unset prof_file
 fi
 
 # Example aliases
