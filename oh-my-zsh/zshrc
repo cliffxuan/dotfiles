@@ -3,31 +3,26 @@ ZSH=$HOME/.oh-my-zsh
 
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-if [[ -n $EMACS ]]
+if [[ $OSTYPE == darwin* ]]
 then
-    ZSH_THEME="arrow"
+    ZSH_THEME="cliff-mac"
 else
-    if [[ $OSTYPE == darwin* ]]
+    prof_file=$(print /etc/*-release) 2>/dev/null
+    if [[ -z $prof_file ]]
     then
-        ZSH_THEME="cliff-mac"
+        ZSH_THEME="cliff-linux"
     else
-        prof_file=$(print /etc/*-release) 2>/dev/null
-        if [[ -z $prof_file ]]
+        if [[ $(cat `echo $prof_file`) =~ .*Ubuntu.* ]]
         then
-            ZSH_THEME="cliff-linux"
+            ZSH_THEME="cliff-ubuntu"
+        elif [[ $(cat `echo $prof_file`) =~ .*Arch.* ]]
+        then
+            ZSH_THEME="cliff-arch"
         else
-            if [[ $(cat `echo $prof_file`) =~ .*Ubuntu.* ]]
-            then
-                ZSH_THEME="cliff-ubuntu"
-            elif [[ $(cat `echo $prof_file`) =~ .*Arch.* ]]
-            then
-                ZSH_THEME="cliff-arch"
-            else
-                ZSH_THEME="cliff-linux"
-            fi
+            ZSH_THEME="cliff-linux"
         fi
-        unset prof_file
     fi
+    unset prof_file
 fi
 
 # Example aliases
@@ -56,6 +51,11 @@ DISABLE_AUTO_UPDATE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=()
+
+if [[ -n $EMACS ]]
+then
+    ZSH_THEME="minimal"
+fi
 
 source $ZSH/oh-my-zsh.sh
 
