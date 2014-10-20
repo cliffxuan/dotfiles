@@ -1,5 +1,4 @@
 # config for both zsh and bash
-
 # path
 if [[ $OSTYPE == darwin* ]]
 then
@@ -118,6 +117,7 @@ python -c "ff=open('$1', 'rb'); ff.seek(-$2,2); print ff.read($2)"
 
 
 #alias
+alias ..g='git rev-parse && cd "$(git rev-parse --show-cdup)"'
 alias g="git"
 alias t='python $HOME/lib/t/t.py --task-dir $HOME/.tasks --list tasks'
 #puppet
