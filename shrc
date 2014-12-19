@@ -188,3 +188,8 @@ fi
 update_ssh_auth_sock
 
 export EDITOR=`which vim`
+
+# docker
+function shellinit {
+    $(boot2docker shellinit)
+}
