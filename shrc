@@ -195,3 +195,12 @@ export EDITOR=`which vim`
 function shellinit {
     $(boot2docker shellinit)
 }
+
+function rmimages {
+    docker rm `docker ps --no-trunc -aq`
+}
+
+function synctime {
+    boot2docker ssh sudo ntpclient -s -h pool.ntp.org
+}
+
