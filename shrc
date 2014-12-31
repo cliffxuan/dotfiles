@@ -170,7 +170,9 @@ EOF
 if [[ $OSTYPE == darwin* ]]
 then
     alias ec=$(which emacs)
-    alias emacs='open -a /Applications/Emacs.app $@'
+    function emacs {
+        /Applications/Emacs.app/Contents/MacOS/Emacs "$@" &
+    }
 fi
 
 
