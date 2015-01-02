@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+import argparse
+
+from rdflib import Graph
+
+SUPPORTED_FORMATS = ['turtle', 'xml', 'nt']
+
+
+def main(argv=None):
+    args = argument_parser().parse_args(argv)
+
+    g = Graph()
+    for format in SUPPORTED_FORMATS:
+        try:
+            g.parse(data=args.filename.read(), format=format)
+            print 'detected format {}'.format(format)
+            break
+        except Exception:
+            pass
+    else:
+        raise Exception(
+            'Cannot parse document. Supported formats are {}'.format(
+                ','.join(SUPPORTED_FORMATS)))
+    target = g.serialize(format=args.target_format)
+    print target
+
+
+def argument_parser():
+    parser = argparse.ArgumentParser(
+        description='describe me')
+    parser.add_argument(
+        'filename', type=argparse.FileType('r'),
+        help='name of the file to convert')
+    parser.add_argument(
+        'target_format', default='xml', nargs='?', choices=SUPPORTED_FORMATS,
+        help='target format')
+    return parser
+
+
+if __name__ == '__main__':
+    main()
