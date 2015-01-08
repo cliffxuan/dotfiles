@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
 import argparse
 
 from rdflib import Graph
@@ -14,8 +15,10 @@ def main(argv=None):
     for format in SUPPORTED_FORMATS:
         try:
             g.parse(data=args.filename.read(), format=format)
-            print 'detected format {}'.format(format)
+            sys.stderr.write('detected format {}'.format(format))
             break
+        except UnicodeDecodeError:
+            raise
         except Exception:
             pass
     else:
@@ -23,7 +26,7 @@ def main(argv=None):
             'Cannot parse document. Supported formats are {}'.format(
                 ','.join(SUPPORTED_FORMATS)))
     target = g.serialize(format=args.target_format)
-    print target
+    sys.stdout.write(target)
 
 
 def argument_parser():
