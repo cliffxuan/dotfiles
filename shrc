@@ -206,6 +206,7 @@ function synctime {
 
 # rust
 function rust {
-    rustc $1 -o /tmp/${1%.*}
-    /tmp/${1%.*}
+    exe=/tmp/${1%.*}
+    rm -f $exe
+    rustc $1 -o $exe && $exe
 }
