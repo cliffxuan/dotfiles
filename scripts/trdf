@@ -5,27 +5,29 @@ import argparse
 
 from rdflib import Graph
 
-SUPPORTED_FORMATS = ['turtle', 'xml', 'nt']
+SUPPORTED_FORMATS = ['turtle', 'xml', 'nt', 'json-ld']
 
 
 def main(argv=None):
     args = argument_parser().parse_args(argv)
 
-    g = Graph()
-    for format in SUPPORTED_FORMATS:
-        try:
-            g.parse(data=args.filename.read(), format=format)
-            sys.stderr.write('detected format {}'.format(format))
-            break
-        except UnicodeDecodeError:
-            raise
-        except Exception:
-            pass
+    if args.source_format:
+        source_format = args._source_format
     else:
-        raise Exception(
-            'Cannot parse document. Supported formats are {}'.format(
-                ','.join(SUPPORTED_FORMATS)))
-    target = g.serialize(format=args.target_format)
+        ext = args.filename.name.split('.')[-1]
+        source_format = {
+            'ttl': 'turtle', 'xml': 'xml', 'json': 'json-ld'}.get(ext)
+    if not source_format:
+        raise Exception('Cannot find source format. pass in --source_format.')
+
+    g = Graph()
+    g.parse(data=args.filename.read(), format=source_format)
+    sys.stderr.write('detected format {}'.format(source_format))
+    if args.target_format == 'json-ld':
+        context = {k: v for k, v in g.namespaces()}
+        target = g.serialize(format=args.target_format, context=context)
+    else:
+        target = g.serialize(format=args.target_format)
     sys.stdout.write(target)
 
 
@@ -36,7 +38,11 @@ def argument_parser():
         'filename', type=argparse.FileType('r'),
         help='name of the file to convert')
     parser.add_argument(
-        'target_format', default='xml', nargs='?', choices=SUPPORTED_FORMATS,
+        '--source_format', '-sf', choices=SUPPORTED_FORMATS,
+        help='source format')
+    parser.add_argument(
+        'target_format', default='turtle', nargs='?',
+        choices=SUPPORTED_FORMATS,
         help='target format')
     return parser
 
