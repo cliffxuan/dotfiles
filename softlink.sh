@@ -1,17 +1,16 @@
 #!/bin/sh
 BASE_DIR=$(cd "$(dirname "$0")"; pwd)
+SCRIPT_DIR=$BASE_DIR/scripts
+DOTFILE_DIR=$BASE_DIR/dotfiles
 
-echo "symlink .gitconfig"
-ln -fs $BASE_DIR/gitconfig $HOME/.gitconfig
+for DOTFILE in $(ls $DOTFILE_DIR)
+do
+    echo "symlink .$DOTFILE"
+    ln -fs $DOTFILE_DIR/$DOTFILE $HOME/.$DOTFILE
+done
 
-echo "symlink .gitignore_global"
-ln -fs $BASE_DIR/gitignore_global $HOME/.gitignore_global
-
-echo "symlink .tmux.conf"
-ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
-
-echo "symlink .gemrc"
-ln -fs $BASE_DIR/gemrc $HOME/.gemrc
-
-echo "symlink .ghci"
-ln -fs $BASE_DIR/ghci $HOME/.ghci
+for SCRIPT in $(ls $BASE_DIR/scripts)
+do
+    echo "symlink $SCRIPT"
+    ln -fs $SCRIPT_DIR/$SCRIPT $HOME/bin/$SCRIPT
+done
