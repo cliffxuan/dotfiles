@@ -12,3 +12,6 @@ ln -fs $BASE_DIR/tmux.conf $HOME/.tmux.conf
 
 echo "symlink .gemrc"
 ln -fs $BASE_DIR/gemrc $HOME/.gemrc
+
+echo "symlink .ghci"
+ln -fs $BASE_DIR/ghci $HOME/.ghci
