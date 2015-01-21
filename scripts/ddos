@@ -18,8 +18,9 @@ def argument_parser():
 def main(argv=None):
     args = argument_parser().parse_args(argv)
     txt = args.filename.read()
-    txt.replace('\n', '\r\n')
-    print txt.decode('utf-16').encode('utf-8')
+    txt = txt.decode('utf-16').encode('utf-8')
+    txt = txt.replace('\r\n', '\n')
+    print txt
 
 
 if __name__ == '__main__':
