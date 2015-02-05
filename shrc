@@ -173,6 +173,7 @@ then
     function emacs {
         /Applications/Emacs.app/Contents/MacOS/Emacs "$@" &
     }
+    alias en="emacsclient -n"
 fi
 
 
