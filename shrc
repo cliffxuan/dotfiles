@@ -81,6 +81,11 @@ then
     PATH=$HOME/lib/android-sdk/tools:$HOME/lib/android-sdk/platform-tools:$PATH
 fi
 
+#haskell
+if [[ -d $HOME/Library/Haskell/bin ]]
+then
+    PATH=$HOME/Library/Haskell/bin:$PATH
+fi
 
 function _all_vms() {
     reply=(`VBoxManage list vms | awk '{gsub("\"",""); print $1}'`)
