@@ -3,7 +3,7 @@
 import sys
 import argparse
 
-from rdflib import Graph
+from rdflib import Graph, URIRef
 
 SUPPORTED_FORMATS = ['turtle', 'xml', 'nt', 'json-ld']
 
@@ -22,6 +22,8 @@ def main(argv=None):
 
     g = Graph()
     g.parse(data=args.filename.read(), format=source_format)
+    for ns, url in extract_namespaces(g).iteritems():
+        g.bind(ns, url)
     sys.stderr.write('detected format {}'.format(source_format))
     if args.target_format == 'json-ld':
         context = {k: v for k, v in g.namespaces()}
@@ -29,6 +31,31 @@ def main(argv=None):
     else:
         target = g.serialize(format=args.target_format)
     sys.stdout.write(target)
+
+
+def get_ns(uriref):
+    """
+    get the namespace abbrev and url
+    """
+    ns = uriref.split('/')[-1].split('#')[0]
+    url = ''.join(uriref.partition('#')[:-1])
+    return (ns, url)
+
+
+def extract_namespaces(graph):
+    """
+    find all the namespaces used in a graph
+    :return: iterator
+    """
+    def _iter_graph_by_elem(graph):
+        for s, p, o in graph:
+            yield s
+            yield p
+            yield o
+
+    urirefs = filter(lambda x: type(x) == URIRef,
+                     _iter_graph_by_elem(graph))
+    return dict(map(get_ns, urirefs))
 
 
 def argument_parser():
