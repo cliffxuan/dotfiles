@@ -216,3 +216,8 @@ function rust {
     rm -f $exe
     rustc $1 -o $exe && $exe
 }
+
+# babel-node
+function bn {
+    babel-node $@
+}
