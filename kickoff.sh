@@ -29,7 +29,7 @@ git submodule init
 git submodule update
 if hash vim 2>/dev/null
 then
-    vim +BundleInstall +qall
+    $HOME/.vim/bundle/neobundle.vim/bin/neoinstall
 else
     echo "vim not found. install it!"
 fi
