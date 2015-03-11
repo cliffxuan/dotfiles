@@ -47,7 +47,7 @@ if hash zsh 2>/dev/null
 then
     echo "zsh present. clone oh-my-zsh and set it up."
     $BASE_DIR/oh-my-zsh/install.sh
-    if [ $SHELL != *zsh* ]
+    if [[ $SHELL != *zsh* ]]
     then
         if sudo chsh -s $(which zsh) $(whoami)
         then
