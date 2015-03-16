@@ -17,8 +17,7 @@ RUN cd /tmp/Python-2.7.9; ./configure; make; make install
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper
 
 # user cliff
-RUN adduser --disabled-password --shell /bin/zsh --gecos "" cliff
-RUN adduser cliff sudo
+RUN useradd cliff -s /bin/zsh -G sudo --home /home/cliff
 RUN echo "cliff ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers
 
 
