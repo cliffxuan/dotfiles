@@ -90,6 +90,12 @@ then
     PATH=$HOME/Library/Haskell/bin:$PATH
 fi
 
+#phpbrew
+if [[ -d $HOME/.phpbrew  ]]
+then
+    source $HOME/.phpbrew/bashrc
+fi
+
 function _all_vms() {
     reply=(`VBoxManage list vms | awk '{gsub("\"",""); print $1}'`)
 }
