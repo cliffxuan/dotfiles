@@ -220,6 +220,10 @@ function synctime {
     boot2docker ssh sudo ntpclient -s -h pool.ntp.org
 }
 
+function refreshdns {
+    boot2docker ssh sudo udhcpc
+}
+
 # rust
 function rust {
     exe=/tmp/${1%.*}
