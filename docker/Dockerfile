@@ -9,6 +9,9 @@ RUN apt-get install -y build-essential vim git tmux zsh patch silversearcher-ag 
 # install python
 RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
 
+# install lxml deps
+RUN apt-get install -y libxml2-dev libxslt-dev
+
 RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz; tar -xf Python-2.7.9.tgz
 RUN cd /tmp/Python-2.7.9; ./configure; make; make install
 
