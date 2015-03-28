@@ -224,6 +224,10 @@ function refreshdns {
     boot2docker ssh sudo udhcpc
 }
 
+function dkhostfile {
+    sed "s/.* docker/`boot2docker ip` docker/" /etc/hosts | sudo tee /etc/hosts
+}
+
 # rust
 function rust {
     exe=/tmp/${1%.*}
