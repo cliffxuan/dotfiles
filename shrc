@@ -243,3 +243,9 @@ function rust {
 function bn {
     babel-node $@
 }
+
+
+# ssl
+function showcrt {
+    openssl x509 -in $1 -text -noout
+}
