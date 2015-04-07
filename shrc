@@ -253,3 +253,14 @@ function bn {
 function showcrt {
     openssl x509 -in $1 -text -noout
 }
+
+
+# proxy
+function proxyus {
+    cd ~/vagrant/noah; vagrant ssh -c mitmproxy
+}
+
+# sudo rsync
+function sursync {
+    rsync --rsync-path="sudo rsync" $@
+}
