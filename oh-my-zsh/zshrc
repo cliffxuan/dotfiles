@@ -30,6 +30,12 @@ else
     fi
 fi
 
+if [[ -n $EMACS ]]
+then
+    ZSH_THEME="minimal"
+fi
+
+
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
@@ -56,11 +62,6 @@ DISABLE_AUTO_UPDATE="true"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 plugins=()
-
-if [[ -n $EMACS ]]
-then
-    ZSH_THEME="minimal"
-fi
 
 source $ZSH/oh-my-zsh.sh
 
