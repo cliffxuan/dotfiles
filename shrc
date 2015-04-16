@@ -244,7 +244,7 @@ function rust {
 }
 
 # babel-node
-function bn {
+function es6 {
     babel-node $@
 }
 
