@@ -22,7 +22,12 @@ rm -rf ~/.bash_it
 echo "remove .bash_profile"
 rm -rf ~/.bash_profile
 echo "added back a minimux bash_profile"
-cp $BASE_DIR/bash-it/template/bash_profile.minimum.bash $HOME/.bash_profile
+if [ -f $BASE_DIR/bash-it/template/bash_profile.minimum.bash ]
+then
+    cp $BASE_DIR/bash-it/template/bash_profile.minimum.bash $HOME/.bash_profile
+fi
 
 echo "remove .tmux.conf"
 rm -rf ~/.tmux.conf
+
+sudo chsh -s $(which bash) $(whoami)
