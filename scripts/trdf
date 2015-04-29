@@ -12,7 +12,7 @@ def main(argv=None):
     args = argument_parser().parse_args(argv)
 
     if args.source_format:
-        source_format = args._source_format
+        source_format = args.source_format
     else:
         ext = args.filename.name.split('.')[-1]
         source_format = {
