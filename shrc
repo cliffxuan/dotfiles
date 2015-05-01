@@ -265,4 +265,5 @@ function sursync {
     rsync --rsync-path="sudo rsync" $@
 }
 
-alias pt="ptpython --vi"
+alias p="python"
+alias i="ptipython --vi"
