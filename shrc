@@ -267,3 +267,4 @@ function sursync {
 
 alias p="python"
 alias i="ptipython --vi"
+alias h="python -m SimpleHTTPServer"
