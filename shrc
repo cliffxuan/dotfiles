@@ -268,3 +268,8 @@ function sursync {
 alias p="python"
 alias i="ptipython --vi"
 alias h="python -m SimpleHTTPServer"
+
+if which pyenv > /dev/null
+then
+    eval "$(pyenv init -)"
+fi
