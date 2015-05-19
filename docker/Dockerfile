@@ -27,13 +27,14 @@ RUN echo "cliff ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 
 # switch user
-USER cliff
+# USER cliff
 
 # ssh
-WORKDIR /home/cliff
+# WORKDIR /home/cliff
+WORKDIR /root
 RUN mkdir -p .ssh
 ADD id_rsa .ssh/id_rsa
-RUN sudo chown cliff:cliff .ssh/id_rsa
+# RUN sudo chown cliff:cliff .ssh/id_rsa
 RUN echo "Host github.com\\n\\tStrictHostKeyChecking no" >> .ssh/config
 
 # dotfiles
@@ -41,5 +42,11 @@ RUN mkdir -p bin
 RUN mkdir -p dev
 RUN git clone git@github.com:cliffxuan/dotfiles dev/dotfiles
 RUN dev/dotfiles/kickoff.sh
+
+# Set the locale
+RUN locale-gen en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LANGUAGE en_US:en
+ENV LC_ALL en_US.UTF-8
 
 CMD ["/bin/zsh"]
