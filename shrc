@@ -237,7 +237,14 @@ function seagull {
     docker run -d -p 80:10086 -v /var/run/docker.sock:/var/run/docker.sock tobegit3hub/seagull
 }
 
+function dr {
 alias dr="docker run -it base"
+if [[ -z $DOCKER_HOST ]]
+then
+    di
+fi
+docker run -it base
+}
 
 # rust
 function rust {
