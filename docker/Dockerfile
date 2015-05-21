@@ -17,7 +17,7 @@ RUN cd /tmp/Python-2.7.9; ./configure; make; make install
 
 
 # install pip, virtualenv, virtualenvwrapper
-RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper
+RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython
 
 # user cliff
 RUN useradd cliff -s /bin/zsh -G sudo --home /home/cliff
