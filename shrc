@@ -242,12 +242,11 @@ function seagull {
 }
 
 function dr {
-alias dr="docker run -it --rm base"
 if [[ -z $DOCKER_HOST ]]
 then
     di
 fi
-docker run -it base
+docker run -it --rm base
 }
 
 # rust
