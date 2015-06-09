@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 if [[ -z $1 ]]
 then
-    KEY='foo'
     KEY=~/.ssh/id_rsa
 else
     if [[ -a $1 ]]
