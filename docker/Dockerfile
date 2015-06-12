@@ -16,8 +16,9 @@ RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz; t
 RUN cd /tmp/Python-2.7.9; ./configure; make; make install
 
 
-# install pip, virtualenv, virtualenvwrapper
+# install pip, virtualenv, virtualenvwrapper, ipython ptpython
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython
+RUN mkdir /root/.ptpython
 
 # user cliff
 RUN useradd cliff -s /bin/zsh -G sudo --home /home/cliff
