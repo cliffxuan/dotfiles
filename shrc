@@ -209,21 +209,28 @@ update_ssh_auth_sock
 export EDITOR=`which vim`
 
 # docker
-function di {
-    $(boot2docker shellinit)
+function _dk_vms() {
+    reply=(`docker-machine ls -q`)
 }
 
+function di {
+    eval "$(docker-machine env $1)"
+}
+compctl -K _dk_vms di
+
 function rmimages {
-    docker rm `docker ps --no-trunc -aq`
+  docker rm `docker ps --no-trunc -aq`
 }
 
 function synctime {
-    boot2docker ssh sudo ntpclient -s -h pool.ntp.org
+  boot2docker ssh $1 sudo ntpclient -s -h pool.ntp.org
 }
+compctl -K _dk_vms synctime
 
 function refreshdns {
-    boot2docker ssh sudo udhcpc
+    docker-machine ssh $1 sudo udhcpc
 }
+compctl -K _dk_vms refreshdns
 
 function dkhostfile {
     sed "s/.* docker/`boot2docker ip` docker/" /etc/hosts | sudo tee /etc/hosts
@@ -246,7 +253,7 @@ if [[ -z $DOCKER_HOST ]]
 then
     di
 fi
-docker run -it --rm base
+docker run -it --rm cliff/base
 }
 
 # rust
