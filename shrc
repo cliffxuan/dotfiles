@@ -223,7 +223,7 @@ function rmimages {
 }
 
 function synctime {
-  boot2docker ssh $1 sudo ntpclient -s -h pool.ntp.org
+  docker-machine ssh $1 sudo ntpclient -s -h pool.ntp.org
 }
 compctl -K _dk_vms synctime
 
@@ -233,7 +233,8 @@ function refreshdns {
 compctl -K _dk_vms refreshdns
 
 function dkhostfile {
-    sed "s/.* docker/`boot2docker ip` docker/" /etc/hosts | sudo tee /etc/hosts
+    # TODO dev is hardcoded for now
+    sed "s/.* docker/`docker-machine ip dev` docker/" /etc/hosts | sudo tee /etc/hosts
 }
 
 function dkkillall {
