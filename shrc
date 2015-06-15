@@ -214,7 +214,13 @@ function _dk_vms() {
 }
 
 function di {
-    eval "$(docker-machine env $1)"
+    if [[ -z $1 ]]
+    then
+        echo 'no host specified'
+        return 1
+    else
+        eval "$(docker-machine env $1)"
+    fi
 }
 compctl -K _dk_vms di
 
