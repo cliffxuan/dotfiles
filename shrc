@@ -216,8 +216,7 @@ function _dk_vms() {
 function di {
     if [[ -z $1 ]]
     then
-        echo 'no host specified'
-        return 1
+        eval "$(docker-machine env $(docker-machine ls -q | sed -n 1p))"
     else
         eval "$(docker-machine env $1)"
     fi
@@ -258,9 +257,14 @@ function seagull {
 function dr {
 if [[ -z $DOCKER_HOST ]]
 then
-    di
+    di `docker-machine ls -q | sed -n 1p`
 fi
-docker run -it --rm cliff/base
+if [[ -z $1 ]]
+then
+    docker run -it --rm cliff/base
+else
+    docker run -it --rm -v "$PWD/$1":/root/$(basename $1) -w /root/$(basename $1) cliff/base 
+fi
 }
 
 # rust
@@ -296,7 +300,7 @@ alias p="python"
 alias i="ptipython --vi"
 alias h="python -m SimpleHTTPServer"
 
-if which pyenv > /dev/null
-then
-    eval "$(pyenv init -)"
-fi
+# if which pyenv > /dev/null
+# then
+    # eval "$(pyenv init -)"
+# fi
