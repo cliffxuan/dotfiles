@@ -4,7 +4,7 @@ MAINTAINER cliff xuan
 RUN apt-get update
 
 # install basic tools
-RUN apt-get install -y build-essential vim git tmux zsh patch silversearcher-ag curl
+RUN apt-get install -y build-essential git tmux zsh patch silversearcher-ag curl
 
 # install python
 RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
@@ -12,9 +12,12 @@ RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqli
 # install lxml deps
 RUN apt-get install -y libxml2-dev libxslt-dev
 
-RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.9/Python-2.7.9.tgz; tar -xf Python-2.7.9.tgz
-RUN cd /tmp/Python-2.7.9; ./configure; make; make install
+RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz; tar -xf Python-2.7.10.tgz
+RUN cd /tmp/Python-2.7.10; ./configure; make; make install
 
+# install vim
+RUN cd /tmp; curl -O ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2; tar -xjf vim-7.4.tar.bz2
+RUN cd /tmp/vim74;./configure --enable-pythoninterp --enable-multibyte --disable-nls --with-python-config-dir=/usr/local/lib/python2.7/config; make; make install
 
 # install pip, virtualenv, virtualenvwrapper, ipython ptpython
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython ipdb
