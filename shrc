@@ -263,7 +263,8 @@ if [[ -z $1 ]]
 then
     docker run -it --rm cliff/base
 else
-    docker run -it --rm -v "$PWD/$1":/root/$(basename $1) -w /root/$(basename $1) cliff/base 
+    ABS_PATH=`cd "$1"; pwd`
+    docker run -it --rm -v $ABS_PATH:/root/$(basename $ABS_PATH) -w /root/$(basename $1) cliff/base 
 fi
 }
 
