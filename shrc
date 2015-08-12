@@ -27,7 +27,7 @@ else
     fi
 fi
 export PROJECT_HOME=$HOME/dev
-export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
+# export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 
 #vim
 alias v="vim"
