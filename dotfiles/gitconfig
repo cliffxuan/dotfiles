@@ -28,6 +28,7 @@
     dm = !git branch --merged | grep -v \"*\" | xargs -n 1 git branch -d
     ss = !git submodule foreach git pull --rebase origin master
     ignored = !git clean -ndX
+    sa = !"find . -name .git -type d -exec echo {} \\; -exec git --git-dir={} --work-tree={}/.. --no-pager diff --color=always \\; -exec echo \\; | less"
 
 
 [diff]
