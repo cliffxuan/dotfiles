@@ -110,3 +110,5 @@ tramp
 
 # cask packages
 .cask/
+
+.ruby-version
