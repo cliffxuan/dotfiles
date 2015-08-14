@@ -136,6 +136,11 @@ alias ..g='git rev-parse && cd "$(git rev-parse --show-cdup)"'
 alias g="git"
 alias t='python $HOME/lib/t/t.py --task-dir $HOME/.tasks --list tasks'
 alias s="git status"
+
+function ga {
+    find . -name .git -type d -exec echo {} \; -exec git --git-dir={} --work-tree={}/.. --no-pager $@ \; -exec echo \;
+}
+
 #puppet
 alias puppet-onetime="puppet agent --onetime --verbose --no-daemonize"
 
