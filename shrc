@@ -73,6 +73,11 @@ then
     eval "$(rbenv init -)"
 fi
 
+function install_ruby() {
+git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+}
+
 #npm
 if [[ -d /usr/local/share/npm/bin ]]
 then
