@@ -137,8 +137,14 @@ alias g="git"
 alias t='python $HOME/lib/t/t.py --task-dir $HOME/.tasks --list tasks'
 alias s="git status"
 
+#git all
 function ga {
     find . -name .git -type d -exec echo {} \; -exec git --git-dir={} --work-tree={}/.. --no-pager $@ \; -exec echo \;
+}
+
+#git do
+function gd {
+    find . -name .git -type d -exec echo {} \; -exec sh -c "cd {}/.. && $@" \; -exec echo \;
 }
 
 #puppet
