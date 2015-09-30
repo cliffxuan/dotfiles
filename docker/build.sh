@@ -15,6 +15,5 @@ echo $KEY
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $DIR
 
-cp $KEY id_rsa
-chmod 400 id_rsa
+cp -rf $KEY id_rsa
 docker build -t cliff/base --no-cache .
