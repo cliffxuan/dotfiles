@@ -230,6 +230,10 @@ function _dk_vms() {
 }
 
 function di {
+    if [[ -S /var/run/docker.sock  ]]
+    then
+        return 0
+    fi
     if [[ -z $1 ]]
     then
         eval "$(docker-machine env $(docker-machine ls -q | sed -n 1p))"
@@ -271,7 +275,7 @@ function seagull {
 }
 
 function dr {
-if [[ -z $DOCKER_HOST ]]
+if [[ -z $DOCKER_HOST ]] && [[ ! -S /var/run/docker.sock ]]
 then
     di `docker-machine ls -q | sed -n 1p`
 fi
