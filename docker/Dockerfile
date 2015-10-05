@@ -27,6 +27,9 @@ RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqli
 # install lxml deps
 RUN apt-get install -y libxml2-dev libxslt-dev
 
+# install openssl deps
+RUN apt-get install -y libssl-dev libffi-dev
+
 RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz; tar -xf Python-2.7.10.tgz
 RUN cd /tmp/Python-2.7.10; ./configure; make; make install
 
