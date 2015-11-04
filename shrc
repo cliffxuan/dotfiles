@@ -144,7 +144,14 @@ alias s="git status"
 
 #git all
 function ga {
-    find . -name .git -type d -exec echo {} \; -exec git --git-dir={} --work-tree={}/.. --no-pager $@ \; -exec echo \;
+    for gitdir in $(find . -name .git -type d)
+    do
+        echo $gitdir
+        cd $gitdir/..
+        git --no-pager $@
+        cd - > /dev/null
+        echo
+    done
 }
 
 #git do
