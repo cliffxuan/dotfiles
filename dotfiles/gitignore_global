@@ -112,3 +112,5 @@ tramp
 .cask/
 
 .ruby-version
+
+.nfs*
