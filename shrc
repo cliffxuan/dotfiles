@@ -144,7 +144,7 @@ alias s="git status"
 
 #git all
 function ga {
-    for gitdir in $(find . -name .git -type d)
+    for gitdir in $(find . -mindepth 2 -name .git -type d)
     do
         echo $gitdir
         cd $gitdir/..
