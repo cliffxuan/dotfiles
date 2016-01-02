@@ -32,7 +32,7 @@ fi
 
 if [[ -n $EMACS ]]
 then
-    ZSH_THEME="minimal"
+    ZSH_THEME="cliffxuan-minimal"
 fi
 
 # Set to this to use case-sensitive completion
