@@ -42,6 +42,9 @@ RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.p
 RUN /bin/zsh -c "source /usr/local/bin/virtualenvwrapper.sh"
 RUN mkdir /root/.ptpython
 
+# install ghc, cabal
+RUN apt-get install -y ghc cabal-install
+
 # Set the locale
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
