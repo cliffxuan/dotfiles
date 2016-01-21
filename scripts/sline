@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+"""
+import math
+import os
+import re
+import argparse
+
+
+def argument_parser():
+    parser = argparse.ArgumentParser(
+        description='split a file by line')
+    parser.add_argument(
+        'file', type=argparse.FileType('r'),
+        help='name of the file to split')
+    parser.add_argument(
+        'pattern', help='regex for the line')
+    parser.add_argument(
+        '--outdir', '-o', default='.', help='output directory')
+    parser.add_argument(
+        '--ext', '-e', default='', help='extension')
+    return parser
+
+
+def split_by_pattern(fileobj, pattern, output_directory, extension):
+    if not os.path.isdir(output_directory):
+        os.mkdir(output_directory)
+    matching_lines = []
+    for ind, line in enumerate(fileobj):
+        if pattern.match(line):
+            matching_lines.append(ind)
+    else:
+        last_ind = ind
+
+    if matching_lines[0] != 0:  # not match on the first line
+        matching_lines = [0] + matching_lines
+
+    tmpl = '{{0:0{}d}}'.format(int(math.log10(len(matching_lines)) + 1))
+    if extension:
+        tmpl += '.' + extension
+
+    fileobj.seek(0, 0)
+
+    line_ind = 0
+    for ind, (s, e) in enumerate(zip(matching_lines,
+                                     matching_lines[1:] + [last_ind])):
+        filename = os.path.join(output_directory, tmpl.format(ind))
+        assert line_ind == s, "{} != {}".format(line_ind, s)
+        with open(filename, 'w') as ff:
+            for line in fileobj:
+                ff.write(line)
+                line_ind += 1
+                if line_ind == e:
+                    break
+
+
+def main(argv=None):
+    args = argument_parser().parse_args(argv)
+    pattern = re.compile(args.pattern)
+    outdir = args.outdir
+    split_by_pattern(args.file, pattern, outdir, args.ext)
+
+
+if __name__ == '__main__':
+    main()
