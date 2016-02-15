@@ -14,7 +14,7 @@ fi
 ln -fs $BASE_DIR/vimfiles $HOME/.vim
 
 echo "symlink .vimrc"
-ln -fs $BASE_DIR/vimfiles/_vimrc $HOME/.vimrc
+ln -fs $BASE_DIR/vimfiles/vimrc $HOME/.vimrc
 
 if [[ "$OSTYPE" == "darwin"* ]]
 then
