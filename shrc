@@ -327,8 +327,10 @@ function sursync {
 }
 
 alias p="python"
-alias i="ptipython --vi"
+alias p3="python3"
 alias h="python -m SimpleHTTPServer"
+alias i="python `which ptipython` --vi"
+alias i3="python3 `which ptipython` --vi"
 
 # if which pyenv > /dev/null
 # then

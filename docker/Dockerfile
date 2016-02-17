@@ -46,6 +46,7 @@ RUN cd /tmp/vim74;./configure --enable-pythoninterp --enable-multibyte --disable
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython ipdb flake8
 RUN /bin/zsh -c "source /usr/local/bin/virtualenvwrapper.sh"
 RUN mkdir /root/.ptpython
+RUN pip3 install ipython ptpython ipdb flake8
 
 # install ghc, cabal
 RUN apt-get install -y ghc cabal-install
