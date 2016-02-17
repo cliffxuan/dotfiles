@@ -30,8 +30,13 @@ RUN apt-get install -y libxml2-dev libxslt-dev
 # install openssl deps
 RUN apt-get install -y libssl-dev libffi-dev
 
-RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.10/Python-2.7.10.tgz; tar -xf Python-2.7.10.tgz
-RUN cd /tmp/Python-2.7.10; ./configure; make; make install
+# install python 2.7.11
+RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz; tar -xf Python-2.7.11.tgz
+RUN cd /tmp/Python-2.7.11; ./configure; make; make install
+
+# install python 3.5.1
+RUN cd /tmp; curl -O https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz; tar -xf Python-3.5.1.tgz
+RUN cd /tmp/Python-3.5.1; ./configure; make; make install
 
 # install vim
 RUN cd /tmp; curl -O ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2; tar -xjf vim-7.4.tar.bz2
