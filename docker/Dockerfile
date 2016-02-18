@@ -49,7 +49,7 @@ RUN mkdir /root/.ptpython
 RUN pip3 install ipython ptpython ipdb flake8
 
 # tmux
-RUN apt-get install -y aclocal automake libevent-dev libncurses5-dev
+RUN apt-get install -y automake libevent-dev libncurses5-dev
 RUN git clone https://github.com/tmux/tmux.git /tmp/tmux
 RUN cd /tmp/tmux; sh autogen.sh; ./configure; make; make install
 
