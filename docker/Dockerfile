@@ -19,7 +19,7 @@ RUN mkdir -p dev
 RUN git clone git@github.com:cliffxuan/dotfiles dev/dotfiles
 
 # install basic tools
-RUN apt-get install -y build-essential tmux zsh patch silversearcher-ag curl
+RUN apt-get install -y build-essential zsh patch silversearcher-ag curl
 
 # install python
 RUN apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
@@ -47,6 +47,11 @@ RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.p
 RUN /bin/zsh -c "source /usr/local/bin/virtualenvwrapper.sh"
 RUN mkdir /root/.ptpython
 RUN pip3 install ipython ptpython ipdb flake8
+
+# tmux
+RUN apt-get install -y aclocal automake libevent-dev libncurses5-dev
+RUN git clone https://github.com/tmux/tmux.git /tmp/tmux
+RUN cd /tmp/tmux; sh autogen.sh; ./configure; make; make install
 
 # install ghc, cabal
 RUN apt-get install -y ghc cabal-install
