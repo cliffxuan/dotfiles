@@ -332,6 +332,7 @@ alias h="python -m SimpleHTTPServer"
 alias i="python `which ptipython` --vi"
 alias i3="python3 `which ptipython` --vi"
 
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 # if which pyenv > /dev/null
 # then
     # eval "$(pyenv init -)"
