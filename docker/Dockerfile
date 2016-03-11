@@ -46,7 +46,7 @@ RUN cd /tmp/vim74;./configure --enable-pythoninterp --enable-multibyte --disable
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython pdbpp flake8
 RUN /bin/zsh -c "source /usr/local/bin/virtualenvwrapper.sh"
 RUN mkdir /root/.ptpython
-RUN pip3 install ipython ptpython pdbpp flake8
+RUN pip3 install ipython ptpython ipdb
 
 # tmux
 RUN apt-get install -y automake libevent-dev libncurses5-dev
