@@ -253,7 +253,7 @@ function di {
 compctl -K _dk_vms di
 
 function rmimages {
-  docker rm `docker ps --no-trunc -aq`
+  docker rmi $(docker images --quiet --filter "dangling=true")
 }
 
 function synctime {
