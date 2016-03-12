@@ -290,10 +290,10 @@ then
 fi
 if [[ -z $1 ]]
 then
-    docker run -it --rm cliff/base
+    docker run -it --rm --net host cliff/base
 else
     ABS_PATH=`cd "$1"; pwd`
-    docker run -it --rm -v $ABS_PATH:/root/$(basename $ABS_PATH) -w /root/$(basename $1) cliff/base 
+    docker run -it --rm -v $ABS_PATH:/root/$(basename $ABS_PATH) -w /root/$(basename $1) --net host cliff/base 
 fi
 }
 
