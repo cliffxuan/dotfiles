@@ -10,6 +10,7 @@ RUN mkdir -p .ssh
 ADD id_rsa /root/.ssh/id_rsa
 RUN chmod 400 /root/.ssh/id_rsa
 RUN echo "Host github.com\\n\\tStrictHostKeyChecking no" >> .ssh/config
+RUN echo "Host gitlab.com\\n\\tStrictHostKeyChecking no" >> .ssh/config
 
 RUN apt-get update
 
