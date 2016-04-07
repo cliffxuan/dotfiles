@@ -57,6 +57,10 @@ RUN cd /tmp/tmux; sh autogen.sh; ./configure; make; make install
 # install ghc, cabal
 RUN apt-get install -y ghc cabal-install
 
+# install node, npm
+RUN curl -sL https://deb.nodesource.com/setup_5.x | sudo -E bash -
+RUN apt-get install -y nodejs
+
 # Set the locale
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
