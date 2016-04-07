@@ -266,6 +266,11 @@ function refreshdns {
 }
 compctl -K _dk_vms refreshdns
 
+function gdns {
+    docker-machine ssh $1 "sudo echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
+}
+compctl -K _dk_vms gdns
+
 function dkhostfile {
     # TODO dev is hardcoded for now
     sed "s/.* docker/`docker-machine ip dev` docker/" /etc/hosts | sudo tee /etc/hosts

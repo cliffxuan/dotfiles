@@ -115,3 +115,5 @@ tramp
 
 .nfs*
 .dockerfile
+
+.tern-port
