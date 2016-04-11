@@ -302,7 +302,8 @@ then
     docker run -it --rm --net host cliff/base
 else
     ABS_PATH=`cd "$1"; pwd`
-    docker run -it --rm -v $ABS_PATH:/root/$(basename $ABS_PATH) -w /root/$(basename $1) --net host cliff/base 
+    WORK_DIR=/root/$(basename $ABS_PATH)
+    docker run -it --rm -v $ABS_PATH:$WORK_DIR -w $WORK_DIR --net host cliff/base
 fi
 }
 
