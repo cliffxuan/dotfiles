@@ -141,7 +141,8 @@ python -c "ff=open('$1', 'rb'); ff.seek(-$2,2); print ff.read($2)"
 #alias
 alias ..g='git rev-parse && cd "$(git rev-parse --show-cdup)"'
 alias g="git"
-alias t='python $HOME/lib/t/t.py --task-dir $HOME/.tasks --list tasks'
+alias gd="git diff"
+alias gs="git status"
 alias s="git status"
 
 #git all
@@ -156,10 +157,6 @@ function ga {
     done
 }
 
-#git do
-function gd {
-    find . -name .git -type d -exec echo {} \; -exec sh -c "cd {}/.. && $@" \; -exec echo \;
-}
 
 #puppet
 alias puppet-onetime="puppet agent --onetime --verbose --no-daemonize"
