@@ -236,10 +236,12 @@ function _dk_vms() {
 }
 
 function di {
-    if [[ -S /var/run/docker.sock  ]]
+    if [[ -S /var/run/docker.sock  ]] && cat /var/run/docker.sock 2> /dev/null
     then
+        echo 'use native docker'
         return 0
     fi
+    echo 'use docker machine'
     if [[ -z $1 ]]
     then
         eval "$(docker-machine env $(docker-machine ls -q | sed -n 1p))"
@@ -290,10 +292,7 @@ function dc {
 }
 
 function dr {
-if [[ -z $DOCKER_HOST ]] && [[ ! -S /var/run/docker.sock ]]
-then
-    di `docker-machine ls -q | sed -n 1p`
-fi
+di `docker-machine ls -q | sed -n 1p`
 if [[ -z $1 ]]
 then
     docker run -it --rm --net host cliff/base
