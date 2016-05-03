@@ -1,9 +1,6 @@
 FROM ubuntu:14.04
 MAINTAINER cliff xuan
 
-# install git
-RUN apt-get -y install git
-
 # do ssh in case it fails, fails early
 WORKDIR /root
 RUN mkdir -p .ssh
@@ -13,6 +10,9 @@ RUN echo "Host github.com\\n\\tStrictHostKeyChecking no" >> .ssh/config
 RUN echo "Host gitlab.com\\n\\tStrictHostKeyChecking no" >> .ssh/config
 
 RUN apt-get update
+
+# install git
+RUN apt-get -y install git
 
 # dotfiles
 RUN mkdir -p bin
