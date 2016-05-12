@@ -6,15 +6,18 @@ $BASE_DIR/softlink.sh
 echo "clone vimfiles"
 git clone git@github.com:cliffxuan/vimfiles $BASE_DIR/vimfiles
 
-echo "symlink .vim"
+echo "symlink .vim and .config/nvim"
 if [ -d "$HOME/.vim" ]
 then
     mv $HOME/.vim $HOME/.vimbak_$(date +"%y_%m_%d_%k_%M")
 fi
 ln -fs $BASE_DIR/vimfiles $HOME/.vim
+mkdir -p $HOME/.config
+ln -fs $BASE_DIR/vimfiles $HOME/.config/nvim
 
-echo "symlink .vimrc"
+echo "symlink .vimrc and .config/nvim/init.vim"
 ln -fs $BASE_DIR/vimfiles/vimrc $HOME/.vimrc
+ln -fs $BASE_DIR/vimfiles/vimrc $HOME/.config/nvim/init.vim
 
 if [[ "$OSTYPE" == "darwin"* ]]
 then
