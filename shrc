@@ -30,7 +30,12 @@ export PROJECT_HOME=$HOME/dev
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 
 #vim
-alias v="vim"
+if hash nvim 2>/dev/null
+then
+    alias v="nvim"
+else
+    alias v="vim"
+fi
 alias uvim="vim -u NONE"
 alias neobundle="vim +NeoBundleInstall +qall"
 
