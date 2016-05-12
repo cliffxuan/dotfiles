@@ -49,10 +49,10 @@ bind esc:cmd hint
 
 # APPLICATION ALIASES AND BINDINGS
 bind h:cmd;shift focus 'Google Chrome'
-bind j:cmd;shift focus 'Emacs'
-bind k:cmd;shift focus 'iTerm'
-bind l:cmd;shift focus 'MacVim'
-bind ;:cmd;shift focus 'Dash'
+bind j:cmd;shift focus 'MacVim'
+bind k:cmd;shift focus 'iTerm2'
+bind l:cmd;shift focus 'Emacs'
+# bind ;:cmd;shift focus 'Dash'
 bind p:cmd;shift focus 'Preview'
 bind m:cmd;shift focus 'HipChat'
 
