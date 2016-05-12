@@ -80,6 +80,14 @@ git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
 git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 }
 
+#nvm
+if [[ -d $HOME/.nvm ]]
+then
+    export NVM_DIR="$HOME/.nvm"
+  . "$(brew --prefix nvm)/nvm.sh"
+fi
+
+
 #npm
 if [[ -d /usr/local/share/npm/bin ]]
 then
