@@ -50,7 +50,7 @@ DISABLE_AUTO_UPDATE="true"
 # Uncomment following line if you want to disable autosetting terminal title.
 DISABLE_AUTO_TITLE="true"
 
-if [[ -z $EMACS ]]
+if [[ -z $EMACS ]] && [[ -z $NVIM_LISTEN_ADDRESS ]]
 then
     plugins=(vi-mode)
 fi
