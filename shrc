@@ -36,6 +36,12 @@ then
 else
     alias v="vim"
 fi
+
+if hash nyaovim 2>/dev/null
+then
+    alias n='nyaovim'
+fi
+
 alias uvim="vim -u NONE"
 alias neobundle="vim +NeoBundleInstall +qall"
 
