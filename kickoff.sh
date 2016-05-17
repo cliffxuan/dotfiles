@@ -7,13 +7,13 @@ echo "clone vimfiles"
 git clone git@github.com:cliffxuan/vimfiles $BASE_DIR/vimfiles
 
 echo "symlink .vim and .config/nvim"
-if [ -d "$HOME/.vim" ]
+if [ -d "$HOME/.vim" ] && ["$(readlink $HOME/.vim)" != "$BASE_DIR/vimfiles"]
 then
     mv $HOME/.vim $HOME/.vimbak_$(date +"%y_%m_%d_%k_%M")
 fi
-ln -fs $BASE_DIR/vimfiles $HOME/.vim
+ln -fns $BASE_DIR/vimfiles $HOME/.vim
 mkdir -p $HOME/.config
-ln -fs $BASE_DIR/vimfiles $HOME/.config/nvim
+ln -fns $BASE_DIR/vimfiles $HOME/.config/nvim
 
 echo "symlink .vimrc and .config/nvim/init.vim"
 ln -fs $BASE_DIR/vimfiles/vimrc $HOME/.vimrc
@@ -28,8 +28,6 @@ fi
 
 echo "checkout vimfiles submodules"
 cd $BASE_DIR/vimfiles
-git submodule init
-git submodule update
 if hash vim 2>/dev/null
 then
     if [[ $1 != "--no-vim-plugins" ]]
