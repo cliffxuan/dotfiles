@@ -34,12 +34,12 @@ if hash vim 2>/dev/null
 then
     if [[ $1 != "--no-vim-plugins" ]]
     then
-        curl https://raw.githubusercontent.com/Shougo/dein.vim/master/bin/installer.sh > /tmp/installer.sh
-        sh /tmp/installer.sh $HOME/.vim/dein
-        vim -u $HOME/.vimrc -c "try | call dein#install() | finally | qall! | endtry" -e
+        curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs \
+          https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        vim -u $HOME/.vimrc -c "try | PlugInstall! | finally | qall! | endtry" -e
         if hash nvim 2>/dev/null
         then
-          nvim -u $HOME/.vimrc -c "try | call dein#install() | finally | qall! | endtry" -e
+          nvim -u $HOME/.vimrc -c "try | PlugInstall! | finally | qall! | endtry" -e
         fi
     fi
 else
