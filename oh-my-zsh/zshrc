@@ -86,3 +86,5 @@ then
     zle -N zle-line-finish
     zle -N zle-keymap-select
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
