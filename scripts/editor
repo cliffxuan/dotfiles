@@ -1,0 +1,7 @@
+#!/bin/sh
+if hash nvim 2>/dev/null
+then
+    nvim-client -f $@
+else
+    vim $@
+fi

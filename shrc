@@ -30,11 +30,12 @@ export PROJECT_HOME=$HOME/dev
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 
 #vim
+export EDITOR=`which editor`
 if hash nvim 2>/dev/null
 then
-    alias v="nvim"
+    alias v='nvim-client'
 else
-    alias v="vim"
+    alias v='vim'
 fi
 
 if hash nyaovim 2>/dev/null
@@ -246,8 +247,6 @@ fi
 }
 
 update_ssh_auth_sock
-
-export EDITOR=`which vim`
 
 # docker
 function _dk_vms() {
