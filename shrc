@@ -362,3 +362,10 @@ alias i3="python3 `which ptipython` --vi"
 # fi
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
 test -L $NIX_SH; . $NIX_SH
+
+# ag tag
+if (( $+commands[tag] )); then
+  tag() { command tag "$@"; source ${TAG_ALIAS_FILE:-/tmp/tag_aliases} 2>/dev/null }
+  alias ag=tag
+  export TAG_CMD_FMT_STRING="editor {{.Filename}} +{{.LineNumber}}"
+fi
