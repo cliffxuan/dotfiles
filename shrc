@@ -161,12 +161,17 @@ python -c "ff=open('$1', 'rb'); ff.seek(-$2,2); print ff.read($2)"
 #alias
 alias ..g='git rev-parse && cd "$(git rev-parse --show-cdup)"'
 alias g="git"
+alias ga="git add"
 alias gd="git diff"
+alias gf="git fetch origin"
+alias gp="git push origin"
 alias gs="git status"
+alias gl="git log"
 alias s="git status"
+alias pt='py.test'
 
 #git all
-function ga {
+function gall {
     for gitdir in $(find . -mindepth 2 -name .git -type d)
     do
         echo $gitdir
@@ -369,3 +374,5 @@ if (( $+commands[tag] )); then
   alias ag=tag
   export TAG_CMD_FMT_STRING="editor {{.Filename}} +{{.LineNumber}}"
 fi
+
+alias ff="\ag -g"
