@@ -1,10 +1,10 @@
 [core]
-    excludesfile = ~/.gitignore_global
+	excludesfile = /Users/cliffxuan/.gitignore_global
     filemode = false
     editor = vim
 [user]
-    name = cliff xuan
-    email = cliff.xuan@gmail.com
+	name = cliff xuan
+	email = cliff.xuan@gmail.com
 
 [color]
     ui = auto
@@ -14,6 +14,7 @@
     ci = commit
     co = checkout
     conflicts = !git ls-files -u | cut -f 2 | sort -u
+    ca = commit --amend -C HEAD
     ct = checkout -t
     df = diff
     fm = merge --ff-only
@@ -33,7 +34,7 @@
 
 
 [diff]
-    algorithm = patience
+    tool = vimdiff
 
 [github]
     user = cliffxuan
@@ -41,3 +42,12 @@
     clean = git-lfs clean %f
     smudge = git-lfs smudge %f
     required = true
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /opt/homebrew-cask/Caskroom/sourcetree/2.3/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+[commit]
+	template = /Users/cliffxuan/.stCommitMsg
