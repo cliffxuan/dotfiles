@@ -49,6 +49,7 @@ then
 fi
 
 alias uvim="vim -u NONE"
+alias svim="vim -u $HOME/.vimfiles/sensible.vim"
 alias neobundle="vim +NeoBundleInstall +qall"
 
 #GAE
