@@ -3,6 +3,8 @@ BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 SCRIPT_DIR=$BASE_DIR/scripts
 DOTFILE_DIR=$BASE_DIR/dotfiles
 
+mkdir -p $HOME/bin
+
 for DOTFILE in $(ls $DOTFILE_DIR)
 do
     echo "symlink .$DOTFILE"
