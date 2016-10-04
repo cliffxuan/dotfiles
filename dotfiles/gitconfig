@@ -1,10 +1,10 @@
 [core]
-	excludesfile = /Users/cliffxuan/.gitignore_global
+    excludesfile = ~/.gitignore_global
     filemode = false
     editor = vim
 [user]
-	name = Cliff Xuan
-	email = cliff.xuan@gmail.com
+    name = Cliff Xuan
+    email = cliff.xuan@gmail.com
 
 [color]
     ui = auto
