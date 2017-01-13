@@ -118,3 +118,6 @@ tramp
 .dockerfile
 
 .tern-port
+
+# node
+node_modules
