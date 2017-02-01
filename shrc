@@ -186,7 +186,7 @@ alias pt='py.test'
 function ga {
     if [ -z $1 ]
     then
-        git add .
+        git add -u
     else
         git add $@
     fi
