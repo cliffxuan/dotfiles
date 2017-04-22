@@ -362,6 +362,13 @@ function rust {
     rustc $1 -o $exe && $exe
 }
 
+# c
+function c {
+    exe=/tmp/${1%.*}
+    rm -f $exe
+    gcc $@ -o $exe && $exe
+}
+
 # babel-node
 function es6 {
     babel-node $@
