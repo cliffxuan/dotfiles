@@ -36,13 +36,13 @@ RUN apt-get install -y libssl-dev libffi-dev
 RUN cd /tmp; curl -O https://www.python.org/ftp/python/2.7.11/Python-2.7.11.tgz; tar -xf Python-2.7.11.tgz
 RUN cd /tmp/Python-2.7.11; ./configure; make; make install
 
-# install python 3.5.1
-RUN cd /tmp; curl -O https://www.python.org/ftp/python/3.5.1/Python-3.5.1.tgz; tar -xf Python-3.5.1.tgz
-RUN cd /tmp/Python-3.5.1; ./configure; make; make install
+# install python 3.6.2
+RUN cd /tmp; curl -O https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz; tar -xf Python-3.6.2.tgz
+RUN cd /tmp/Python-3.6.2; ./configure; make; make install
 
 # install vim
-RUN cd /tmp; curl -O ftp://ftp.vim.org/pub/vim/unix/vim-7.4.tar.bz2; tar -xjf vim-7.4.tar.bz2
-RUN cd /tmp/vim74;./configure --enable-pythoninterp --enable-multibyte --disable-nls --with-python-config-dir=/usr/local/lib/python2.7/config; make; make install
+RUN cd /tmp; git clone https://github.com/vim/vim.git
+RUN cd /tmp/vim; ./configure --enable-pythoninterp --enable-multibyte --disable-nls --with-python-config-dir=/usr/local/lib/python2.7/config; make; make install
 
 # install pip, virtualenv, virtualenvwrapper, ipython ptpython
 RUN cd /tmp; curl -O https://bootstrap.pypa.io/get-pip.py; python /tmp/get-pip.py; pip install virtualenv virtualenvwrapper ipython ptpython pdbpp flake8
@@ -63,6 +63,7 @@ RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
 RUN apt-get install -y nodejs
 
 # Set the locale
+RUN apt-get install -y locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
