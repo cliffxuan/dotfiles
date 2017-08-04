@@ -32,7 +32,7 @@ if hash vim 2>/dev/null
 then
     if [[ $1 != "--no-vim-plugins" ]]
     then
-        curl -fLo $HOME/.vim/autoload/plug.vim --create-dirs \
+        curl -kfLo $HOME/.vim/autoload/plug.vim --create-dirs \
           https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
         vim -u $HOME/.vimrc -c "try | PlugInstall! | finally | qall! | endtry" -e
         if hash nvim 2>/dev/null
