@@ -6,7 +6,7 @@ if [[ -d $INSTALL_DIR ]]
 then
     echo "oh-my-zsh already installed"
 else
-    git clone git://github.com/robbyrussell/oh-my-zsh.git $INSTALL_DIR
+    git clone https://github.com/robbyrussell/oh-my-zsh.git $INSTALL_DIR
 fi
 
 echo "install $HOME/.zshrc"
