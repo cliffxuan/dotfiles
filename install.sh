@@ -4,6 +4,16 @@ BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 sudo apt-get update
 curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
 sudo apt-get install -y curl zsh build-essential python-dev python3-dev nodejs libffi-dev silversearcher-ag
+# python deps
+apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev
+# lxml deps
+apt-get install -y libxml2-dev libxslt-dev
+# openssl deps
+apt-get install -y libssl-dev libffi-dev
+
+# install python3.6
+cd /tmp; curl -O https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz; tar -xf Python-3.6.2.tgz
+cd /tmp/Python-3.6.2; ./configure; make; sudo make install
 sudo ln -sf /usr/bin/nodejs /usr/bin/node
 curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
