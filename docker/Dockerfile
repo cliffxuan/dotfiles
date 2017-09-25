@@ -59,7 +59,7 @@ RUN cd /tmp/tmux; sh autogen.sh; ./configure; make; make install
 RUN apt-get install -y ghc cabal-install
 
 # install node, npm
-RUN curl -sL https://deb.nodesource.com/setup_5.x | bash -
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
 # Set the locale
