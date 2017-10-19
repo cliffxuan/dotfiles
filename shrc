@@ -22,12 +22,12 @@ then
 else
     if type virtualenvwrapper.sh 2>&1 >/dev/null
     then
-        # if type python3 2>&1 >/dev/null
-        # then
-            # export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-        # else
-            # export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
-        # fi
+        if type python3 2>&1 >/dev/null
+        then
+            export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+        else
+            export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
+        fi
         source $(which virtualenvwrapper.sh)
     fi
 fi
