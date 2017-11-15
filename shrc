@@ -36,12 +36,14 @@ export PROJECT_HOME=$HOME/dev
 
 #vim
 export EDITOR=`which editor`
-if hash nvim 2>/dev/null
-then
-    alias v='nvim-client'
-else
-    alias v='vim'
-fi
+function v() {
+    if hash nvim 2>/dev/null && `python -c 'import neovim' &> /dev/null`
+    then
+        nvim-client $@
+    else
+        vim $@
+    fi
+}
 
 if hash nyaovim 2>/dev/null
 then
