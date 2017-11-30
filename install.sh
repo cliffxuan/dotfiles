@@ -12,10 +12,10 @@ sudo apt-get install -y libxml2-dev libxslt-dev
 sudo apt-get install -y libssl-dev libffi-dev
 
 # install python3.6
-cd /tmp; curl -O https://www.python.org/ftp/python/3.6.2/Python-3.6.2.tgz; tar -xf Python-3.6.2.tgz
-cd /tmp/Python-3.6.2; ./configure; make; sudo make install
+cd /tmp; curl -O https://www.python.org/ftp/python/3.6.3/Python-3.6.3.tgz; tar -xf Python-3.6.3.tgz
+cd /tmp/Python-3.6.3; ./configure; make; sudo make install
 sudo ln -sf /usr/bin/nodejs /usr/bin/node
 curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
-sudo pip install virtualenv virtualenvwrapper
+sudo pip3 install virtualenv virtualenvwrapper
 $BASE_DIR/kickoff.sh
