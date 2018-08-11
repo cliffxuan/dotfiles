@@ -18,4 +18,5 @@ sudo ln -sf /usr/bin/nodejs /usr/bin/node
 curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
 sudo pip3 install virtualenv virtualenvwrapper pipenv
+cd /tmp; curl -OL https://github.com/sharkdp/fd/releases/download/v7.0.0/fd-musl_7.0.0_amd64.deb; sudo dpkg -i fd-musl_7.0.0_amd64.deb
 $BASE_DIR/kickoff.sh
