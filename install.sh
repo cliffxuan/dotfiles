@@ -19,4 +19,10 @@ curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
 sudo pip3 install virtualenv virtualenvwrapper pipenv
 cd /tmp; curl -OL https://github.com/sharkdp/fd/releases/download/v7.0.0/fd-musl_7.0.0_amd64.deb; sudo dpkg -i fd-musl_7.0.0_amd64.deb
+# git lfs
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:git-core/ppa
+curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
+sudo apt-get install git-lfs
+git lfs install
 $BASE_DIR/kickoff.sh
