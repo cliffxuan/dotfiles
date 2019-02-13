@@ -1,5 +1,5 @@
 #!/bin/sh
-if hash nvim 2>/dev/null
+if hash nvim 2>/dev/null && python -c 'import neovim' 2>/dev/null
 then
     nvim-client -f $@
 else

@@ -42,11 +42,13 @@ Thumbs.db
 
 # Python specific #
 *.py[cod]
+.mypy_cache/
 
 # C extensions
 *.so
 
 # Packages
+*.pyre
 *.egg
 *.egg-info
 dist
@@ -121,3 +123,9 @@ tramp
 
 # node
 node_modules
+
+# pytest
+.pytest_cache/
+
+# intelij
+.idea/

@@ -19,6 +19,7 @@ def argument_parser():
 def main(argv=None):
     args = argument_parser().parse_args(argv)
     txt = args.filename.read()
+    args.filename.close()
     try:
         txt = txt.decode('utf-16').encode('utf-8')
     except UnicodeDecodeError:
