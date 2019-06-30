@@ -4,6 +4,8 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
   config.vm.hostname = "uno"
+  # vagrant plugin install vagrant-disksize
+  config.disksize.size = "30GB"
 
   config.vm.network "private_network", ip: "192.168.33.10"
 
