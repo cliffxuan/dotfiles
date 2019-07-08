@@ -12,8 +12,8 @@ sudo apt-get install -y libxml2-dev libxslt-dev
 sudo apt-get install -y libssl-dev libffi-dev
 
 # install python3.7
-cd /tmp; curl -O https://www.python.org/ftp/python/3.7.2/Python-3.7.2.tgz; tar -xf Python-3.7.2.tgz
-cd /tmp/Python-3.7.2; ./configure; make; sudo make install
+cd /tmp; curl -O https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz; tar -xf Python-3.7.3.tgz
+cd /tmp/Python-3.7.3; ./configure; make; sudo make install
 sudo ln -sf /usr/bin/nodejs /usr/bin/node
 curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
@@ -25,4 +25,7 @@ sudo add-apt-repository ppa:git-core/ppa
 curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.sh | sudo bash
 sudo apt-get install git-lfs
 git lfs install
+
+# docker
+$BASE_DIR/docker/install.sh
 $BASE_DIR/kickoff.sh
