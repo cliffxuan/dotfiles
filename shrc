@@ -54,21 +54,6 @@ alias uvim="vim -u NONE"
 alias svim="vim -u $HOME/.vimfiles/sensible.vim"
 alias neobundle="vim +NeoBundleInstall +qall"
 
-#GAE
-if [[ $OSTYPE == darwin* ]]
-then
-    GAE="/Applications/GoogleAppEngineLauncher.app"
-    GAE=$GAE"/Contents/Resources/GoogleAppEngine-default.bundle"
-    GAE=$GAE"/Contents/Resources/google_appengine"
-    if [[ -d $GAE ]]
-    then
-        export GAE
-        cdgae() {
-            cd $GAE
-        }
-    fi
-fi
-
 #term
 export TERM="xterm-256color"
 export LANG='en_US.UTF-8'
@@ -80,8 +65,8 @@ export LC_NUMERIC="en_US.UTF-8"
 export LC_TIME="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 
-#tmux
-alias tmux="TERM=screen-256color-bce tmux"
+#tmux cannot remember why screen-256color-bce. this doesn't work on wsl
+# alias tmux="TERM=screen-256color-bce tmux"
 
 #ssh reverse tunneling
 alias sshl="ssh -R 19999:localhost:22"
@@ -216,7 +201,7 @@ function gall {
 alias puppet-onetime="puppet agent --onetime --verbose --no-daemonize"
 
 #z
-#. `brew --prefix`/etc/profile.d/z.sh
+. $HOME/dev/dotfiles/scripts/z.sh
 
 #web pastebins
 #hastebin.com
