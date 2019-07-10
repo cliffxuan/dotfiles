@@ -29,6 +29,7 @@ else
             export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
         fi
         source $(which virtualenvwrapper.sh)
+        alias wo=workon
     fi
 fi
 export PROJECT_HOME=$HOME/dev
@@ -400,6 +401,8 @@ if (( $+commands[tag] )); then
 fi
 
 alias ff="\ag -g"
+# turn off bell
+set bell-style none
 
 function gkill {
     ps aux | grep "$*" | grep -v grep | awk '{print $2}' | xargs kill -9
