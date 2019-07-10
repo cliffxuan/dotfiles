@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:18.04
 MAINTAINER cliff xuan
 
 # do ssh in case it fails, fails early
