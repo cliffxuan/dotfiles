@@ -31,11 +31,6 @@ else
     fi
 fi
 
-if [[ -n $EMACS ]]
-then
-    ZSH_THEME="gozilla"
-fi
-
 # Set to this to use case-sensitive completion
 CASE_SENSITIVE="true"
 
@@ -51,11 +46,7 @@ DISABLE_AUTO_UPDATE="true"
 # Uncomment following line if you want to disable autosetting terminal title.
 DISABLE_AUTO_TITLE="true"
 
-if [[ -z $EMACS ]] && [[ -z $NVIM_LISTEN_ADDRESS ]]
-then
-    plugins=(vi-mode)
-fi
-
+plugins=(zsh-autosuggestions)
 source $ZSH/oh-my-zsh.sh
 
 if [[ -f $HOME/.shrc ]]

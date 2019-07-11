@@ -66,23 +66,6 @@ then
             echo "unabled to change default shell to zsh"
         fi
     fi
-else
-    echo "zsh not present. clone bash_it."
-    git clone git@github.com:cliffxuan/bash-it.git
-    echo "symlink .bash_profile"
-    rm -rf $HOME/.bash_it
-    ln -fs $BASE_DIR/bash-it $HOME/.bash_it
-    rm -rf $HOME/.bash_profile
-    ln -fs $BASE_DIR/bash-it/template/bash_profile.cliff.template.bash $HOME/.bash_profile
-    if [ ! -d "$BASE_DIR/bash-it/completion/enabled" ]
-    then
-        mkdir "$BASE_DIR/bash-it/completion/enabled"
-    fi
-    for item in git bash-it ssh defaults
-    do
-        ln -fs $BASE_DIR/bash-it/completion/available/$item.completion.bash $BASE_DIR/bash-it/completion/enabled/$item.completion.bash
-    done
-    echo 'run `source ~/.bash_profile` to activate new profile'
 fi
 
 
