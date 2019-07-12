@@ -16,6 +16,9 @@ sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsql
 sudo apt-get install -y libxml2-dev libxslt-dev
 # openssl deps
 sudo apt-get install -y libssl-dev libffi-dev
+# rg
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb
+sudo dpkg -i ripgrep_11.0.1_amd64.deb
 
 # install python3.7
 cd /tmp; curl -O https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz; tar -xf Python-3.7.3.tgz
