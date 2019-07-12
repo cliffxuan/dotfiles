@@ -14,8 +14,12 @@ zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
 zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
 
 # zsh-history-substring-search configuration
+# linux
 bindkey '^[OA' history-substring-search-up
 bindkey '^[OB' history-substring-search-down
+# mac
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
 source ~/.shrc
