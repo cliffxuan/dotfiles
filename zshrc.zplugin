@@ -1,0 +1,21 @@
+source '/home/cliff/.zplugin/bin/zplugin.zsh'
+autoload -Uz _zplugin
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
+
+
+zplugin light zsh-users/zsh-autosuggestions
+zplugin light zsh-users/zsh-syntax-highlighting
+zplugin light zsh-users/zsh-history-substring-search
+zplugin snippet OMZ::lib/history.zsh
+
+zplugin load zdharma/history-search-multi-word
+
+zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
+zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+
+# zsh-history-substring-search configuration
+bindkey '^[OA' history-substring-search-up
+bindkey '^[OB' history-substring-search-down
+HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+source ~/.shrc

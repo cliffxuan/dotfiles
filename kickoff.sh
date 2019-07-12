@@ -55,8 +55,10 @@ ln -fs $BASE_DIR/shrc $HOME/.shrc
 
 if hash zsh 2>/dev/null
 then
-    echo "zsh present. clone oh-my-zsh and set it up."
-    $BASE_DIR/oh-my-zsh/install.sh
+    echo "zsh present. clone zplugin and set it up."
+    mkdir $HOME/.zplugin
+    git clone https://github.com/zdharma/zplugin.git $HOME/.zplugin/bin
+    ln -sf $BASE_DIR/zshrc.zplugin $HOME/.zshrc
     if [[ "$SHELL" != *"zsh"* ]]
     then
         if sudo chsh -s $(which zsh) $(whoami)
