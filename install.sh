@@ -1,8 +1,14 @@
 #!/bin/bash
 BASE_DIR=$(cd "$(dirname "$0")"; pwd)
-
+# ppa for vim
+sudo add-apt-repository ppa:jonathonf/vim -y
 sudo apt-get update
-curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+
+# install vim
+sudo apt-get install vim
+
+# node
+curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
 sudo apt-get install -y curl zsh build-essential python-dev python3-dev nodejs libffi-dev silversearcher-ag
 # python deps
 sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsqlite3-dev tk-dev libgdbm-dev libc6-dev libbz2-dev zlib1g-dev
@@ -19,6 +25,7 @@ curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
 sudo pip3 install virtualenv virtualenvwrapper pipenv
 cd /tmp; curl -OL https://github.com/sharkdp/fd/releases/download/v7.0.0/fd-musl_7.0.0_amd64.deb; sudo dpkg -i fd-musl_7.0.0_amd64.deb
+
 # git lfs
 sudo apt-get install software-properties-common
 sudo add-apt-repository ppa:git-core/ppa
