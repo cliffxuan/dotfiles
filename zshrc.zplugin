@@ -7,7 +7,10 @@ zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 zplugin light zsh-users/zsh-history-substring-search
 zplugin snippet OMZ::lib/history.zsh
-
+zplugin snippet OMZ::lib/completion.zsh
+zplugin snippet OMZ::lib/git.zsh
+zplugin snippet OMZ::lib/directories.zsh
+zplugin snippet OMZ::lib/theme-and-appearance.zsh
 zplugin load zdharma/history-search-multi-word
 
 zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
