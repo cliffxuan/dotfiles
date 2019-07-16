@@ -7,8 +7,6 @@ zplugin light zsh-users/zsh-autosuggestions
 zplugin light zsh-users/zsh-syntax-highlighting
 zplugin light zsh-users/zsh-history-substring-search
 zplugin snippet OMZ::lib/history.zsh
-zplugin snippet OMZ::lib/completion.zsh
-zplugin snippet OMZ::lib/git.zsh
 zplugin snippet OMZ::lib/directories.zsh
 zplugin snippet OMZ::lib/theme-and-appearance.zsh
 zplugin load zdharma/history-search-multi-word
@@ -24,5 +22,9 @@ bindkey '^[OB' history-substring-search-down
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+
+# completions
+autoload -U compinit
+compinit
 
 source ~/.shrc
