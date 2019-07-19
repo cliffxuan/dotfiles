@@ -13,15 +13,22 @@ zplugin snippet OMZ::lib/theme-and-appearance.zsh
 zplugin load zdharma/history-search-multi-word
 
 zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
-zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+# zplugin ice src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    zplugin ice src"powerlevel10k.zsh-theme"; zplugin light romkatv/powerlevel10k
+    POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+fi
 
 # zsh-history-substring-search configuration
-# linux
-bindkey '^[OA' history-substring-search-up
-bindkey '^[OB' history-substring-search-down
-# mac
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    bindkey '^[OA' history-substring-search-up
+    bindkey '^[OB' history-substring-search-down
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+fi
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
 # completions
