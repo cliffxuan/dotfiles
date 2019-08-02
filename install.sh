@@ -16,9 +16,6 @@ sudo apt-get install -y libreadline-gplv2-dev libncursesw5-dev libssl-dev libsql
 sudo apt-get install -y libxml2-dev libxslt-dev
 # openssl deps
 sudo apt-get install -y libssl-dev libffi-dev
-# rg
-curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb
-sudo dpkg -i ripgrep_11.0.1_amd64.deb
 
 # install python3.7
 cd /tmp; curl -O https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz; tar -xf Python-3.7.3.tgz
@@ -27,7 +24,6 @@ sudo ln -sf /usr/bin/nodejs /usr/bin/node
 curl https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
 sudo python /tmp/get-pip.py
 sudo pip3 install virtualenv virtualenvwrapper pipenv
-cd /tmp; curl -OL https://github.com/sharkdp/fd/releases/download/v7.0.0/fd-musl_7.0.0_amd64.deb; sudo dpkg -i fd-musl_7.0.0_amd64.deb
 
 # git lfs
 sudo apt-get install software-properties-common
@@ -36,6 +32,12 @@ curl -s https://packagecloud.io/install/repositories/github/git-lfs/script.deb.s
 sudo apt-get install git-lfs
 git lfs install
 
+# rg
+curl -LO https://github.com/BurntSushi/ripgrep/releases/download/11.0.1/ripgrep_11.0.1_amd64.deb
+sudo dpkg -i ripgrep_11.0.1_amd64.deb
+
+# fd
+cd /tmp; curl -OL https://github.com/sharkdp/fd/releases/download/v7.0.0/fd-musl_7.0.0_amd64.deb; sudo dpkg -i fd-musl_7.0.0_amd64.deb
 # docker
 $BASE_DIR/docker/install.sh
 $BASE_DIR/kickoff.sh
