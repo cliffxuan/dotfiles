@@ -22,6 +22,6 @@ Vagrant.configure("2") do |config|
     echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
     git clone git@github.com:cliffxuan/dotfiles
     $HOME/dev/dotfiles/install.sh
-    $HOME/dev/dotfiles/docker/install.sh
+    $HOME/dev/dotfiles/docker/install.sh vagrant
   SHELL
 end

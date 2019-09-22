@@ -18,6 +18,7 @@ sudo apt-get install -y libxml2-dev libxslt-dev
 sudo apt-get install -y libssl-dev libffi-dev
 
 # install python3.7
+# TODO do not install if already exists
 cd /tmp; curl -O https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tgz; tar -xf Python-3.7.3.tgz
 cd /tmp/Python-3.7.3; ./configure; make; sudo make install
 sudo ln -sf /usr/bin/nodejs /usr/bin/node
