@@ -125,6 +125,12 @@ then
     PATH=$HOME/Library/Haskell/bin:$PATH
 fi
 
+#linuxbrew
+if [[ -d /home/linuxbrew/.linuxbrew/bin ]]
+then
+    PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+fi
+
 #phpbrew
 if [[ -d $HOME/.phpbrew  ]]
 then
