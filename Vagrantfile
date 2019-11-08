@@ -24,8 +24,7 @@ Vagrant.configure("2") do |config|
   end
 
   # host -> guest
-  # NOTE:
-  # https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
+  # NOTE: https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
   config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/vagrant/dev/dotfiles" , type: "nfs"
   config.vm.synced_folder "#{ENV['HOME']}/dev/gongzuo", "/home/vagrant/dev/gongzuo" , type: "nfs"
   # guest -> host
