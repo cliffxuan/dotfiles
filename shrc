@@ -394,9 +394,9 @@ alias i3="python3 `which ptipython` --vi"
     # eval "$(pyenv init -)"
 # fi
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
-if [ -x $NIX_SH ]
+if [ -f $NIX_SH ]
 then
-    test -L $NIX_SH; . $NIX_SH
+    source $NIX_SH
 fi
 
 # ag tag
