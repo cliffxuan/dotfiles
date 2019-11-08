@@ -46,3 +46,5 @@
 
 [icdiff]
     options = --highlight --line-numbers
+[credential]
+	helper = cache
