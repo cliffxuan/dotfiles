@@ -1,6 +1,14 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
+=begin
+depends on these plugins:
+  - vagrant-disksize
+  - vagrant-nfs_guest
+=end
+require 'fileutils'
+
+
 PWD = File.dirname(__FILE__)
 
 Vagrant.configure("2") do |config|
@@ -15,8 +23,15 @@ Vagrant.configure("2") do |config|
     vb.memory = "4096"
   end
 
-  config.vm.synced_folder PWD, "/vagrant", type: "nfs"
-  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/vagrant/dev/dotfiles", type: "nfs"
+  # host -> guest
+  # NOTE:
+  # https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
+  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/vagrant/dev/dotfiles" , type: "nfs"
+  config.vm.synced_folder "#{ENV['HOME']}/dev/gongzuo", "/home/vagrant/dev/gongzuo" , type: "nfs"
+  # guest -> host
+  hcl = "#{ENV['HOME']}/hcl"
+  FileUtils.mkdir_p hcl unless Dir.exists?(hcl)
+  config.vm.synced_folder hcl, "/home/vagrant/hcl", type: "nfs_guest"
 
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
