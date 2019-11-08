@@ -4,7 +4,12 @@ BASE_DIR=$(cd "$(dirname "$0")"; pwd)
 $BASE_DIR/softlink.sh
 
 echo "clone vimfiles"
-git clone git@github.com:cliffxuan/vimfiles $BASE_DIR/vimfiles
+if [ -d "$BASE_DIR/vimfiles" ]
+then
+    echo "vimfiles alread exists"
+else
+    git clone git@github.com:cliffxuan/vimfiles $BASE_DIR/vimfiles
+fi
 
 echo "symlink .vim and .config/nvim"
 if [ -d "$HOME/.vim" ] && ["$(readlink $HOME/.vim)" != "$BASE_DIR/vimfiles"]
@@ -57,7 +62,12 @@ if hash zsh 2>/dev/null
 then
     echo "zsh present. clone zplugin and set it up."
     mkdir $HOME/.zplugin
-    git clone https://github.com/zdharma/zplugin.git $HOME/.zplugin/bin
+    if [ -d "$HOME/.zplugin/bin" ]
+    then
+        echo "zplugin already exists"
+    else
+        git clone https://github.com/zdharma/zplugin.git $HOME/.zplugin/bin
+    fi
     ln -sf $BASE_DIR/zshrc.zplugin $HOME/.zshrc
     if [[ "$SHELL" != *"zsh"* ]]
     then
