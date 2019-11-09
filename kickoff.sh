@@ -78,6 +78,7 @@ then
             echo "unabled to change default shell to zsh"
         fi
     fi
+    zsh -i -c -- '-zplg-scheduler burst || true'
 fi
 
 

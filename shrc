@@ -7,34 +7,6 @@ else
     export PATH=$HOME/local/bin:$HOME/bin:$PATH
 fi
 
-if [[ $OSTYPE == cygwin ]]
-then
-    export CYGWIN=nodosfilewarning
-    # virtualenvwrapper
-    export VIRTUALENVWRAPPER_PYTHON="/cygdrive/c/Python/26/python.exe"
-    export VIRTUALENVWRAPPER_VIRTUALENV="/cygdrive/c/Python/26/Scripts/virtualenv.exe"
-    source "$HOME/dev/virtualenvwrapper/virtualenvwrapper.sh"
-    # vim
-    mvim()  {
-        run mintty -c ~/.viminttyrc -i ~/.vim/vim.ico -e vim $@
-       }
-    alias open=cygstart
-else
-    if type virtualenvwrapper.sh 2>&1 >/dev/null
-    then
-        if type python3 2>&1 >/dev/null
-        then
-            export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-        else
-            export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
-        fi
-        source $(which virtualenvwrapper.sh)
-        alias wo=workon
-    fi
-fi
-export PROJECT_HOME=$HOME/dev
-# export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
-
 #vim
 export EDITOR=`which editor`
 function v() {
@@ -429,3 +401,31 @@ function transfer {
 }
 
 export BW_SESSION="rSd3094F2wGS6Xqdx2H7Yv1ogqRak5crUABv/SpePsL+C7NchtyBo+7KRMZwQdf0Yk67ROktZTlaRJQQJ7cpqg=="
+
+if [[ $OSTYPE == cygwin ]]
+then
+    export CYGWIN=nodosfilewarning
+    # virtualenvwrapper
+    export VIRTUALENVWRAPPER_PYTHON="/cygdrive/c/Python/26/python.exe"
+    export VIRTUALENVWRAPPER_VIRTUALENV="/cygdrive/c/Python/26/Scripts/virtualenv.exe"
+    source "$HOME/dev/virtualenvwrapper/virtualenvwrapper.sh"
+    # vim
+    mvim()  {
+        run mintty -c ~/.viminttyrc -i ~/.vim/vim.ico -e vim $@
+       }
+    alias open=cygstart
+else
+    if type virtualenvwrapper.sh 2>&1 >/dev/null
+    then
+        if type python3 2>&1 >/dev/null
+        then
+            export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+        else
+            export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
+        fi
+        source $(which virtualenvwrapper.sh)
+        alias wo=workon
+    fi
+fi
+export PROJECT_HOME=$HOME/dev
+# export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'

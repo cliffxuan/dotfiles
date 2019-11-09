@@ -1,0 +1,11 @@
+hostname: oz
+ip: "192.168.33.12"
+
+synced_folder:
+  - host: "~/dev/gongzuo"
+    guest: "/home/vagrant/dev/gongzuo"
+    type: nfs
+
+  - host: "~/hcl"
+    guest: "/home/vagrant/hcl"
+    type: nfs_guest
