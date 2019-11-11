@@ -17,28 +17,16 @@ end
 
 PWD = File.dirname(__FILE__)
 
-# puts settings.fetch("hostname", "uno")
-# puts settings.fetch("foo", "bar")
-# settings.fetch("synced_folder", []).each do | item |
-#   puts item["host"].gsub(/^~/, "#{ENV['HOME']}")
-#   puts item["guest"].gsub(/^~/, "/home/vagrant")
-#   if item["type"] == "nfs"
-#     puts "guest -> host"
-#   elsif
-#     puts "host -> guest"
-#   else
-#     puts "cannot handle"
-#   end
-#   puts item["type"]
-# end
-
 Vagrant.configure("2") do |config|
   config.vm.box = "ubuntu/bionic64"
-  config.vm.hostname = settings.fetch(:hostname, "uno")
+  config.vm.hostname = settings.fetch("hostname", "uno")
   # vagrant plugin install vagrant-disksize
-  config.disksize.size = settings.fetch(:disksize, "40GB")
+  config.disksize.size = settings.fetch("disksize", "20GB")
 
-  config.vm.network "private_network", ip: settings.fetch(:ip, "192.168.33.10")
+  config.vm.network "private_network", ip: settings.fetch("ip", "192.168.33.10")
+  settings.fetch("forward_port", []).each do | item |
+    config.vm.network "forwarded_port", guest: item["guest"], host: item["host"]
+  end
 
   config.vm.provider "virtualbox" do |vb|
     vb.memory = settings.fetch(:memory, "4096")
@@ -63,6 +51,7 @@ Vagrant.configure("2") do |config|
 
   config.vm.provision "shell", privileged: false, inline: <<-SHELL
     mkdir -p $HOME/dev
+    sudo chown vagrant:vagrant $HOME/dev
     cd $HOME/dev
     echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
     if [ -d dotfiles ]

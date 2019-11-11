@@ -9,3 +9,7 @@ synced_folder:
   - host: "~/hcl"
     guest: "/home/vagrant/hcl"
     type: nfs_guest
+
+forward_port:
+  - guest: 8080
+  - host: 8080
