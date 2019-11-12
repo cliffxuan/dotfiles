@@ -12,15 +12,17 @@ curl https://nixos.org/nix/install | sh
 source $HOME/.nix-profile/etc/profile.d/nix.sh
 
 # install packages
-nix-env -i tmux nodejs-12.13.0 git-lfs ripgrep fd inotify-tools fzf
+nix-env -i tmux nodejs-12.13.0 git-lfs ripgrep fd inotify-tools fzf httpie
 
 # install python
 PY2_VERSION=2.7.17
 PY3_MAJOR=3.8
 PY3_MINOR=0
+PREFIX=python${PY3_MAJOR}
 nix-env -i python-${PY2_VERSION} \
-  python3-${PY3_MAJOR}.${PY3_MINOR} python${PY3_MAJOR}-pip \
-  python${PY3_MAJOR}-virtualenv python${PY3_MAJOR}-virtualenvwrapper
+  python3-${PY3_MAJOR}.${PY3_MINOR} $PREFIX-pip \
+  $PREFIX-virtualenv $PREFIX-virtualenvwrapper \
+  $PREFIX-black $PREFIX-flake8
 
 # install docker
 $BASE_DIR/docker/install.sh
