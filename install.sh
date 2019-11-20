@@ -5,7 +5,7 @@ sudo add-apt-repository ppa:jonathonf/vim -y
 sudo apt-get update
 
 # install essentials
-sudo apt-get -y install build-essential cmake python3-dev zsh vim curl vim-gtk3
+sudo apt-get -y install build-essential cmake python3-dev zsh vim curl vim-gtk3 xsel
 
 # install nix
 curl https://nixos.org/nix/install | sh
