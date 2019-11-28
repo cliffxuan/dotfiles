@@ -369,6 +369,7 @@ NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
 if [ -f $NIX_SH ]
 then
     source $NIX_SH
+    PATH=$HOME/.local/bin:$PATH
 fi
 
 # ag tag
