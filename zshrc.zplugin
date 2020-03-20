@@ -1,24 +1,24 @@
-source "$HOME/.zplugin/bin/zplugin.zsh"
-autoload -Uz _zplugin
-(( ${+_comps} )) && _comps[zplugin]=_zplugin
+source "$HOME/.zinit/bin/zinit.zsh"
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
 
 
-zplugin light zsh-users/zsh-autosuggestions
-zplugin light zsh-users/zsh-syntax-highlighting
-zplugin light zsh-users/zsh-history-substring-search
-zplugin snippet OMZ::lib/history.zsh
-zplugin snippet OMZ::lib/completion.zsh
-zplugin snippet OMZ::lib/directories.zsh
-zplugin snippet OMZ::lib/theme-and-appearance.zsh
-zplugin load zdharma/history-search-multi-word
+zinit light zsh-users/zsh-autosuggestions
+zinit light zsh-users/zsh-syntax-highlighting
+zinit light zsh-users/zsh-history-substring-search
+zinit snippet OMZ::lib/history.zsh
+zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/directories.zsh
+zinit snippet OMZ::lib/theme-and-appearance.zsh
+zinit load zdharma/history-search-multi-word
 
-# zplugin ice from"gh-r" as"program"; zplugin load junegunn/fzf-bin
-# zplugin ice src"spaceship.zsh"; zplugin light denysdovhan/spaceship-prompt
+# zinit ice from"gh-r" as"program"; zinit load junegunn/fzf-bin
+# zinit ice src"spaceship.zsh"; zinit light denysdovhan/spaceship-prompt
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    zplugin ice src"powerlevel10k.zsh-theme"; zplugin light romkatv/powerlevel10k
+    zinit ice src"powerlevel10k.zsh-theme"; zinit light romkatv/powerlevel10k
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    zplugin ice pick"async.zsh" src"pure.zsh"; zplugin light sindresorhus/pure
+    zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
 fi
 
 # zsh-history-substring-search configuration
@@ -39,3 +39,4 @@ compinit
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source ~/.shrc
+### End of Zinit's installer chunk
