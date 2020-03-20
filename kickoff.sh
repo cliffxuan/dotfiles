@@ -87,6 +87,6 @@ then
     echo "clone tmux plugin manager"
     mkdir -p $HOME/.tmux/plugins
     cd $HOME/.tmux/plugins
-    git clone git@github.com:tmux-plugins/tpm.git
-    git clone git@github.com:tmux-plugins/tmux-yank.git
+    git clone https://github.com/tmux-plugins/tpm
+    git clone https://github.com/tmux-plugins/tmux-yank
 fi
