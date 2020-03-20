@@ -4,6 +4,10 @@ if [[ $OSTYPE == darwin* ]]
 then
     export PATH=$HOME/local/bin:$HOME/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/bin:/usr/local/sbin:$PATH
 else
+    if grep -vq "/usr/local/bin" <<< "$PATH"
+    then
+        export PATH=/usr/local/bin:$PATH
+    fi
     export PATH=$HOME/local/bin:$HOME/bin:$PATH
 fi
 
@@ -430,3 +434,7 @@ else
 fi
 export PROJECT_HOME=$HOME/dev
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
+if [[ -f $HOME/.extra ]]
+then
+    source $HOME/.extra
+fi
