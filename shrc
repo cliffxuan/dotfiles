@@ -437,4 +437,8 @@ export PROJECT_HOME=$HOME/dev
 if [[ -f $HOME/.extra ]]
 then
     source $HOME/.extra
+export GOPATH=$HOME/.go
+if [[ -d $GOPATH ]]
+then
+    PATH=$PATH:$GOPATH/bin
 fi

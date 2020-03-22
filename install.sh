@@ -11,7 +11,7 @@ curl https://nixos.org/nix/install | sh
 source $HOME/.nix-profile/etc/profile.d/nix.sh
 
 # install packages
-nix-env -i tmux nodejs-12.13.1 ripgrep fd inotify-tools fzf
+nix-env -i tmux nodejs-12.13.1 ripgrep fd inotify-tools fzf go ctags
 
 # install python
 $BASE_DIR/python/install.sh
