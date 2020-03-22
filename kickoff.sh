@@ -60,15 +60,15 @@ ln -fs $BASE_DIR/shrc $HOME/.shrc
 
 if hash zsh 2>/dev/null
 then
-    echo "zsh present. clone zplugin and set it up."
-    mkdir $HOME/.zplugin
-    if [ -d "$HOME/.zplugin/bin" ]
+    echo "zsh present. clone zinit and set it up."
+    mkdir $HOME/.zinit
+    if [ -d "$HOME/.zinit/bin" ]
     then
-        echo "zplugin already exists"
+        echo "zinit already exists"
     else
-        git clone https://github.com/zdharma/zplugin.git $HOME/.zplugin/bin
+        git clone https://github.com/zdharma/zinit.git $HOME/.zinit/bin
     fi
-    ln -sf $BASE_DIR/zshrc.zplugin $HOME/.zshrc
+    ln -sf $BASE_DIR/zshrc.zinit $HOME/.zshrc
     if [[ "$SHELL" != *"zsh"* ]]
     then
         if sudo chsh -s $(which zsh) $(whoami)
@@ -78,7 +78,6 @@ then
             echo "unabled to change default shell to zsh"
         fi
     fi
-    zsh -i -c -- '-zplg-scheduler burst || true'
 fi
 
 
