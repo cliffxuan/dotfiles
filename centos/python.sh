@@ -3,7 +3,7 @@ version=3.7.7
 yum install -y gcc openssl-devel bzip2-devel libffi-devel python3-devel sqlite-devel readline-devel
 cd /tmp
 rm Python-$version.tgz
-wget https://www.python.org/ftp/python/$version/Python-$version.tgz
+curl -OL https://www.python.org/ftp/python/$version/Python-$version.tgz
 rm -rf Python-$version
 tar xzf Python-$version.tgz
 cd Python-$version
