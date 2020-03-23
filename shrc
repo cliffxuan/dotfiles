@@ -443,3 +443,9 @@ if [[ -d $GOPATH ]]
 then
     PATH=$PATH:$GOPATH/bin
 fi
+
+#display for WSL
+if grep -q microsoft /proc/version
+then
+    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+fi
