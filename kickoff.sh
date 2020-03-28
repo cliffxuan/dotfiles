@@ -22,7 +22,6 @@ ln -fns $BASE_DIR/vimfiles $HOME/.config/nvim
 
 echo "symlink .vimrc and .config/nvim/init.vim"
 ln -fs $BASE_DIR/vimfiles/vimrc $HOME/.vimrc
-ln -fs $BASE_DIR/vimfiles/vimrc $BASE_DIR/vimfiles/init.vim
 
 if [[ "$OSTYPE" == "darwin"* ]]
 then
