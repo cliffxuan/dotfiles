@@ -6,6 +6,7 @@ autoload -Uz _zinit
 zinit light zsh-users/zsh-autosuggestions
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-history-substring-search
+zinit snippet OMZ::lib/git.zsh
 zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/directories.zsh
@@ -19,6 +20,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
+else
+    zinit snippet OMZ::themes/robbyrussell.zsh-theme
 fi
 
 # zsh-history-substring-search configuration
