@@ -445,7 +445,10 @@ then
 fi
 
 #display for WSL
-if grep -q microsoft /proc/version
+if [[ -f /proc/version ]]
 then
-    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+    if grep -q microsoft /proc/version
+    then
+        export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+    fi
 fi
