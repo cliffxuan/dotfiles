@@ -37,9 +37,10 @@ HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 # completions
 autoload -U compinit
 compinit
+### End of Zinit's installer chunk
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 source ~/.shrc
-### End of Zinit's installer chunk
+zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
