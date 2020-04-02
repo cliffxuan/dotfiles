@@ -1,3 +1,4 @@
 vimfiles
 emacs.d
 docker/id_rsa
+proxy/*
