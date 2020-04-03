@@ -11,6 +11,7 @@ zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/completion.zsh
 zinit snippet OMZ::lib/directories.zsh
 zinit snippet OMZ::lib/theme-and-appearance.zsh
+zinit snippet OMZ::plugins/vi-mode/vi-mode.plugin.zsh
 zinit load zdharma/history-search-multi-word
 
 # zinit ice from"gh-r" as"program"; zinit load junegunn/fzf-bin
