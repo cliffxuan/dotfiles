@@ -14,7 +14,7 @@ fi
 #vim
 export EDITOR=`which editor`
 function v() {
-    if hash nvim 2>/dev/null && `python -c 'import neovim' &> /dev/null`
+    if hash nvim 2>/dev/null
     then
         nvim-client $@
     else
