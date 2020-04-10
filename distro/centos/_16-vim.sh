@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-yum update -y
-yum install -y gcc make ncurses ncurses-devel ctags cmake
+# currently disabled because the clipboard doesn't work
+sudo yum install -y gcc make ncurses ncurses-devel ctags cmake
 cd /tmp
 curl -OL https://ftp.nluug.nl/pub/vim/unix/vim-8.2.tar.bz2
 tar -xjf vim-8.2.tar.bz2
@@ -13,4 +13,4 @@ cd vim82
     --enable-cscope \
     --prefix=/usr/local
 make
-make install
+sudo make install
