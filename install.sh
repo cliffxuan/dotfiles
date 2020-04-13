@@ -17,50 +17,25 @@ setup_logging() {
 
 
 run_os_specific_scripts() {
-  get_os  # exports $OS
+  get_os  # set $OS
   echo "========= operating system $OS"
   shopt -s nocasematch
+  local script_dir
   if [[ $OS =~ ubuntu  ]]
   then
-    local script_dir=$DIR/distro/ubuntu
+    script_dir=$DIR/modules/ubuntu
   elif [[  $OS =~ centos ]]
   then
-    local script_dir=$DIR/distro/centos
+    script_dir=$DIR/modules/centos
   else
     echo "\$OS=$OS does not have os specific packages"
   fi
-  if [[ -n $script_dir ]]
-  then
-    echo "========= install scripts from $script_dir"
-    for script in $(find "$script_dir" -type f -name "*.sh" -exec basename {} \; | sort | grep -Ev '^_')
-    do
-      echo "========= run install $script_dir/$script"
-      "$script_dir/$script"
-    done
-  fi
+  [ -n "$script_dir" ] && run_sh_scripts "$script_dir"
 }
 
 
-install_python_utils() {
-  sudo /usr/local/bin/pip3 install -U pip
-  sudo /usr/local/bin/pip3 install virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim
-}
-
-
-install_nix() {
-  curl https://nixos.org/nix/install | sh
-}
-
-
-nix_install_packages() {
-  # shellcheck source=/dev/null
-  source "$HOME/.nix-profile/etc/profile.d/nix.sh"
-  nix-env -i tmux ripgrep fd inotify-tools fzf ctags
-}
-
-
-configure_dev_environment() {
-  "$DIR"/configure.sh
+run_common_scripts() {
+  run_sh_scripts "$DIR/modules"
 }
 
 
@@ -84,7 +59,4 @@ done
 
 setup_logging
 run_os_specific_scripts
-# install_python_utils
-# install_nix
-# nix_install_packages
-# configure_dev_environment
+run_common_scripts

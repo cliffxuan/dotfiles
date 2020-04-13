@@ -4,13 +4,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../../utils.sh"
 
 run() {
-  sudo yum install -y xsel
+  sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 }
 
 
 check() {
-  run | grep -qE "Package xsel-.* already installed and latest version"
+  run 2>&1 | grep -q "Error: Nothing to do"
 }
 
 
-provision
+provision "$@"

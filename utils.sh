@@ -35,11 +35,22 @@ get_os() {
 
 
 provision() {
-  if check
+  local msg=${1:-"already provisioned. do nothing!"}
+  if check >&4 2>&1
   then
-    echo "already provisioned. do nothing!"
+    echo "$msg"
   else
-    time provision 2>&1
+    run >&4 2>&1
     check && echo succeed! || echo fail! >&2
   fi
+}
+
+
+run_sh_scripts() {
+  local script_dir=$1
+  for script in $(find "$script_dir" -maxdepth 1 -type f -name "*.sh" -exec basename {} \; | sort | grep -Ev '^_')
+  do
+    echo "========= run install $script_dir/$script"
+    "$script_dir/$script"
+  done
 }

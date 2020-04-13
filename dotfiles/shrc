@@ -423,14 +423,20 @@ export BW_SESSION="rSd3094F2wGS6Xqdx2H7Yv1ogqRak5crUABv/SpePsL+C7NchtyBo+7KRMZwQ
 # else
 if type virtualenvwrapper.sh 2>&1 >/dev/null
 then
-    if type python3 2>&1 >/dev/null
+    if [ -z $VIRTUALENVWRAPPER_PYTHON ]
     then
-        export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-    else
-        export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
+      if type python3 2>&1 >/dev/null
+      then
+          export VIRTUALENVWRAPPER_PYTHON=$(which python3)
+      else
+          export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
+      fi
     fi
-    source $(which virtualenvwrapper.sh)
-    alias wo=workon
+    if [ -z $VIRTUAL_ENV ]
+    then
+      source $(which virtualenvwrapper.sh)
+      alias wo=workon
+    fi
 fi
 # fi
 export PROJECT_HOME=$HOME/dev

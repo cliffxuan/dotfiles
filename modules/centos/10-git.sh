@@ -14,4 +14,4 @@ check() {
 }
 
 
-provision
+provision "$@"

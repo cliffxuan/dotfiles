@@ -4,13 +4,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../../utils.sh"
 
 run() {
-  sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+  sudo yum groupinstall -y "Development Tools"
 }
 
 
 check() {
-  run 2>&1 | grep -q "Error: Nothing to do"
+  run 2>&1 | grep -q "No packages in any requested group available to install or update"
 }
 
 
-provision
+provision "$@"

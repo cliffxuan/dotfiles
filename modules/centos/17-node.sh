@@ -4,12 +4,14 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../../utils.sh"
 
 run() {
-  sudo yum update -y
+  curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
+  sudo yum install -y nodejs
 }
 
 
 check() {
-  run | grep -q "No packages marked for update"
+  node -v 2>&1 | grep -q "v12."
 }
 
-provision
+
+provision "$@"

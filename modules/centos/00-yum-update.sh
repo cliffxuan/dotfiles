@@ -4,13 +4,12 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../../utils.sh"
 
 run() {
-  sudo yum groupinstall -y "Development Tools"
+  sudo yum update -y
 }
 
 
 check() {
-  run 2>&1 | grep -q "No packages in any requested group available to install or update"
+  run | grep -q "No packages marked for update"
 }
 
-
-provision
+provision "$@"

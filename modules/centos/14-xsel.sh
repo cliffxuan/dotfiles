@@ -4,14 +4,13 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../../utils.sh"
 
 run() {
-  curl -sL https://rpm.nodesource.com/setup_12.x | sudo bash -
-  sudo yum install -y nodejs
+  sudo yum install -y xsel
 }
 
 
 check() {
-  node -v 2>&1 | grep -q "v12."
+  run | grep -qE "Package xsel-.* already installed and latest version"
 }
 
 
-provision
+provision "$@"
