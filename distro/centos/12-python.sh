@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=../../utils.sh
+source "$DIR/../../utils.sh"
+
 version=3.7.7
 path=/usr/local/bin/python${version::3}
 
-function provision {
+run() {
   sudo yum install -y gcc openssl-devel bzip2-devel libffi-devel sqlite-devel readline-devel
   cd /tmp || exit
   rm -f Python-$version.tgz
@@ -21,12 +25,9 @@ function provision {
 }
 
 
-function check {
+check() {
   python3 -c "import sys; print(sys.version)" 2>&1 | grep -q $version
 }
 
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
-  provision
-fi
+provision

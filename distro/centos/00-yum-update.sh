@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-function provision {
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=../../utils.sh
+source "$DIR/../../utils.sh"
+
+run() {
   sudo yum update -y
 }
 
 
-function check {
-  sudo yum update -y | grep -q "No packages marked for update"
+check() {
+  run | grep -q "No packages marked for update"
 }
 
-
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
-  provision
-fi
+provision

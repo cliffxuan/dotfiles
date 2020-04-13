@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
-function provision {
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=../../utils.sh
+source "$DIR/../../utils.sh"
+
+run() {
   sudo yum install -y ninja-build libtool autoconf automake cmake gcc gcc-c++ make pkgconfig unzip patch
   cd /tmp || exit 1
   if [ ! -d neovim ]
@@ -16,12 +20,9 @@ function provision {
 }
 
 
-function check {
+check() {
   nvim -v 2>&1 | grep -q "v0.4."
 }
 
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
-  provision
-fi
+provision

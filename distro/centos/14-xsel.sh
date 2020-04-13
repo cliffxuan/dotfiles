@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-function provision {
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=../../utils.sh
+source "$DIR/../../utils.sh"
+
+run() {
   sudo yum install -y xsel
 }
 
 
-function check {
-  provision | grep -qE "Package xsel-.* already installed and latest version"
+check() {
+  run | grep -qE "Package xsel-.* already installed and latest version"
 }
 
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
-  provision
-fi
+provision

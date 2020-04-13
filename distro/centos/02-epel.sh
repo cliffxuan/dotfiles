@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-function provision {
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# shellcheck source=../../utils.sh
+source "$DIR/../../utils.sh"
+
+run() {
   sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
 }
 
 
-function check {
-  provision 2>&1 | grep -q "Error: Nothing to do"
+check() {
+  run 2>&1 | grep -q "Error: Nothing to do"
 }
 
 
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]
-then
-  provision
-fi
+provision
