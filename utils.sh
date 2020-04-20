@@ -36,7 +36,7 @@ get_os() {
 
 provision() {
   local msg=${1:-"already provisioned. do nothing!"}
-  if check >&4 2>&1
+  if check >&4 2>&1  # TODO bad file descriptor run script standalone
   then
     echo "$msg"
   else
