@@ -3,19 +3,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=./utils.sh
 source "$DIR/utils.sh"
 
-setup_logging() {
-  SEED="$(date "+%Y%m%d%H%M%S").$$"
-  local log_path="/tmp/install.${SEED}.log"
-  exec 4<> "$log_path" # open the log file at fd 4
-  if $VERBOSE
-  then
-    tail -f "$log_path" &
-    TAIL_PID=$!
-    trap 'kill $TAIL_PID' SIGINT SIGTERM EXIT
-  fi
-}
-
-
 run_os_specific_scripts() {
   get_os  # set $OS
   echo "========= operating system $OS"

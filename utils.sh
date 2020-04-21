@@ -36,12 +36,33 @@ get_os() {
 
 provision() {
   local msg=${1:-"already provisioned. do nothing!"}
-  if check >&4 2>&1  # TODO bad file descriptor run script standalone
+  setup_logging
+  if check >&4 2>&1
   then
     echo "$msg"
   else
     run >&4 2>&1
     check && echo succeed! || echo fail! >&2
+  fi
+}
+
+
+setup_logging() {
+  if [ -z "$LOG_PATH" ]
+  then
+    seed="$(date "+%Y%m%d%H%M%S").$$"
+    export LOG_PATH="/tmp/install.${seed}.log"
+  fi
+  if ! { true >&4; } 2<> /dev/null
+  then
+    exec 4<> "$LOG_PATH" # open the log file at fd 4
+    if [ "$VERBOSE" = true ]
+    then
+      echo "verbose mode on"
+      tail -f "$LOG_PATH" &
+      tail_pid=$!
+      trap 'kill $tail_pid' SIGINT SIGTERM EXIT
+    fi
   fi
 }
 
