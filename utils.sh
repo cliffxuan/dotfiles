@@ -41,7 +41,13 @@ provision() {
   then
     echo "$msg"
   else
-    run >&4 2>&1
+    if [ "$VERBOSE" = true ]
+    then
+      run >&4 2>&1
+    else
+      run >&4 2>&1 &
+      show_spinner $!
+    fi
     check && echo succeed! || echo fail! >&2
   fi
 }
@@ -74,4 +80,21 @@ run_sh_scripts() {
     echo "========= run install $script_dir/$script"
     "$script_dir/$script"
   done
+}
+
+
+show_spinner()
+{
+  local -r pid="${1}"
+  local -r delay='0.75'
+  local spinstr='\|/-'
+  local temp
+  while ps a | awk '{print $1}' | grep -q "${pid}"; do
+    temp="${spinstr#?}"
+    printf " [%c]  " "${spinstr}"
+    spinstr=${temp}${spinstr%"${temp}"}
+    sleep "${delay}"
+    printf "\b\b\b\b\b\b"
+  done
+  printf "    \b\b\b\b"
 }

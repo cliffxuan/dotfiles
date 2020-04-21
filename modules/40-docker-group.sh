@@ -17,7 +17,7 @@ run() {
 }
 
 check() {
-  run
+  docker run hello-world
 }
 
 
