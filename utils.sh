@@ -35,12 +35,14 @@ get_os() {
 
 
 provision() {
+  local module=$0
   local msg=${1:-"already provisioned. do nothing!"}
   setup_logging
   if check >&4 2>&1
   then
-    echo "$msg"
+    echo "'$module' $msg"
   else
+    echo "'$module' has not been applied. applying..."
     if [ "$VERBOSE" = true ]
     then
       run >&4 2>&1
@@ -48,7 +50,12 @@ provision() {
       run >&4 2>&1 &
       show_spinner $!
     fi
-    check && echo succeed! || echo fail! >&2
+    if check >&4 2>&1
+    then
+      echo succeed! 
+    else
+      echo fail! >&2
+    fi
   fi
 }
 
