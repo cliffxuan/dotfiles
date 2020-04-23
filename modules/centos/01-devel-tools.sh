@@ -9,7 +9,7 @@ run() {
 
 
 check() {
-  run 2>&1 | grep -q "No packages in any requested group available to install or update"
+  run 2>&1 | tee -a "$LOG_PATH" | grep -q "No packages in any requested group available to install or update"
 }
 
 

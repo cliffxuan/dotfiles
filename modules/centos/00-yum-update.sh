@@ -9,7 +9,7 @@ run() {
 
 
 check() {
-  run | grep -q "No packages marked for update"
+  run | tee -a "$LOG_PATH" | grep -q "No packages marked for update"
 }
 
 provision "$@"
