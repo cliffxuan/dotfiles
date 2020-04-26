@@ -37,19 +37,28 @@ get_os() {
 provision() {
   local module=$0
   local msg=${1:-"already provisioned. do nothing!"}
+  if ! command -v run >/dev/null 2>&1 ;then
+    echo "function run not provided"
+    return 1
+  fi
+  if ! command -v check >/dev/null 2>&1; then
+    echo "function check not provided"
+    return 1
+  fi
   setup_logging
   if check >&4 2>&1
   then
     echo "'$module' $msg"
   else
     echo "'$module' has not been applied. applying..."
-    if [ "$VERBOSE" = true ]
-    then
-      run >&4 2>&1
-    else
-      run >&4 2>&1 &
-      show_spinner $!
-    fi
+    run >&4 2>&1
+    # if [ "$VERBOSE" = true ]
+    # then
+    #   run >&4 2>&1
+    # else
+    #   run >&4 2>&1 &
+    #   show_spinner $!
+    # fi
     if check >&4 2>&1
     then
       echo succeed! 

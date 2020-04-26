@@ -13,11 +13,13 @@ fi
 
 run() {
   sudo usermod -aG docker "$user"
-  newgrp docker
 }
 
 check() {
-  docker run hello-world
+  sudo systemctl start docker
+  newgrp docker << EOF
+docker run hello-world
+EOF
 }
 
 

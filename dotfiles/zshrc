@@ -48,3 +48,6 @@ zinit snippet OMZ::plugins/docker-compose/docker-compose.plugin.zsh
 
 source ~/.shrc
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
+if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
+  source "${HOME}/.iterm2_shell_integration.zsh"
+fi

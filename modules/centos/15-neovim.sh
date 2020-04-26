@@ -11,6 +11,8 @@ run() {
   chmod +x nvim.appimage
   sudo mv nvim.appimage /usr/local/bin/nvim
 
+  # for appimage to run
+  sudo yum -y install fuse-sshfs
   # needed for YCM plugin
   sudo yum install -y cmake
 }
