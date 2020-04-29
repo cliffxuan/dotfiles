@@ -25,25 +25,7 @@ run_common_scripts() {
   run_sh_scripts "$DIR/modules"
 }
 
-
-VERBOSE=false
-while getopts ":v" opt
-do
-    case "$opt" in
-        v)
-            VERBOSE=true
-            ;;
-        \?)
-            echo "Invalid option: -$OPTARG" >&2
-            exit 1
-            ;;
-        :)
-            echo "Option -$OPTARG requires an argument." >&2
-            exit 1
-            ;;
-    esac
-done
-
+parse_args "$@"
 setup_logging
 run_os_specific_scripts
 run_common_scripts

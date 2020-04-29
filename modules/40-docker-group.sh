@@ -23,4 +23,4 @@ EOF
 }
 
 
-provision "installed ok!" "$@"
+provision "$@"

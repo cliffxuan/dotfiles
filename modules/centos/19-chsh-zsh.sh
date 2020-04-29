@@ -7,8 +7,7 @@ run() {
   if ! grep -q "/usr/local/bin/zsh" /etc/shells 2>&1 ; then
     echo "/usr/local/bin/zsh" | sudo tee -a /etc/shells
   fi
-  chsh -s "/usr/local/bin/zsh" "$USER"
-  usermod -s /usr/local/bin/zsh "$USER"
+  sudo chsh -s "/usr/local/bin/zsh" "$USER"
 }
 
 

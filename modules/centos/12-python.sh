@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../../utils.sh
 source "$DIR/../../utils.sh"
 
-version=3.7.7
+version=3.8.2
 path=/usr/local/bin/python${version::3}
 
 run() {

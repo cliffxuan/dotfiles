@@ -34,9 +34,31 @@ get_os() {
 }
 
 
+parse_args() {
+  VERBOSE=false
+  while getopts ":v" opt
+  do
+    case "$opt" in
+      v)
+        VERBOSE=true
+        ;;
+      \?)
+        echo "Invalid option: -$OPTARG" >&2
+        exit 1
+        ;;
+      :)
+        echo "Option -$OPTARG requires an argument." >&2
+        exit 1
+        ;;
+    esac
+  done
+}
+
+
 provision() {
+  parse_args "$@"
   local module=$0
-  local msg=${1:-"already provisioned. do nothing!"}
+  local msg="already provisioned. do nothing!"
   if ! command -v run >/dev/null 2>&1 ;then
     echo "function run not provided"
     return 1
@@ -51,17 +73,14 @@ provision() {
     echo "'$module' $msg"
   else
     echo "'$module' has not been applied. applying..."
-    run >&4 2>&1
-    # if [ "$VERBOSE" = true ]
+    # if [ "$VERBOSE" = false ]
     # then
-    #   run >&4 2>&1
-    # else
-    #   run >&4 2>&1 &
-    #   show_spinner $!
+    #   show_spinner
     # fi
+    run >&4 2>&1
     if check >&4 2>&1
     then
-      echo succeed! 
+      echo succeed!
     else
       echo fail! >&2
     fi
@@ -101,16 +120,20 @@ run_sh_scripts() {
 
 show_spinner()
 {
-  local -r pid="${1}"
-  local -r delay='0.75'
-  local spinstr='\|/-'
-  local temp
-  while ps a | awk '{print $1}' | grep -q "${pid}"; do
-    temp="${spinstr#?}"
-    printf " [%c]  " "${spinstr}"
-    spinstr=${temp}${spinstr%"${temp}"}
-    sleep "${delay}"
-    printf "\b\b\b\b\b\b"
-  done
-  printf "    \b\b\b\b"
+  _show_spinner() {
+    local -r delay='0.75'
+    local spinstr='\|/-'
+    local temp
+    while :; do
+      temp="${spinstr#?}"
+      printf " [%c]  " "${spinstr}"
+      spinstr=${temp}${spinstr%"${temp}"}
+      sleep "${delay}"
+      printf "\b\b\b\b\b\b"
+    done
+    printf "    \b\b\b\b"
+  }
+  _show_spinner &
+  spin_pid=$!
+  trap 'kill -9 $spin_pid' $(seq 0 15)
 }

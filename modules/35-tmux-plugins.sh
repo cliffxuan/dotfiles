@@ -20,4 +20,4 @@ check() {
 }
 
 
-provision "installed ok!"
+provision "$@"
