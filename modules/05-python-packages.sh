@@ -3,19 +3,22 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
-packages="virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim"
+packages="virtualenv pipenv flake8 black httpie pynvim"
+pyenv="$HOME/.pyenv/bin/pyenv"
+eval "$($pyenv init -)"
+
 
 run() {
   for pkg in $packages
   do
-    sudo /usr/local/bin/pip3 install "$pkg"
+    pip install "$pkg"
   done
 }
 
 check() {
   for pkg in $packages
   do
-    /usr/local/bin/python3 -c "import $pkg" 2>/dev/null || return 1
+    python -c "import $pkg" 2>/dev/null || return 1
   done
 }
 

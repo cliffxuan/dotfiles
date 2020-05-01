@@ -43,6 +43,7 @@ Thumbs.db
 # Python specific #
 *.py[cod]
 .mypy_cache/
+.python-version
 
 # C extensions
 *.so
