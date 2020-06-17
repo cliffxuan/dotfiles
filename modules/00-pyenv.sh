@@ -7,7 +7,8 @@ PYENV_ROOT="$HOME/.pyenv"
 
 run() {
   git clone https://github.com/pyenv/pyenv.git "$PYENV_ROOT"
-  git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git "$PYENV_ROOT/plugins/pyenv-virtualenvwrapper"
+  git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git \
+    "$PYENV_ROOT/plugins/pyenv-virtualenvwrapper"
 }
 
 check() {
