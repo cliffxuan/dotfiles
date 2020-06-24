@@ -4,7 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../utils.sh"
 
 run() {
-  curl https://nixos.org/nix/install | sh
+  sh <(curl -L https://nixos.org/nix/install)
 }
 
 check() {
