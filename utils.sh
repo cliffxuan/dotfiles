@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export CONFIG_DIR="$DIR/config"
+
 get_os() {
   if [ -f /etc/os-release ]; then
       # freedesktop.org and systemd
@@ -58,7 +61,6 @@ parse_args() {
 provision() {
   parse_args "$@"
   local module=$0
-  local msg="already provisioned. do nothing!"
   if ! command -v run >/dev/null 2>&1 ;then
     echo "function run not provided"
     return 1
@@ -70,7 +72,7 @@ provision() {
   setup_logging
   if check >&4 2>&1
   then
-    echo "'$module' $msg"
+    echo "'$module' already provisioned. do nothing!"
   else
     echo "'$module' has not been applied. applying..."
     # if [ "$VERBOSE" = false ]
@@ -100,6 +102,7 @@ setup_logging() {
     if [ "$VERBOSE" = true ]
     then
       echo "verbose mode on"
+      echo "log=$LOG_PATH"
       tail -f "$LOG_PATH" &
       tail_pid=$!
       trap 'kill $tail_pid' SIGINT SIGTERM EXIT

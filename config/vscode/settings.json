@@ -1,0 +1,23 @@
+{
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "vscode-neovim.neovimPath": "/usr/local/bin/nvim",
+    "go.useLanguageServer": true,
+    "vim.easymotion": true,
+    "editor.minimap.enabled": false,
+    "breadcrumbs.enabled": false,
+    "editor.renderWhitespace": "all",
+    "editor.renderControlCharacters": true,
+    "sync.gist": "d7de17ff8b015a674ba6e077f353e25c",
+    "terminal.external.osxExec": "iTerm.app",
+    "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
+    "editor.largeFileOptimizations": false,
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorTheme": "One Dark Pro"
+}
