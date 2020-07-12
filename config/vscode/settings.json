@@ -19,5 +19,14 @@
     "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
     "editor.largeFileOptimizations": false,
     "workbench.iconTheme": "vscode-icons",
-    "workbench.colorTheme": "One Dark Pro"
+    "workbench.colorTheme": "One Dark Pro",
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[html]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    }
 }
