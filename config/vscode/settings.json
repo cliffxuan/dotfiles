@@ -1,32 +1,127 @@
 {
-    "editor.suggestSelection": "first",
-    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-    "files.exclude": {
-        "**/.classpath": true,
-        "**/.project": true,
-        "**/.settings": true,
-        "**/.factorypath": true
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true
+  },
+  "go.useLanguageServer": true,
+  "vim.enableNeovim": true,
+  "vim.easymotion": true,
+  "vim.leader": "<space>",
+  "vim.useSystemClipboard": true,
+  "vim.hlsearch": true,
+  "vim.incsearch": true,
+  "vim.neovimPath": "/usr/local/bin/nvim",
+  "vim.normalModeKeyBindings": [
+    {
+      "before": [
+        ";"
+      ],
+      "after": [
+        ":"
+      ]
     },
-    "vscode-neovim.neovimPath": "/usr/local/bin/nvim",
-    "go.useLanguageServer": true,
-    "vim.easymotion": true,
-    "editor.minimap.enabled": false,
-    "breadcrumbs.enabled": false,
-    "editor.renderWhitespace": "all",
-    "editor.renderControlCharacters": true,
-    "sync.gist": "d7de17ff8b015a674ba6e077f353e25c",
-    "terminal.external.osxExec": "iTerm.app",
-    "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
-    "editor.largeFileOptimizations": false,
-    "workbench.iconTheme": "vscode-icons",
-    "workbench.colorTheme": "One Dark Pro",
-    "[typescript]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    {
+      "before": [
+        "<leader>",
+        "h"
+      ],
+      "commands": [
+        "workbench.action.openRecent"
+      ]
     },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    {
+      "before": [
+        "<leader>",
+        "f"
+      ],
+      "commands": [
+        "workbench.action.quickOpen"
+      ]
     },
-    "[html]": {
-        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    {
+      "before": [
+        "<leader>",
+        "j"
+      ],
+      "after": [
+        "<leader>",
+        "<leader>",
+        "j"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "k"
+      ],
+      "after": [
+        "<leader>",
+        "<leader>",
+        "k"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "w"
+      ],
+      "commands": [
+        ":w"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "v"
+      ],
+      "commands": [
+        ":vsp"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "b"
+      ],
+      "commands": [
+        "editor.debug.action.toggleBreakpoint"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
+        "x"
+      ],
+      "commands": [
+        "editor.action.formatDocument"
+      ]
     }
+  ],
+  "vim.easymotionMarkerBackgroundColor": "292c33",
+  "vim.easymotionMarkerForegroundColorOneChar": "#d27272",
+  "vim.easymotionMarkerForegroundColorTwoChar": "#dfc184",
+  "editor.minimap.enabled": false,
+  "breadcrumbs.enabled": true,
+  "editor.renderWhitespace": "all",
+  "editor.renderControlCharacters": true,
+  "sync.gist": "d7de17ff8b015a674ba6e077f353e25c",
+  "terminal.external.osxExec": "iTerm.app",
+  "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
+  "editor.largeFileOptimizations": false,
+  "workbench.iconTheme": "vscode-icons",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.lineNumbers": "relative",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "python.languageServer": "Pylance"
 }
