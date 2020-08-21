@@ -22,14 +22,11 @@ function v() {
     fi
 }
 
-if hash nyaovim 2>/dev/null
-then
-    alias n='nyaovim'
-fi
-
+alias v="vim"
 alias uvim="vim -u NONE"
 alias svim="vim -u $HOME/.vimfiles/sensible.vim"
 alias neobundle="vim +NeoBundleInstall +qall"
+alias n="nvim"
 
 #term
 export TERM="xterm-256color"

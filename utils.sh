@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-export CONFIG_DIR="$DIR/config"
+ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_DIR=$(realpath "$ROOT/config")
+DOTFILE_DIR=$(realpath "$ROOT"/dotfiles)
+SCRIPT_DIR="$(realpath "$ROOT"/scripts)"
+export DOTFILE_DIR SCRIPT_DIR CONFIG_DIR
 
 get_os() {
   if [ -f /etc/os-release ]; then
