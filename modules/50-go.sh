@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../../utils.sh
-source "$DIR/../../utils.sh"
+source "$DIR/../utils.sh"
 
 version=1.14.2
 run() {

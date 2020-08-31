@@ -11,14 +11,14 @@ eval "$($pyenv init -)"
 run() {
   for pkg in $packages
   do
-    pip install "$pkg"
+    pip3 install "$pkg"
   done
 }
 
 check() {
   for pkg in $packages
   do
-    python -c "import $pkg" 2>/dev/null || return 1
+    python3 -c "import $pkg" 2>/dev/null || return 1
   done
 }
 
