@@ -375,11 +375,9 @@ function sursync {
     rsync --rsync-path="sudo rsync" $@
 }
 
-alias p="python"
-alias p3="python3"
+alias p="python3"
 alias h="python3 -m http.server"
-alias i="python `which ptipython` --vi"
-alias i3="python3 `which ptipython` --vi"
+alias i="ptipython --vi"
 
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
 if [ -f $NIX_SH ]
@@ -417,22 +415,6 @@ function transfer {
     cat $tmpfile; rm -f $tmpfile;
 }
 
-export BW_SESSION="rSd3094F2wGS6Xqdx2H7Yv1ogqRak5crUABv/SpePsL+C7NchtyBo+7KRMZwQdf0Yk67ROktZTlaRJQQJ7cpqg=="
-
-# if [[ $OSTYPE == cygwin ]]
-# then
-#     export CYGWIN=nodosfilewarning
-#     # virtualenvwrapper
-#     export VIRTUALENVWRAPPER_PYTHON="/cygdrive/c/Python/26/python.exe"
-#     export VIRTUALENVWRAPPER_VIRTUALENV="/cygdrive/c/Python/26/Scripts/virtualenv.exe"
-#     source "$HOME/dev/virtualenvwrapper/virtualenvwrapper.sh"
-#     # vim
-#     mvim()  {
-#         run mintty -c ~/.viminttyrc -i ~/.vim/vim.ico -e vim $@
-#        }
-#     alias open=cygstart
-# else
-# fi
 export PROJECT_HOME=$HOME/dev
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 if [[ -f $HOME/.extra ]]
