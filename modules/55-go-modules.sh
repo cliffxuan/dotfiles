@@ -10,6 +10,7 @@ packages=( \
   ["gotetris"]="jjinux/gotetris" \
   ["lazygit"]="jesseduffield/lazygit" \
   ["lazydocker"]="jesseduffield/lazydocker" \
+  ["gotop"]="xxxserxxx/gotop/cmd/gotop"
 )
 
 GOPATH=${GOPATH:-$HOME/.go}
