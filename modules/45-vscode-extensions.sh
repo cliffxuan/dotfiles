@@ -3,15 +3,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
-extensions=(
-  VisualStudioExptTeam.vscodeintellicode
-  asvetliakov.vscode-neovim
-  dbaeumer.vscode-eslint
-  formulahendry.code-runner
-  golang.Go
-  ms-vscode.vscode-typescript-tslint-plugin
-  redhat.vscode-yaml
-)
 settings=(
   settings.json
   keybindings.json
