@@ -17,7 +17,6 @@ run() {
   ln -fs "$BASE_DIR"/vimfiles/vimrc "$HOME"/.vimrc
   cd "$VIMFILES" || return 1
   if hash vim 2>/dev/null || hash nvim 2>/dev/null; then
-    curl -kfLo "$HOME/.vim/autoload/plug.vim" --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
     if hash vim 2>/dev/null; then
       vim -u "$HOME/.vimrc" -c "try | PlugInstall | finally | qall! | endtry" -e
     fi
