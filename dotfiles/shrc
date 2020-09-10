@@ -206,21 +206,20 @@ alias puppet-onetime="puppet agent --onetime --verbose --no-daemonize"
 #hastebin.com
 function haste {
 cat <<EOF | python -
-import urllib2
-URL = "http://hastebin.com"
-r = urllib2.urlopen(URL + "/documents", open("$1", 'r').read()).read()
-print "{}/{}".format(URL, r[8:-2])
+from urllib.request import urlopen, Request
+URL = "https://hastebin.com"
+rsp = urlopen(Request(
+    f"{URL}/documents",
+    data=open("$1", 'rb').read(),
+    method="POST",
+    headers={"user-agent": ""},
+))
+print(f"{URL}/{rsp.read().decode()[8:-2]}")
 EOF
 }
 
 #sprunge.us
 function sprunge {
-#cat <<EOF | python -
-#import urllib2
-#URL = "http://sprunge.us/"
-#r = urllib2.urlopen(URL, 'sprunge={}'.format(open("$1", 'r').read())).read()
-#print r
-#EOF
 cat $1 | curl -F 'sprunge=<-' http://sprunge.us
 }
 
