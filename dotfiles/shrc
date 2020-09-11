@@ -38,6 +38,7 @@ export LC_MONETARY="en_US.UTF-8"
 export LC_NUMERIC="en_US.UTF-8"
 export LC_TIME="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 
 #tmux cannot remember why screen-256color-bce. this doesn't work on wsl
 # alias tmux="TERM=screen-256color-bce tmux"
