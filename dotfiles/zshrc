@@ -19,6 +19,7 @@ zinit load zdharma/history-search-multi-word
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     zinit ice src"powerlevel10k.zsh-theme"; zinit light romkatv/powerlevel10k
     POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
+   [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
 else
