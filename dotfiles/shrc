@@ -421,7 +421,7 @@ if [[ -f $HOME/.extra ]]
 then
     source $HOME/.extra
 fi
-export GOPATH=$HOME/.go
+export GOPATH=$HOME/go
 if [[ -d $GOPATH ]]
 then
     PATH=$PATH:$GOPATH/bin

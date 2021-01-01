@@ -13,7 +13,7 @@ packages=( \
   ["gotop"]="xxxserxxx/gotop/cmd/gotop"
 )
 
-GOPATH=${GOPATH:-$HOME/.go}
+GOPATH=${GOPATH:-$HOME/go}
 
 run() {
   for pkg in "${packages[@]}"
