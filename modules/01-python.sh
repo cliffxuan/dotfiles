@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 pyenv="$HOME/.pyenv/bin/pyenv"
-version="3.8.2"
+version="3.9.1"
 
 
 run() {
