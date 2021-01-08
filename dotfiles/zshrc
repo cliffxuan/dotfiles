@@ -9,30 +9,32 @@ zinit light zsh-users/zsh-history-substring-search
 zinit snippet OMZ::lib/git.zsh
 zinit snippet OMZ::lib/history.zsh
 zinit snippet OMZ::lib/completion.zsh
+zinit snippet OMZ::lib/clipboard.zsh
 zinit snippet OMZ::lib/directories.zsh
 zinit snippet OMZ::lib/theme-and-appearance.zsh
 zinit snippet OMZ::plugins/vi-mode/vi-mode.plugin.zsh
 zinit load zdharma/history-search-multi-word
 
 # zinit ice from"gh-r" as"program"; zinit load junegunn/fzf-bin
-# zinit ice src"spaceship.zsh"; zinit light denysdovhan/spaceship-prompt
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    zinit ice src"powerlevel10k.zsh-theme"; zinit light romkatv/powerlevel10k
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
-   [ -f ~/.p10k.zsh ] && source ~/.p10k.zsh
+if [[ -f $HOME/.theme.zsh ]]; then
+  source $HOME/.theme.zsh
+elif [[ "$OSTYPE" == "linux-gnu" ]]; then
+  zinit ice src"powerlevel10k.zsh-theme"; zinit light romkatv/powerlevel10k
+  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
+  source $HOME/dev/dotfiles/zsh/p10k.zsh
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
+  zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
 else
-    zinit snippet OMZ::themes/robbyrussell.zsh-theme
+  zinit snippet OMZ::themes/robbyrussell.zsh-theme
 fi
 
 # zsh-history-substring-search configuration
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    bindkey '^[OA' history-substring-search-up
-    bindkey '^[OB' history-substring-search-down
+  bindkey '^[OA' history-substring-search-up
+  bindkey '^[OB' history-substring-search-down
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
 fi
 HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 
