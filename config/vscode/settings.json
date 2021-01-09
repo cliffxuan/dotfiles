@@ -123,5 +123,6 @@
   "[html]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "python.languageServer": "Pylance"
+  "python.languageServer": "Pylance",
+  "extensions.ignoreRecommendations": true
 }
