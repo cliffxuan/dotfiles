@@ -5,6 +5,7 @@
 [user]
     name = Cliff Xuan
     email = cliff.xuan@gmail.com
+	signingkey = BD140839328746A9
 
 [color]
     ui = auto
@@ -48,3 +49,5 @@
     options = --highlight --line-numbers
 [credential]
 	helper = cache
+[gpg]
+	program = gpg
