@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+if [[ -z $1 ]] || [[ -z $2 ]]
+then
+  echo "usage: replace old new"
+  exit 1
+fi
+
+rg -l "$1" | xargs -n 1 sed -i "s/$1/$2/g"
