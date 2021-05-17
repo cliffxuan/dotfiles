@@ -124,5 +124,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "python.languageServer": "Pylance",
-  "extensions.ignoreRecommendations": true
+  "extensions.ignoreRecommendations": true,
+  "git.ignoreMissingGitWarning": true
 }
