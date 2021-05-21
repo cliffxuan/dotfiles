@@ -125,5 +125,15 @@
   },
   "python.languageServer": "Pylance",
   "extensions.ignoreRecommendations": true,
-  "git.ignoreMissingGitWarning": true
+  "git.ignoreMissingGitWarning": true,
+  "workbench.editorAssociations": [
+    {
+      "viewType": "jupyter.notebook.ipynb",
+      "filenamePattern": "*.ipynb"
+    }
+  ],
+  "remote.SSH.useLocalServer": false,
+  "remote.SSH.remotePlatform": {
+    "yt": "linux"
+  }
 }
