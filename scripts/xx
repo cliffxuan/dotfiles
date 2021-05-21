@@ -6,16 +6,22 @@ fi
 
 open_in_nvim() {
   read -r fzf_output
+  if [[ -z $fzf_output ]] ; then
+    return
+  fi
   echo "$fzf_output" \
     | awk -F: '{ printf "\"+call cursor(%s, %s)\" %s", $2, $3, $1 }' \
-    | xargs -r nvim
+    | xargs nvim
 }
 
 open_in_vscode() {
   read -r fzf_output
+  if [[ -z $fzf_output ]] ; then
+    return
+  fi
   echo "$fzf_output" \
     | awk -F: '{ printf "%s:%s:%s", $1, $2, $3 }' \
-    | xargs -r code -g
+    | xargs code -g
 }
 
 rg "$1" --column --line-number --no-heading --color always \

@@ -135,5 +135,6 @@
   "remote.SSH.useLocalServer": false,
   "remote.SSH.remotePlatform": {
     "yt": "linux"
-  }
+  },
+  "workbench.startupEditor": "none"
 }
