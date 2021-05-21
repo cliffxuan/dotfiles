@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+if [[ -z $1 ]]; then
+  echo "usage: xx SEARCH_PHRASE"
+  exit 1
+fi
+
+open_in_nvim() {
+  read -r fzf_output
+  echo "$fzf_output" \
+    | awk -F: '{ printf "\"+call cursor(%s, %s)\" %s", $2, $3, $1 }' \
+    | xargs -r nvim
+}
+
+open_in_vscode() {
+  read -r fzf_output
+  echo "$fzf_output" \
+    | awk -F: '{ printf "%s:%s:%s", $1, $2, $3 }' \
+    | xargs -r code -g
+}
+
+rg "$1" --column --line-number --no-heading --color always \
+  | fzf --ansi --delimiter : --preview "bat --color always --style numbers --highlight-line {2} --pager=never {1}"  --preview-window +"{2}"-/2 \
+  | open_in_vscode
+  # | open_in_nvim
