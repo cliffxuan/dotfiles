@@ -172,7 +172,6 @@ alias gf="git fetch origin"
 alias gp="git push origin"
 alias gs="git status"
 alias gl="git log"
-alias s="git status"
 alias pt='py.test'
 
 function ga {
