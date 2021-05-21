@@ -27,6 +27,16 @@
     {
       "before": [
         "<leader>",
+        "a",
+        "s"
+      ],
+      "commands": [
+        "vscode-rg-fzf.rgFzf"
+      ]
+    },
+    {
+      "before": [
+        "<leader>",
         "h"
       ],
       "commands": [

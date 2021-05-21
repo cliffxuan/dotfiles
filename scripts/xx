@@ -1,9 +1,4 @@
 #!/usr/bin/env bash
-if [[ -z $1 ]]; then
-  echo "usage: xx SEARCH_PHRASE"
-  exit 1
-fi
-
 open_in_nvim() {
   read -r fzf_output
   if [[ -z $fzf_output ]] ; then
@@ -12,7 +7,7 @@ open_in_nvim() {
   echo "$fzf_output" \
     | awk -F: '{ printf "\"+call cursor(%s, %s)\" %s", $2, $3, $1 }' \
     | xargs nvim
-}
+  }
 
 open_in_vscode() {
   read -r fzf_output
@@ -22,9 +17,53 @@ open_in_vscode() {
   echo "$fzf_output" \
     | awk -F: '{ printf "%s:%s:%s", $1, $2, $3 }' \
     | xargs code -g
+  }
+
+usage() {
+  echo "usage: xx [-e nvim|code] SEARCH_PHRASE"
+  exit 0
 }
 
-rg "$1" --column --line-number --no-heading --color always \
+positional=()
+while [[ $# -gt 0 ]]
+do
+  key="$1"
+  case $key in
+    -e|--editor)
+      editor="$2"
+      shift
+      shift
+      ;;
+    -h|--help)
+      usage
+      ;;
+    *)
+      positional+=("$1")
+      shift
+      ;;
+  esac
+done
+set -- "${positional[@]}" # restore positional parameters
+
+if [[ ${#positional[@]} -eq 0 ]]; then
+  echo "no search phrase provided"
+  usage
+  exit 1
+elif [[ ${#positional[@]} -gt 1 ]]; then
+  echo "more than 1 search phrases provided. quote like \"abc def\"."
+  usage
+  exit 1
+fi
+
+if [[ -z "$editor" || "$editor" == nvim  ]] ; then
+  open_command=open_in_nvim
+elif  [[ "$editor" == code ]] ; then
+  open_command=open_in_vscode
+else
+  echo "editor $editor is not supported. use nvim or code."
+  exit 1
+fi
+
+rg "${positional[*]}" --column --line-number --no-heading --color always \
   | fzf --ansi --delimiter : --preview "bat --color always --style numbers --highlight-line {2} --pager=never {1}"  --preview-window +"{2}"-/2 \
-  | open_in_vscode
-  # | open_in_nvim
+  | $open_command
