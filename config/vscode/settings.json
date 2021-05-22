@@ -31,7 +31,7 @@
         "s"
       ],
       "commands": [
-        "vscode-rg-fzf.rgFzf"
+        "vscode-fzf.rgFzf"
       ]
     },
     {
