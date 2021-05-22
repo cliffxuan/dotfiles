@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-bat --color always "$1"
+bat --color=always --theme=base16 "$1"
