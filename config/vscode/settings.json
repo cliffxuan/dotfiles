@@ -49,29 +49,7 @@
         "f"
       ],
       "commands": [
-        "workbench.action.quickOpen"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "j"
-      ],
-      "after": [
-        "<leader>",
-        "<leader>",
-        "j"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "k"
-      ],
-      "after": [
-        "<leader>",
-        "<leader>",
-        "k"
+        "vscode-fzf.fdFzf"
       ]
     },
     {

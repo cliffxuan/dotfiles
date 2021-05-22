@@ -51,3 +51,5 @@
 	helper = cache
 [gpg]
 	program = gpg
+[pull]
+	ff = only
