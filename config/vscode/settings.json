@@ -26,6 +26,14 @@
     },
     {
       "before": [
+        "Q"
+      ],
+      "commands": [
+        "vscode-fzf.lf"
+      ]
+    },
+    {
+      "before": [
         "<leader>",
         "a",
         "s"
