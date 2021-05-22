@@ -435,3 +435,6 @@ then
         export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
     fi
 fi
+
+export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"

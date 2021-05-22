@@ -146,5 +146,7 @@
   "remote.SSH.remotePlatform": {
     "yt": "linux"
   },
-  "workbench.startupEditor": "none"
+  "workbench.startupEditor": "none",
+  "vim.camelCaseMotion.enable": true,
+  "vim.visualstar": true
 }
