@@ -4,11 +4,11 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../utils.sh"
 
 run() {
-  ln -sf "$CONFIG_DIR/lf" "$HOME/.config/"
+  ln -sf "$CONFIG_DIR/lf" "$HOME/.config"
 }
 
 check() {
-  if command -v code; then
+  if [[ ! -d $HOME/.config/lf ]]; then
     run
   fi
 }
