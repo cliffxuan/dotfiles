@@ -31,7 +31,7 @@ set -- "${positional[@]}" # restore positional parameters
 if [[ ${#positional[@]} -eq 0 ]]; then
   search_word=""
 elif [[ ${#positional[@]} -eq 1 ]]; then
-  search_word=${#positional[0]}
+  search_word=${positional[0]}
 elif [[ ${#positional[@]} -gt 1 ]]; then
   echo "more than 1 search words provided."
   usage
