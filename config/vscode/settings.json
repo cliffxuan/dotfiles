@@ -17,84 +17,64 @@
   "vim.neovimPath": "/usr/local/bin/nvim",
   "vim.normalModeKeyBindings": [
     {
-      "before": [
-        ";"
-      ],
-      "after": [
-        ":"
+      "before": [";"],
+      "after": [":"]
+    },
+    {
+      "before": ["-"],
+      "commands": [
+        {
+          "command": "vscode-term.runCmd",
+          "args": {
+            "cmd": "EDITOR=code lf",
+            "folder": "${workspaceFolder}"
+          }
+        }
       ]
     },
     {
-      "before": [
-        "Q"
-      ],
+      "before": ["<leader>", "a", "s"],
       "commands": [
-        "vscode-fzf.lf"
+        {
+          "command": "vscode-term.runCmd",
+          "args": {
+            "cmd": "xx ${wordUnderCursor} --editor code",
+            "folder": "${workspaceFolder}"
+          }
+        }
       ]
     },
     {
-      "before": [
-        "<leader>",
-        "a",
-        "s"
-      ],
+      "before": ["<leader>", "h"],
+      "commands": ["workbench.action.openRecent"]
+    },
+    {
+      "before": ["<leader>", "f"],
       "commands": [
-        "vscode-fzf.rgFzf"
+        {
+          "command": "vscode-term.runCmd",
+          "args": {
+            "cmd": "xf --executable code",
+            "folder": "${workspaceFolder}"
+          }
+        }
       ]
     },
     {
-      "before": [
-        "<leader>",
-        "h"
-      ],
-      "commands": [
-        "workbench.action.openRecent"
-      ]
+      "before": ["<leader>", "w"],
+      "commands": [":w"]
     },
     {
-      "before": [
-        "<leader>",
-        "f"
-      ],
-      "commands": [
-        "vscode-fzf.fdFzf"
-      ]
+      "before": ["<leader>", "v"],
+      "commands": [":vsp"]
     },
     {
-      "before": [
-        "<leader>",
-        "w"
-      ],
-      "commands": [
-        ":w"
-      ]
+      "before": ["<leader>", "b"],
+      "commands": ["editor.debug.action.toggleBreakpoint"]
     },
     {
-      "before": [
-        "<leader>",
-        "v"
-      ],
-      "commands": [
-        ":vsp"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "b"
-      ],
-      "commands": [
-        "editor.debug.action.toggleBreakpoint"
-      ]
-    },
-    {
-      "before": [
-        "<leader>",
-        "x"
-      ],
-      "commands": [
-        "editor.action.formatDocument"
-      ]
+      "before": ["<leader>", "x"],
+      "commands": ["editor.action.formatDocument"]
     }
   ],
   "vim.easymotionMarkerBackgroundColor": "292c33",
@@ -134,5 +114,8 @@
   },
   "workbench.startupEditor": "none",
   "vim.camelCaseMotion.enable": true,
-  "vim.visualstar": true
+  "vim.visualstar": true,
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
