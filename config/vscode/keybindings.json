@@ -10,5 +10,13 @@
       "cmd": "EDITOR=code lf",
       "folder": "${projectFolder}"
     }
+  },
+  {
+    "key": "cmd+k cmd+j",
+    "command": "vscode-term.runCmd",
+    "args": {
+      "cmd": "xf --executable code",
+      "folder": "${projectFolder}"
+    }
   }
 ]
