@@ -1,7 +1,14 @@
-// Place your key bindings in this file to override the defaultsauto[]
 [
-    {
-        "key": "cmd+'",
-        "command": "workbench.action.toggleMaximizedPanel"
+  {
+    "key": "cmd+'",
+    "command": "workbench.action.toggleMaximizedPanel"
+  },
+  {
+    "key": "cmd+k cmd+k",
+    "command": "vscode-term.runCmd",
+    "args": {
+      "cmd": "EDITOR=code lf",
+      "folder": "${projectFolder}"
     }
+  }
 ]

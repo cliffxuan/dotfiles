@@ -27,7 +27,7 @@
           "command": "vscode-term.runCmd",
           "args": {
             "cmd": "EDITOR=code lf",
-            "folder": "${workspaceFolder}"
+            "folder": "${fileDirname}"
           }
         }
       ]
@@ -39,7 +39,19 @@
           "command": "vscode-term.runCmd",
           "args": {
             "cmd": "xx ${wordUnderCursor} --editor code",
-            "folder": "${workspaceFolder}"
+            "folder": "${projectFolder}"
+          }
+        }
+      ]
+    },
+    {
+      "before": ["<leader>", "d", "d"],
+      "commands": [
+        {
+          "command": "vscode-term.runCmd",
+          "args": {
+            "cmd": "pwd",
+            "folder": "${projectFolder}"
           }
         }
       ]
@@ -55,7 +67,7 @@
           "command": "vscode-term.runCmd",
           "args": {
             "cmd": "xf --executable code",
-            "folder": "${workspaceFolder}"
+            "folder": "${projectFolder}"
           }
         }
       ]
