@@ -69,10 +69,6 @@
       ]
     },
     {
-      "before": ["<leader>", "h"],
-      "commands": ["workbench.action.openRecent"]
-    },
-    {
       "before": ["<leader>", "f"],
       "commands": [
         {
@@ -80,6 +76,21 @@
           "args": {
             "cmd": "xf --executable code",
             "folder": "${projectFolder}"
+          }
+        }
+      ]
+    },
+    {
+      "before": ["<leader>", "h"],
+      "commands": ["workbench.action.openRecent"]
+    },
+    {
+      "before": ["<leader>", "o"],
+      "commands": [
+        {
+          "command": "vscode-term.runCmd",
+          "args": {
+            "cmd": "nvim ${file}"
           }
         }
       ]
