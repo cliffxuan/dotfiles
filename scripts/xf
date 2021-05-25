@@ -39,4 +39,4 @@ elif [[ ${#positional[@]} -gt 1 ]]; then
 fi
 fd --type f --hidden --follow --exclude .git "$search_word" \
   | fzf --preview "bat --color always --style numbers {1}" \
-  | xargs $executable
+  | xargs -r $executable
