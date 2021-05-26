@@ -7,7 +7,7 @@
     "key": "cmd+k cmd+k",
     "command": "vscode-term.runCmd",
     "args": {
-      "cmd": "EDITOR=code lf",
+      "cmd": "EDITOR=code lf; exit",
       "folder": "${projectFolder}"
     }
   },
@@ -15,12 +15,30 @@
     "key": "cmd+k cmd+j",
     "command": "vscode-term.runCmd",
     "args": {
-      "cmd": "xf --executable code",
+      "cmd": "xf --executable code; exit",
       "folder": "${projectFolder}"
     }
   },
   {
     "key": "cmd+h",
     "command": "workbench.action.toggleActivityBarVisibility"
+  },
+  {
+    "key": "cmd+j",
+    "command": "workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  {
+    "key": "ctrl+`",
+    "command": "-workbench.action.terminal.toggleTerminal",
+    "when": "terminal.active"
+  },
+  {
+    "key": "ctrl+cmd+p",
+    "command": "workbench.action.togglePanel"
+  },
+  {
+    "key": "cmd+j",
+    "command": "-workbench.action.togglePanel"
   }
 ]

@@ -15,8 +15,9 @@ bindkeyHistorySubstringSearch() {
 
 # automatically run by zvm
 function zvm_after_init() {
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+  [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 }
+
 
 zinit wait lucid light-mode for \
   atinit"zicompinit; zicdreplay" \
@@ -28,14 +29,13 @@ zinit wait lucid light-mode for \
     zsh-users/zsh-completions
 
 zinit wait lucid for \
-  OMZ::lib/git.zsh \
-  OMZ::lib/history.zsh \
-  OMZ::lib/completion.zsh \
-  OMZ::lib/clipboard.zsh \
-  OMZ::lib/directories.zsh \
-  OMZ::lib/theme-and-appearance.zsh \
-  OMZ::plugins/docker-compose/docker-compose.plugin.zsh \
-  OMZP::fzf \
+  OMZL::git.zsh \
+  OMZL::history.zsh \
+  OMZL::completion.zsh \
+  OMZL::clipboard.zsh \
+  OMZL::directories.zsh \
+  OMZL::theme-and-appearance.zsh \
+  OMZP::docker-compose/docker-compose.plugin.zsh \
   https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker \
   jeffreytse/zsh-vi-mode
 
@@ -50,6 +50,11 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 else
   zinit snippet OMZ::themes/robbyrussell.zsh-theme
 fi
+
+# fzf
+zinit ice atclone'"$PWD"/install --key-bindings --completion --no-update-rc --no-bash --no-fish' \
+  atpull"%atclone" atinit'export PATH="$PWD/bin:$PATH"'
+zinit light junegunn/fzf
 
 # pyenv
 zinit ice wait"1" lucid atclone'PYENV_ROOT="$PWD" git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git $PWD/plugins/pyenv-virtualenvwrapper && ./libexec/pyenv init - > zpyenv.zsh' \
