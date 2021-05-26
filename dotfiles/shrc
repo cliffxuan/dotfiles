@@ -62,41 +62,9 @@ then
 fi
 
 function install-rbenv() {
-git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
-git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
+  git clone https://github.com/sstephenson/rbenv.git ~/.rbenv
+  git clone https://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
 }
-
-#nvm
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-#pyenv
-if [[ -d $HOME/.pyenv ]]
-then
-    export PYENV_ROOT="$HOME/.pyenv"
-    export PATH="$PYENV_ROOT/bin:$PATH"
-    eval "$(pyenv init -)"
-fi
-if type virtualenvwrapper.sh 2>&1 >/dev/null
-then
-    if [ -z $VIRTUALENVWRAPPER_PYTHON ]
-    then
-      if type python3 2>&1 >/dev/null
-      then
-          export VIRTUALENVWRAPPER_PYTHON=$(which python3)
-      else
-          export VIRTUALENVWRAPPER_PYTHON=$(which python2.7)
-      fi
-    fi
-    if command -v virtualenvwrapper.sh 2>/dev/null | grep -q "pyenv/shims"; then
-        pyenv virtualenvwrapper
-    elif [ -z $VIRTUAL_ENV ]; then
-      source $(which virtualenvwrapper.sh)
-    fi
-    alias wo=workon
-fi
-
 
 #npm
 if [[ -d /usr/local/share/npm/bin ]]
@@ -172,7 +140,7 @@ alias gf="git fetch origin"
 alias gp="git push origin"
 alias gs="git status"
 alias gl="git log"
-alias pt='py.test'
+alias wo=workon
 
 function ga {
     if [ -z $1 ]
@@ -220,37 +188,8 @@ EOF
 
 #sprunge.us
 function sprunge {
-cat $1 | curl -F 'sprunge=<-' http://sprunge.us
+  cat $1 | curl -F 'sprunge=<-' http://sprunge.us
 }
-
-function fave {
-cat <<EOF | python -
-import urllib
-import urllib2
-import json
-SITEID = "61555X1384403"
-long_url = "$1"
-if not long_url.endswith('/'):
-    long_url = long_url + '/'
-params = urllib.urlencode({
-    'user': SITEID,
-    'url': long_url
-})
-url = "http://buyth.at/-make?{}".format(params)
-r = urllib2.urlopen(url).read()
-print json.loads(r)['shorturl']
-EOF
-}
-
-if [[ $OSTYPE == darwin* ]]
-then
-    alias ec=$(which emacs)
-    function emacs {
-        /Applications/Emacs.app/Contents/MacOS/Emacs "$@" &
-    }
-    alias en="emacsclient -n"
-fi
-
 
 function update_ssh_auth_sock {
 # Predictable SSH authentication socket location.
