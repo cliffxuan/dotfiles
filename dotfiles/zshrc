@@ -13,6 +13,11 @@ bindkeyHistorySubstringSearch() {
   HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 }
 
+# automatically run by zvm
+function zvm_after_init() {
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+}
+
 zinit wait lucid light-mode for \
   atinit"zicompinit; zicdreplay" \
     zsh-users/zsh-syntax-highlighting \
@@ -30,7 +35,9 @@ zinit wait lucid for \
   OMZ::lib/directories.zsh \
   OMZ::lib/theme-and-appearance.zsh \
   OMZ::plugins/docker-compose/docker-compose.plugin.zsh \
-  https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+  OMZP::fzf \
+  https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker \
+  jeffreytse/zsh-vi-mode
 
 if [[ -f $HOME/.theme.zsh ]]; then
   source $HOME/.theme.zsh
@@ -57,7 +64,6 @@ zinit ice wait"2" lucid atinit'export NVM_DIR="$PWD"' atload='source bash_comple
 zinit light nvm-sh/nvm
 
 ############ end of zinit ################
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
 
 if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
