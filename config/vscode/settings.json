@@ -155,6 +155,5 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "terminal.integrated.defaultProfile.linux": "zsh",
-  "workbench.activityBar.visible": false,
   "terminal.integrated.copyOnSelection": true
 }

@@ -18,5 +18,9 @@
       "cmd": "xf --executable code",
       "folder": "${projectFolder}"
     }
+  },
+  {
+    "key": "cmd+h",
+    "command": "workbench.action.toggleActivityBarVisibility"
   }
 ]
