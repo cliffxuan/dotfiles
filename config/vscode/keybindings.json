@@ -7,7 +7,7 @@
     "key": "cmd+k cmd+k",
     "command": "vscode-cmdlet.runCmd",
     "args": {
-      "cmd": "EDITOR=code lf; exit",
+      "cmd": "EDITOR=code lf",
       "folder": "${projectFolder}"
     }
   },
@@ -15,7 +15,7 @@
     "key": "cmd+k cmd+j",
     "command": "vscode-cmdlet.runCmd",
     "args": {
-      "cmd": "xf --executable code; exit",
+      "cmd": "xf --executable code",
       "folder": "${projectFolder}"
     }
   },
