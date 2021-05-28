@@ -24,7 +24,7 @@
       "before": ["-"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "EDITOR=code lf",
             "folder": "${fileDirname}"
@@ -36,7 +36,7 @@
       "before": ["<leader>", "a", "a"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "xx ${searchPhrase} --editor code",
             "folder": "${projectFolder}"
@@ -48,7 +48,7 @@
       "before": ["<leader>", "a", "s"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "xx ${wordUnderCursor} --editor code",
             "folder": "${projectFolder}"
@@ -60,7 +60,7 @@
       "before": ["<leader>", "d", "d"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "pwd",
             "folder": "${projectFolder}"
@@ -72,7 +72,7 @@
       "before": ["<leader>", "f"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "xf --executable code",
             "folder": "${projectFolder}"
@@ -88,7 +88,7 @@
       "before": ["<leader>", "o"],
       "commands": [
         {
-          "command": "vscode-term.runCmd",
+          "command": "vscode-cmdlet.runCmd",
           "args": {
             "cmd": "nvim ${file}"
           }
