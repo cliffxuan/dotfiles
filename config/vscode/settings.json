@@ -38,7 +38,7 @@
         {
           "command": "vscode-cmdlet.runCmd",
           "args": {
-            "cmd": "xx ${searchPhrase} --editor code",
+            "cmd": "xx \"${searchPhrase}\" --editor code",
             "folder": "${projectFolder}"
           }
         }
@@ -128,7 +128,7 @@
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.lineNumbers": "relative",
+  "editor.lineNumbers": "on",
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -138,12 +138,9 @@
   "python.languageServer": "Pylance",
   "extensions.ignoreRecommendations": true,
   "git.ignoreMissingGitWarning": true,
-  "workbench.editorAssociations": [
-    {
-      "viewType": "jupyter.notebook.ipynb",
-      "filenamePattern": "*.ipynb"
-    }
-  ],
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter.notebook.ipynb"
+  },
   "remote.SSH.useLocalServer": false,
   "remote.SSH.remotePlatform": {
     "yt": "linux"
@@ -156,5 +153,10 @@
   },
   "terminal.integrated.defaultProfile.linux": "zsh",
   "terminal.integrated.copyOnSelection": true,
-  "workbench.activityBar.visible": false
+  "editor.tabSize": 8,
+  "editor.cursorStyle": "line",
+  "editor.insertSpaces": false,
+  "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+  "editor.wordWrap": "off",
+  "security.workspace.trust.untrustedFiles": "open"
 }
