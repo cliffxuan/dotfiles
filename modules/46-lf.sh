@@ -8,9 +8,7 @@ run() {
 }
 
 check() {
-  if [[ ! -d $HOME/.config/lf ]]; then
-    run
-  fi
+  [[ -d $HOME/.config/lf ]]
 }
 
 provision "$@"

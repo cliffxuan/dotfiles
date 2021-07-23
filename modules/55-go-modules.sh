@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-# shellcheck source=../../utils.sh
+# shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
 
@@ -9,8 +9,8 @@ packages=( \
   ["lf"]="gokcehan/lf" \
   ["gotetris"]="jjinux/gotetris" \
   ["lazygit"]="jesseduffield/lazygit" \
-  ["lazydocker"]="jesseduffield/lazydocker" \
-  ["gotop"]="xxxserxxx/gotop/cmd/gotop"
+  ["bt"]="cliffxuan/bt" \
+  ["lazydocker"]="jesseduffield/lazydocker"
 )
 
 GOPATH=${GOPATH:-$HOME/go}

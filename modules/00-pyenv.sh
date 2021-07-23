@@ -7,12 +7,11 @@ PYENV_ROOT="$HOME/.pyenv"
 
 run() {
   git clone https://github.com/pyenv/pyenv.git "$PYENV_ROOT"
-  git clone https://github.com/pyenv/pyenv-virtualenvwrapper.git \
-    "$PYENV_ROOT/plugins/pyenv-virtualenvwrapper"
+  sudo "$PYENV_ROOT/plugins/python-build/install.sh"
 }
 
 check() {
-  command -v "$PYENV_ROOT/bin/pyenv"  > /dev/null 2>&1
+  command -v "python-build"  > /dev/null 2>&1
 }
 
 
