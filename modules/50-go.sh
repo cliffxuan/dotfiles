@@ -15,8 +15,8 @@ run() {
   cd /tmp || return 1
   curl -OL "https://dl.google.com/go/go${version}.${format}.tar.gz"
   sudo tar -C /usr/local -xzf "go${version}.${format}.tar.gz"
-  sudo ln -s /usr/local/go/bin/go /usr/local/bin
-  sudo ln -s /usr/local/go/bin/gofmt /usr/local/bin/gofmt
+  sudo ln -fs /usr/local/go/bin/go /usr/local/bin
+  sudo ln -fs /usr/local/go/bin/gofmt /usr/local/bin/gofmt
 }
 
 check() {

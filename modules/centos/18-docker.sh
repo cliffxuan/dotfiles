@@ -10,7 +10,7 @@ run() {
 
 
 check() {
-  docker version 2>&1 | grep -qE "Version: +19."
+  docker version 2>&1 | grep -qE "Version: +20."
 }
 
 
