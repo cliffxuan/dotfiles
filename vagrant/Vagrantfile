@@ -21,7 +21,12 @@ Vagrant.configure("2") do |config|
   # vagrant plugin install vagrant-disksize
   config.disksize.size = settings.fetch("disksize", "40GB")
 
-  config.vm.network "private_network", ip: settings.fetch("ip", "192.168.33.10")
+  config.vm.network "private_network", ip: settings.fetch("private_network", {}).fetch("ip", "192.168.33.12")
+  public_network = settings.fetch("public_network", {})
+  if !public_network.empty?
+    config.vm.network "public_network", bridge: public_network.fetch("bridge"), ip: public_network.fetch("ip")
+  else
+  end
   settings.fetch("forward_port", []).each do | item |
     config.vm.network "forwarded_port", guest: item["guest"], host: item["host"]
   end
@@ -48,9 +53,10 @@ Vagrant.configure("2") do |config|
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
 
+  timezone = settings.fetch("timezone", "Europe/Paris")
   config.vm.provision :shell, run: "always", inline: <<-SHELL
     sudo rm /etc/localtime
-    sudo ln -s /usr/share/zoneinfo/Europe/Paris /etc/localtime
+    sudo ln -s /usr/share/zoneinfo/#{timezone} /etc/localtime
   SHELL
 
   config.vm.provision :shell, privileged: false, inline: <<-SHELL
