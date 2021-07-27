@@ -58,8 +58,9 @@ zinit ice wait lucid \
   atinit'export PATH="$PWD/bin:$PATH"'
 zinit light junegunn/fzf
 
+# virtualenvwrapper
 zinit ice wait lucid from'bitbucket' \
-  atinit'source virtualenvwrapper_lazy.sh'
+  atinit'[[ -z $VIRTUAL_ENV ]] && source virtualenvwrapper.sh'
 zinit light virtualenvwrapper/virtualenvwrapper
 
 # nvm
