@@ -25,6 +25,9 @@ run_common_scripts() {
   run_sh_scripts "$DIR/modules"
 }
 
+#for modules/01-python.sh
+export PYTHON_PREFIX="/usr/local"
+
 parse_args "$@"
 setup_logging
 run_os_specific_scripts
