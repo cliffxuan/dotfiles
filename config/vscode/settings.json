@@ -143,7 +143,8 @@
   },
   "remote.SSH.useLocalServer": false,
   "remote.SSH.remotePlatform": {
-    "yt": "linux"
+    "yt": "linux",
+    "ab": "linux"
   },
   "workbench.startupEditor": "none",
   "vim.camelCaseMotion.enable": true,
