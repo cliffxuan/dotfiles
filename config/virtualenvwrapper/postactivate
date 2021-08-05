@@ -1,0 +1,10 @@
+#!/usr/bin/zsh
+# This hook is sourced after every virtualenv is activated.
+if [ -f $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME ]
+then
+  project_dir="$(cat $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME)"
+  if [ -f $project_dir/.env ]
+  then
+    source "$project_dir/.env"
+  fi
+fi
