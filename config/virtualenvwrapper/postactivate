@@ -3,8 +3,8 @@
 if [ -f $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME ]
 then
   project_dir="$(cat $VIRTUAL_ENV/$VIRTUALENVWRAPPER_PROJECT_FILENAME)"
-  if [ -f $project_dir/.env ]
+  if [ -f $project_dir/.venv ]
   then
-    source "$project_dir/.env"
+    source "$project_dir/.venv"
   fi
 fi

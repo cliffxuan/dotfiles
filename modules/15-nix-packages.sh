@@ -5,7 +5,7 @@ source "$DIR/../utils.sh"
 # shellcheck source=/dev/null
 source "$HOME/.nix-profile/etc/profile.d/nix.sh"
 
-packages="bat tmux ripgrep fd ctags inotify-tools shellcheck tree delta"
+packages="bat tmux ripgrep fd ctags inotify-tools shellcheck tree delta jq"
 
 get_executable() {
   local pkg=$1
