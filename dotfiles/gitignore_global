@@ -137,3 +137,5 @@ node_modules
 tags
 # vim folder created by vim-coc
 .vim
+# .env file
+.env
