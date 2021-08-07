@@ -4,9 +4,6 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../utils.sh"
 
 packages="virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim autoflake"
-pyenv="$HOME/.pyenv/bin/pyenv"
-eval "$($pyenv init -)"
-
 
 run() {
   for pkg in $packages
