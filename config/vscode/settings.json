@@ -166,5 +166,6 @@
   "code-runner.runInTerminal": true,
   "code-runner.executorMap": {
     "typescript": "node -r ts-node/register"
-  }
+  },
+  "workbench.activityBar.visible": false
 }
