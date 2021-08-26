@@ -36,9 +36,33 @@ Vagrant.configure("2") do |config|
     vb.cpus = settings.fetch(:memory, 3)
   end
 
+  # create user cliff
+  config.vm.provision :shell, privileged: true, inline: <<-SHELL
+    if ! id cliff >/dev/null 2>&1
+    then
+      useradd -m -s /usr/bin/zsh -U cliff -u 666
+      chown -R cliff:cliff /home/cliff
+    fi
+    if [ ! -f /etc/sudoers.d/cliff ]
+    then
+      echo "%cliff ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/cliff
+    fi
+    mkdir -p /home/cliff/.ssh
+    if ! grep -q vagrant /home/cliff/.ssh/authorized_keys >/dev/null 2>&1
+    then
+      grep vagrant /home/vagrant/.ssh/authorized_keys >> /home/cliff/.ssh/authorized_keys
+    fi
+    if ! grep -q github.com /home/cliff/.ssh/config >/dev/null 2>&1
+    then
+      echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> /home/cliff/.ssh/config
+    fi
+    chmod 500 /home/cliff/.ssh/config
+    chown -R cliff:cliff /home/cliff/.ssh
+  SHELL
+
   # dotfiles
   # NOTE: https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
-  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/vagrant/dev/dotfiles" , type: "nfs"
+  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/cliff/dev/dotfiles" , type: "nfs"
   settings.fetch("synced_folder", []).each do | item |
     host_dir = item["host"].gsub(/^~/, "#{ENV['HOME']}")
     guest_dir = item["guest"].gsub(/^~/, "/home/vagrant")
@@ -52,6 +76,9 @@ Vagrant.configure("2") do |config|
 
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
+  if ARGV[0] == "ssh"
+    config.ssh.username = 'cliff'
+  end
 
   timezone = settings.fetch("timezone", "Europe/Paris")
   config.vm.provision :shell, run: "always", inline: <<-SHELL
@@ -59,18 +86,24 @@ Vagrant.configure("2") do |config|
     sudo ln -s /usr/share/zoneinfo/#{timezone} /etc/localtime
   SHELL
 
-  config.vm.provision :shell, privileged: false, inline: <<-SHELL
-    mkdir -p $HOME/dev
-    sudo chown vagrant:vagrant $HOME/dev
-    cd $HOME/dev
-    echo -e "Host github.com\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
-    chmod 500 ~/.ssh/config
+  config.vm.provision :shell, privileged: true, inline: <<-SHELL
+    mkdir -p /home/cliff/dev
+    cd /home/cliff/dev
     if [ -d dotfiles ]
     then
       echo "dotfiles already exists"
     else
       git clone git@github.com:cliffxuan/dotfiles
     fi
-    $HOME/dev/dotfiles/install.sh -v
+    cd /home/cliff/dev/dotfiles
+    if [ -d vimfiles ]
+    then
+      echo "vimfiles already exists"
+    else
+      git clone git@github.com:cliffxuan/vimfiles
+    fi
+    chown cliff:cliff -R /home/cliff/dev
+    runuser -u cliff -- /home/cliff/dev/dotfiles/install.sh -v
   SHELL
-end
+
+  end
