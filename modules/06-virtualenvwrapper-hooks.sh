@@ -4,6 +4,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/../utils.sh"
 
 run() {
+  mkdir -p "$HOME/.virtualenvs"
   for file in "$CONFIG_DIR"/virtualenvwrapper/*
   do
     ln -sf "$file" "$HOME/.virtualenvs/"
