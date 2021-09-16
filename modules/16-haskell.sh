@@ -8,6 +8,7 @@ source "$HOME/.nix-profile/etc/profile.d/nix.sh"
 softlink_package_dir() {
   # https://github.com/haskell/cabal/issues/6262
   # https://gitlab.haskell.org/ghc/ghc/-/issues/17341
+  cabal install haskell-say
   cabal v1-install haskell-say
   PACKAGE_CONF_D=$(ghc-pkg list | grep "$HOME")
   PACKAGE_DB=$(find ~/.cabal -name package.db -type d)
@@ -25,6 +26,7 @@ run() {
 check() {
   hash ghc 2>/dev/null || return 1
   hash cabal 2>/dev/null || return 1
+  ghc-pkg list | grep -q haskell-say
 }
 
 
