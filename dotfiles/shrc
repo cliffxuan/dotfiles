@@ -85,6 +85,10 @@ if [[ -d $HOME/Library/Haskell/bin ]]
 then
     PATH=$HOME/Library/Haskell/bin:$PATH
 fi
+if [[ -d $HOME/.cabal/bin ]]
+then
+    PATH=$HOME/.cabal/bin:$PATH
+fi
 
 #linuxbrew
 if [[ -d /home/linuxbrew/.linuxbrew/bin ]]
