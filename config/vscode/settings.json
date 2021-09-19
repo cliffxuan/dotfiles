@@ -14,6 +14,7 @@
   "vim.useSystemClipboard": true,
   "vim.hlsearch": true,
   "vim.incsearch": true,
+  "vim.smartRelativeLine": true,
   "vim.neovimPath": "/usr/local/bin/nvim",
   "vim.normalModeKeyBindings": [
     {
