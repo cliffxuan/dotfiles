@@ -19,6 +19,7 @@ softlink_package_dir() {
 run() {
   nix-env -i -f '<nixpkgs>' -E 'pkgs: (pkgs {}).ghc.withPackages (hp: with hp; [ zlib ])'
   nix-env -iA nixpkgs.haskellPackages.cabal-install
+  nix-env -i ormolu
   cabal update
   softlink_package_dir
 }
@@ -26,6 +27,7 @@ run() {
 check() {
   hash ghc 2>/dev/null || return 1
   hash cabal 2>/dev/null || return 1
+  hash ormolu 2>/dev/null || return 1
   ghc-pkg list | grep -q haskell-say
 }
 

@@ -167,5 +167,6 @@
   "code-runner.executorMap": {
     "typescript": "node -r ts-node/register"
   },
-  "redhat.telemetry.enabled": false
+  "redhat.telemetry.enabled": false,
+  "workbench.activityBar.visible": false
 }
