@@ -169,5 +169,9 @@
     "typescript": "node -r ts-node/register"
   },
   "redhat.telemetry.enabled": false,
+  "[haskell]": {
+    "editor.defaultFormatter": "haskell.haskell"
+  },
+  "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
   "workbench.activityBar.visible": false
 }

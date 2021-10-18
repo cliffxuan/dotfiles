@@ -44,5 +44,14 @@
   {
     "key": "cmd+k space",
     "command": "workbench.action.debug.selectandstart"
+  },
+  {
+    "key": "shift+cmd+j",
+    "command": "workbench.action.terminal.focus"
+  },
+  {
+    "key": "shift+cmd+j",
+    "command": "workbench.action.focusActiveEditorGroup",
+    "when": "terminalFocus"
   }
 ]
