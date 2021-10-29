@@ -12,7 +12,7 @@ run() {
   then
     echo "zinit already exists"
   else
-    git clone https://github.com/zdharma/zinit.git "$HOME/.zinit/bin"
+    git clone https://github.com/cliffxuan/zinit.git "$HOME/.zinit/bin"
   fi
   if [[ "$SHELL" != *"zsh"* ]]
   then
