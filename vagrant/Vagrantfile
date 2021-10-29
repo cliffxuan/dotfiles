@@ -32,15 +32,19 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provider "virtualbox" do |vb|
+    vb.gui = true # temporary
     vb.memory = settings.fetch(:memory, 6144)
     vb.cpus = settings.fetch(:memory, 3)
   end
 
-  # create user cliff
+  username = "cliff"
+  uid = 666
+
+  # create user
   config.vm.provision :shell, privileged: true, inline: <<-SHELL
     if ! id cliff >/dev/null 2>&1
     then
-      useradd -m -s /usr/bin/zsh -U cliff -u 666
+      useradd -m -s /usr/bin/zsh -U cliff -u #{uid}
       chown -R cliff:cliff /home/cliff
     fi
     if [ ! -f /etc/sudoers.d/cliff ]
@@ -62,22 +66,23 @@ Vagrant.configure("2") do |config|
 
   # dotfiles
   # NOTE: https://www.vagrantup.com/docs/synced-folders/nfs.html#root-privilege-requirement
-  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/cliff/dev/dotfiles" , type: "nfs"
+  config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/#{username}/dev/dotfiles", owner: uid
+  # config.vm.synced_folder "#{ENV['HOME']}/dev/dotfiles", "/home/#{username}/dev/dotfiles",  type: "nfs", owner: uid
   settings.fetch("synced_folder", []).each do | item |
     host_dir = item["host"].gsub(/^~/, "#{ENV['HOME']}")
-    guest_dir = item["guest"].gsub(/^~/, "/home/vagrant")
+    guest_dir = item["guest"].gsub(/^~/, "/home/#{username}")
     type = item["type"]
 
     if type == "nfs_guest"  # guest -> host make sure the directory exists
       FileUtils.mkdir_p host_dir unless Dir.exists?(host_dir)
     end
-    config.vm.synced_folder host_dir, guest_dir, type: type
+    config.vm.synced_folder host_dir, guest_dir, type: type, owner: uid
   end
 
   config.ssh.forward_agent = true
   config.ssh.forward_x11 = true
   if ARGV[0] == "ssh"
-    config.ssh.username = 'cliff'
+    config.ssh.username = username
   end
 
   timezone = settings.fetch("timezone", "Europe/Paris")
@@ -86,24 +91,24 @@ Vagrant.configure("2") do |config|
     sudo ln -s /usr/share/zoneinfo/#{timezone} /etc/localtime
   SHELL
 
-  config.vm.provision :shell, privileged: true, inline: <<-SHELL
-    mkdir -p /home/cliff/dev
-    cd /home/cliff/dev
-    if [ -d dotfiles ]
-    then
-      echo "dotfiles already exists"
-    else
-      git clone git@github.com:cliffxuan/dotfiles
-    fi
-    cd /home/cliff/dev/dotfiles
-    if [ -d vimfiles ]
-    then
-      echo "vimfiles already exists"
-    else
-      git clone git@github.com:cliffxuan/vimfiles
-    fi
-    chown cliff:cliff -R /home/cliff/dev
-    runuser -u cliff -- /home/cliff/dev/dotfiles/install.sh -v
-  SHELL
+  # config.vm.provision :shell, privileged: true, inline: <<-SHELL
+  #   mkdir -p /home/cliff/dev
+  #   cd /home/cliff/dev
+  #   if [ -d dotfiles ]
+  #   then
+  #     echo "dotfiles already exists"
+  #   else
+  #     git clone git@github.com:cliffxuan/dotfiles
+  #   fi
+  #   cd /home/cliff/dev/dotfiles
+  #   if [ -d vimfiles ]
+  #   then
+  #     echo "vimfiles already exists"
+  #   else
+  #     git clone git@github.com:cliffxuan/vimfiles
+  #   fi
+  #   chown cliff:cliff -R /home/cliff/dev
+  #   runuser -u cliff -- /home/cliff/dev/dotfiles/install.sh -v
+  # SHELL
 
   end
