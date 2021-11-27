@@ -58,6 +58,7 @@ elif [[ "$OSTYPE" == "linux-gnu" ]]; then
   fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
   zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
+  zstyle :prompt:pure:path color 039
 else
   zinit snippet OMZ::themes/robbyrussell.zsh-theme
 fi
