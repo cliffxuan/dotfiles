@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../../utils.sh
 source "$DIR/../../utils.sh"
 
-version="${NVIM_VERSION-0.5.0}"
+version="${NVIM_VERSION-0.6.0}"
 
 appimage() {
   cd /tmp || exit
