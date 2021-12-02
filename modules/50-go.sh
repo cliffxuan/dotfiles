@@ -6,6 +6,9 @@ source "$DIR/../utils.sh"
 get_os  # set $OS
 if [[ $OS =~ Darwin ]]; then
   format="darwin-amd64"
+elif dpkg --print-architecture | grep -q arm64
+then
+  format="linux-arm64"
 else
   format="linux-amd64"
 fi
