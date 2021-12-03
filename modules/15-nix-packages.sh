@@ -27,7 +27,7 @@ run() {
   for pkg in $packages
   do
     get_executable "$pkg"
-    hash "$executable" 2>/dev/null || nix-env -i "$pkg"
+    hash "$executable" 2>/dev/null || nix-env -f '<nixpkgs>' -iA "$pkg"
   done
 }
 
