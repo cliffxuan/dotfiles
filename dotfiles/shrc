@@ -261,25 +261,21 @@ function dkrmall {
     docker rm $(docker ps -a -q)
 }
 
-function seagull {
-    docker run -d -p 80:10086 -v /var/run/docker.sock:/var/run/docker.sock tobegit3hub/seagull
-}
-
-function dc {
-    docker-machine create -d virtualbox --engine-opt dns=8.8.8.8 $@
+function _all_images {
+  reply=($(docker images | awk '{print $1 ":" $2}' | grep -v REPOSITORY))
 }
 
 function dr {
-di `docker-machine ls -q | sed -n 1p`
-if [[ -z $1 ]]
-then
-    docker run -it --rm --net host cliff/base
-else
-    ABS_PATH=`cd "$1"; pwd`
-    WORK_DIR=/root/$(basename $ABS_PATH)
-    docker run -it --rm -v $ABS_PATH:$WORK_DIR -w $WORK_DIR --net host cliff/base
-fi
+  if [[ -z $1 ]] ; then
+    echo "usage: dr image_name [command]"
+  fi
+  if [[ -z $2 ]] ; then
+    docker run -it --rm "$1"
+  else
+    docker run -it --rm "$1" "$2"
+  fi
 }
+compctl -K _all_images dr
 
 # rust
 function rust {

@@ -90,3 +90,5 @@ source ~/.shrc
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# TODO lazy load
+hash gcloud 2>/dev/null && source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
