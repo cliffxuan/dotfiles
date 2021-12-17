@@ -141,3 +141,6 @@ tags
 .venv
 # haskell cabal
 dist-newstyle/
+# rust
+target/
+Cargo.lock
