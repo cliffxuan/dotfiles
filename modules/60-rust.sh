@@ -8,7 +8,7 @@ run() {
 }
 
 check() {
-  rustc
+  "$HOME/.cargo/bin/rustc"
 }
 
 provision "$@"
