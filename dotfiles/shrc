@@ -248,11 +248,6 @@ function gdns {
 }
 compctl -K _dk_vms gdns
 
-function dkhostfile {
-    # TODO dev is hardcoded for now
-    sed "s/.* docker/`docker-machine ip dev` docker/" /etc/hosts | sudo tee /etc/hosts
-}
-
 function dkkillall {
     docker kill $(docker ps -a -q)
 }
@@ -264,18 +259,6 @@ function dkrmall {
 function _all_images {
   reply=($(docker images | awk '{print $1 ":" $2}' | grep -v REPOSITORY))
 }
-
-function dr {
-  if [[ -z $1 ]] ; then
-    echo "usage: dr image_name [command]"
-  fi
-  if [[ -z $2 ]] ; then
-    docker run -it --rm "$1"
-  else
-    docker run -it --rm "$1" "$2"
-  fi
-}
-compctl -K _all_images dr
 
 # rust
 function rust {
