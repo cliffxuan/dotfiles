@@ -167,13 +167,6 @@ function gall {
     done
 }
 
-
-#puppet
-alias puppet-onetime="puppet agent --onetime --verbose --no-daemonize"
-
-#z
-. $HOME/dev/dotfiles/scripts/z.sh
-
 #web pastebins
 #hastebin.com
 function haste {
@@ -298,7 +291,6 @@ function sursync {
 
 alias p="python3"
 alias h="python3 -m http.server"
-alias i="ptipython --vi"
 
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
 if [ -f $NIX_SH ]

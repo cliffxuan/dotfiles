@@ -96,3 +96,6 @@ fi
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # TODO lazy load
 hash gcloud 2>/dev/null && source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
+
+#z
+eval "$(zoxide init zsh)"
