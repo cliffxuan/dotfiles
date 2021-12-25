@@ -80,6 +80,14 @@ zinit ice wait"2" lucid atinit'export NVM_DIR="$PWD"' atload='source bash_comple
   as'command' src"nvm.sh" nocompile'!'
 zinit light nvm-sh/nvm
 
+# bottom
+zinit ice as"command" from"gh-r"
+zinit light ClementTsang/bottom
+
+# exa
+zinit ice as"command" from"gh-r" pick"/bin/exa"
+zinit light ogham/exa
+
 # zoxide
 zinit ice as"command" from"gh-r" lucid \
   mv"zoxide*/zoxide -> zoxide" \
