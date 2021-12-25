@@ -80,6 +80,13 @@ zinit ice wait"2" lucid atinit'export NVM_DIR="$PWD"' atload='source bash_comple
   as'command' src"nvm.sh" nocompile'!'
 zinit light nvm-sh/nvm
 
+# zoxide
+zinit ice as"command" from"gh-r" lucid \
+  mv"zoxide*/zoxide -> zoxide" \
+  atclone"./zoxide init zsh > init.zsh" \
+  src"init.zsh" nocompile'!'
+zinit light ajeetdsouza/zoxide
+
 ############ end of zinit ################
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
 
@@ -92,6 +99,3 @@ source ~/.shrc
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 # TODO lazy load
 hash gcloud 2>/dev/null && source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
-
-#z
-eval "$(zoxide init zsh)"
