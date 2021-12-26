@@ -170,14 +170,6 @@ function gdns {
 }
 compctl -K _dk_vms gdns
 
-function dkrmall {
-  docker rm $(docker ps -a -q)
-}
-
-function _all_images {
-  reply=($(docker images | awk '{print $1 ":" $2}' | grep -v REPOSITORY))
-}
-
 # rust
 function rust {
   exe=/tmp/${1%.*}
