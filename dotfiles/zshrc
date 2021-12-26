@@ -85,7 +85,7 @@ zinit ice as"command" from"gh-r"
 zinit light ClementTsang/bottom
 
 # exa
-zinit ice as"command" from"gh-r" pick"/bin/exa"
+zinit ice as"command" from"gh-r" pick"/bin/exa" atclone"mv completions/exa.zsh completions/_exa"
 zinit light ogham/exa
 
 # zoxide
