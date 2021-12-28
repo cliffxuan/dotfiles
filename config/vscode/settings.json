@@ -175,6 +175,5 @@
   "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "workbench.activityBar.visible": false
+  }
 }

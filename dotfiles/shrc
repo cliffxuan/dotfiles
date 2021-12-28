@@ -151,10 +151,6 @@ function _dk_vms() {
   reply=(`docker-machine ls -q`)
 }
 
-function rmimages {
-  docker rmi $(docker images --quiet --filter "dangling=true")
-}
-
 function synctime {
   docker-machine ssh $1 sudo ntpclient -s -h pool.ntp.org
 }
