@@ -16,6 +16,7 @@
   "vim.incsearch": true,
   "vim.smartRelativeLine": true,
   "vim.neovimPath": "/usr/local/bin/nvim",
+  "vim.neovimUseConfigFile": true,
   "vim.normalModeKeyBindings": [
     {
       "before": [";"],
