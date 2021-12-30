@@ -179,5 +179,6 @@
   },
   "[rust]": {
     "editor.defaultFormatter": "matklad.rust-analyzer"
-  }
+  },
+  "workbench.activityBar.visible": false
 }
