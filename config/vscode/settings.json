@@ -26,7 +26,7 @@
       "before": ["-"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "EDITOR=code lf",
             "folder": "${fileDirname}"
@@ -38,7 +38,7 @@
       "before": ["<leader>", "a", "a"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "xx \"${searchPhrase}\" --editor code",
             "folder": "${projectFolder}"
@@ -50,7 +50,7 @@
       "before": ["<leader>", "a", "s"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "xx ${wordUnderCursor} --editor code",
             "folder": "${projectFolder}"
@@ -62,7 +62,7 @@
       "before": ["<leader>", "d", "d"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "pwd",
             "folder": "${projectFolder}"
@@ -74,7 +74,7 @@
       "before": ["<leader>", "f"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "xf --executable code",
             "folder": "${projectFolder}"
@@ -90,7 +90,7 @@
       "before": ["<leader>", "o"],
       "commands": [
         {
-          "command": "vscode-cmdlet.runCmd",
+          "command": "cmdlet.runCmd",
           "args": {
             "cmd": "nvim ${file}"
           }
@@ -179,6 +179,5 @@
   },
   "[rust]": {
     "editor.defaultFormatter": "matklad.rust-analyzer"
-  },
-  "workbench.activityBar.visible": false
+  }
 }
