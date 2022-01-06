@@ -107,9 +107,10 @@ function ga {
 
 #git all
 function gall {
-  for gitdir in $(find . -mindepth 2 -name .git -type d)
+  for gitdir in $(find . -mindepth 2 -name .git -type d 2>/dev/null)
   do
-    echo $gitdir
+    echo "#########################################################"
+    echo ${gitdir%/.git}
     cd $gitdir/..
     git --no-pager "$@"
     cd - > /dev/null
