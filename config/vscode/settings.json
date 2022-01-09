@@ -19,10 +19,6 @@
   "vim.neovimUseConfigFile": true,
   "vim.normalModeKeyBindings": [
     {
-      "before": [";"],
-      "after": [":"]
-    },
-    {
       "before": ["-"],
       "commands": [
         {
@@ -179,5 +175,7 @@
   },
   "[rust]": {
     "editor.defaultFormatter": "matklad.rust-analyzer"
-  }
+  },
+  "vim.sneak": true,
+  "vim.sneakReplacesF": true
 }
