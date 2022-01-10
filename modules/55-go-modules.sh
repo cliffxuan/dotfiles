@@ -7,7 +7,6 @@ source "$DIR/../utils.sh"
 declare -A packages
 packages=( \
   ["lf"]="gokcehan/lf" \
-  ["gotetris"]="jjinux/gotetris" \
   ["lazygit"]="jesseduffield/lazygit" \
   ["bt"]="cliffxuan/bt" \
   ["lazydocker"]="jesseduffield/lazydocker"
@@ -18,7 +17,7 @@ GOPATH=${GOPATH:-$HOME/go}
 run() {
   for pkg in "${packages[@]}"
   do
-    go get "github.com/$pkg"
+    go install "github.com/$pkg@latest"
   done
 }
 

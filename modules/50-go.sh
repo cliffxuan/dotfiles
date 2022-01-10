@@ -13,10 +13,11 @@ else
   format="linux-amd64"
 fi
 
-version=${GO_VERSION:-1.16.5}
+version=${GO_VERSION:-1.17.6}
 run() {
   cd /tmp || return 1
   curl -OL "https://dl.google.com/go/go${version}.${format}.tar.gz"
+  sudo rm -rf /usr/local/go
   sudo tar -C /usr/local -xzf "go${version}.${format}.tar.gz"
   sudo ln -fs /usr/local/go/bin/go /usr/local/bin
   sudo ln -fs /usr/local/go/bin/gofmt /usr/local/bin/gofmt
