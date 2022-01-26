@@ -3,7 +3,7 @@
 # path
 if [[ $OSTYPE == darwin* ]]
 then
-  export PATH=$HOME/local/bin:$HOME/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/bin:/usr/local/sbin:$PATH
+  export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/bin:/usr/local/sbin:$PATH
 else
   if grep -vq "/usr/local/bin" <<< "$PATH"
   then
@@ -44,12 +44,6 @@ fi
 if [[ -d $HOME/.cabal/bin ]]
 then
   PATH=$HOME/.cabal/bin:$PATH
-fi
-
-#linuxbrew
-if [[ -d /home/linuxbrew/.linuxbrew/bin ]]
-then
-  PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
 fi
 
 function _all_vms() {
@@ -148,10 +142,6 @@ function update_ssh_auth_sock {
 update_ssh_auth_sock
 
 # docker
-function _dk_vms() {
-  reply=(`docker-machine ls -q`)
-}
-
 function synctime {
   docker-machine ssh $1 sudo ntpclient -s -h pool.ntp.org
 }
@@ -213,7 +203,6 @@ function transfer {
   cat $tmpfile; rm -f $tmpfile;
 }
 
-export PROJECT_HOME=$HOME/dev
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 if [[ -f $HOME/.env ]]
 then

@@ -14,6 +14,8 @@ return {
     {key="RightArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4c"}}, -- ctrl-space L
     {key="UpArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4b"}}, -- ctrl-space K
     {key="DownArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4a"}}, -- ctrl-space J
+    {key="n", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x63"}}, -- ctrl-space c
+    {key="w", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x78"}}, -- ctrl-space x
     {key="x", mods="SUPER", action=wezterm.action{SendString="\x00\x5b"}}, -- ctrl-space [
   },
   window_padding = {
