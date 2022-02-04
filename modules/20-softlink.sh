@@ -18,12 +18,12 @@ run() {
     ln -fs "$DOTFILE_DIR/$dotfile" "$HOME/.$dotfile"
   done
 
-  mkdir -p "$HOME/bin"
+  mkdir -p "$HOME/.local/bin"
   for ff in "$SCRIPT_DIR"/*
   do
     script=$(basename "$ff")
-    echo "symlink $SCRIPT_DIR/$script $HOME/bin/$script"
-    ln -fs "$SCRIPT_DIR/$script" "$HOME/bin/$script"
+    echo "symlink $SCRIPT_DIR/$script $HOME/.local/bin/$script"
+    ln -fs "$SCRIPT_DIR/$script" "$HOME/.local/bin/$script"
   done
 }
 
