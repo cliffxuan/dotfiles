@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+NC="\033[0m"
+
+help() {
+  cat <<EOF
+Run git command in all sub directories.
+Usage: 
+  ./$(basename "$0") DIRECTORY GIT_COMMAND [OPTIONS]
+EOF
+}
+
+if [ $# -eq 0 ]
+then
+  echo -e "${RED}missing DIRECTORY and GIT_COMMAND${NC}"
+  help "$@"
+  exit 1
+elif [ $# -eq 1 ]
+then
+  echo -e "${RED}missing GIT_COMMAND${NC}"
+  help "$@"
+  exit 1
+fi
+
+PARENT_DIR="$1"
+shift
+
+echo -e "- parent directory:\n  ${GREEN}$PARENT_DIR${NC}"
+echo -e "- command:\n  ${GREEN}git $*${NC}\n"
+find "$PARENT_DIR" -mindepth 2 -name .git -type d -print0 2>/dev/null | while IFS= read -r -d '' gitdir; do
+  echo -e "${GREEN}# ${gitdir%/.git}${NC}"
+  cd "$gitdir/.." || exit 1
+  git --no-pager "$@"
+  cd - > /dev/null || exit 1
+  echo
+done
