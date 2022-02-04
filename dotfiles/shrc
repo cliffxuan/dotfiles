@@ -201,6 +201,12 @@ then
   PATH=$PATH:$GOPATH/bin
 fi
 
+# solana
+if [[ -d $HOME/.local/share/solana/install/active_release/bin ]]
+then
+  PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+fi
+
 #display for WSL
 if [[ -f /proc/version ]]
 then
