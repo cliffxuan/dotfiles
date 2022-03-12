@@ -3,7 +3,14 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../../utils.sh
 source "$DIR/../../utils.sh"
 
-version="${NVIM_VERSION-0.6.0}"
+if [ -n "$NVIM_VERSION" ]
+then
+  version=$NVIM_VERSION
+else
+  curl -L https://github.com/neovim/neovim/releases/latest > /tmp/neovim-latest.html 2>/dev/null
+  version=$(grep -Po '(?<=/neovim/neovim/releases/download/v).*(?=/nvim.appimage)' /tmp/neovim-latest.html | head -1)
+fi
+echo version="$version"
 
 appimage() {
   cd /tmp || exit
