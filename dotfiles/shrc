@@ -144,13 +144,6 @@ function gdns {
 }
 compctl -K _dk_vms gdns
 
-# rust
-function rust {
-  exe=/tmp/${1%.*}
-  rm -f $exe
-  rustc $1 -o $exe && $exe
-}
-
 # c
 function c {
 exe=/tmp/${1%.*}
