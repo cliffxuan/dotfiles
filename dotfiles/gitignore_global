@@ -137,8 +137,8 @@ node_modules
 tags
 # vim folder created by vim-coc
 .vim
-# .venv file
-.venv
+# .myvenv file
+.myvenv
 # haskell cabal
 dist-newstyle/
 # rust
