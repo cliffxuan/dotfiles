@@ -13,7 +13,7 @@ else
   format="linux-amd64"
 fi
 
-version=${GO_VERSION:-1.17.6}
+version=${GO_VERSION:-1.18}
 run() {
   cd /tmp || return 1
   curl -OL "https://dl.google.com/go/go${version}.${format}.tar.gz"

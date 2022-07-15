@@ -12,7 +12,7 @@ packages=( \
   ["lazydocker"]="jesseduffield/lazydocker"
 )
 
-GOPATH=${GOPATH:-$HOME/go}
+GOPATH=${GOPATH:-$HOME/.go}
 
 run() {
   for pkg in "${packages[@]}"
