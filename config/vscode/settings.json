@@ -226,5 +226,6 @@
   "vim.easymotionMarkerBackgroundColor": "292c33",
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1"
-  }
+  },
+  "workbench.activityBar.visible": false
 }
