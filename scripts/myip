@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-curl -s https://httpbin.org/ip | rg -Po "(?<=\")[0-9]{1,3}(.[0-9]{1,3}){3}(?=\")"
+curl -s https://httpbin.org/ip | grep -Po "(?<=\")[0-9]{1,3}(.[0-9]{1,3}){3}(?=\")"
