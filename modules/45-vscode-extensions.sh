@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
 settings=(
   settings.json
   keybindings.json
+  snippets
 )
 
-get_os  # set $OS
+get_os # set $OS
 if [[ $OS =~ Darwin ]]; then
   config_dir="$HOME/Library/Application Support/Code/User/"
 else
@@ -18,10 +19,9 @@ fi
 run() {
   while IFS= read -r extension; do
     code --install-extension "$extension"
-  done < "$CONFIG_DIR/vscode/extensions"
-  for file in "${settings[@]}"
-  do
-    ln -sf "$CONFIG_DIR/vscode/$file" "$config_dir"
+  done <"$CONFIG_DIR/vscode/extensions"
+  for item in "${settings[@]}"; do
+    ln -sf "$CONFIG_DIR/vscode/$item" "$config_dir"
   done
 }
 
