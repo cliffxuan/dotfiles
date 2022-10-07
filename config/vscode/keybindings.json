@@ -53,5 +53,29 @@
     "key": "shift+cmd+j",
     "command": "workbench.action.focusActiveEditorGroup",
     "when": "terminalFocus"
+  },
+  {
+    "key": "cmd+k k",
+    "command": "cmdlet.runCmd",
+    "args": {
+      "cmd": "pytest ${file} -vv -k ${wordUnderCursor}"
+    },
+    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
+  },
+  {
+    "key": "cmd+k y",
+    "command": "cmdlet.runCmd",
+    "args": {
+      "cmd": "pytest ${file}"
+    },
+    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
+  },
+  {
+    "key": "cmd+k x",
+    "command": "cmdlet.runCmd",
+    "args": {
+      "cmd": "autoflake --remove-all-unused-imports --expand-star-imports --in-place ${file}; isort ${file}; black ${file}"
+    },
+    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
   }
 ]

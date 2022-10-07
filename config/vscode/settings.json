@@ -1,229 +1,272 @@
 {
   "go.useLanguageServer": true,
-  "editor.suggestSelection" : "first",
-  "workbench.editorAssociations" : {
-    "*.ipynb" : "jupyter.notebook.ipynb"
+  "editor.suggestSelection": "first",
+  "workbench.editorAssociations": {
+    "*.ipynb": "jupyter.notebook.ipynb"
   },
-  "[jsonc]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.fontFamily" : "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
-  "breadcrumbs.enabled" : true,
-  "terminal.integrated.copyOnSelection" : true,
-  "terminal.integrated.scrollback" : 10000,
-  "vim.enableNeovim" : true,
-  "vim.visualstar" : true,
-  "vim.smartRelativeLine" : true,
-  "vim.hlsearch" : true,
-  "python.languageServer" : "Pylance",
-  "vim.easymotionMarkerForegroundColorOneChar" : "#d27272",
-  "[typescript]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
+  "terminal.integrated.copyOnSelection": true,
+  "terminal.integrated.scrollback": 10000,
+  "vim.enableNeovim": true,
+  "vim.visualstar": true,
+  "vim.smartRelativeLine": true,
+  "vim.hlsearch": true,
+  "python.languageServer": "Pylance",
+  "vim.easymotionMarkerForegroundColorOneChar": "#d27272",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "vim.easymotionMarkerForegroundColorTwoChar" : "#dfc184",
-  "remote.SSH.useLocalServer" : false,
-  "[haskell]" : {
-    "editor.defaultFormatter" : "haskell.haskell"
+  "vim.easymotionMarkerForegroundColorTwoChar": "#dfc184",
+  "remote.SSH.useLocalServer": false,
+  "[haskell]": {
+    "editor.defaultFormatter": "haskell.haskell"
   },
-  "[json]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.renderControlCharacters" : true,
-  "editor.accessibilitySupport" : "off",
-  "vsintellicode.modify.editor.suggestSelection" : "automaticallyOverrodeDefaultValue",
-  "vim.easymotion" : true,
-  "editor.wordSeparators" : "\/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
-  "sync.gist" : "d7de17ff8b015a674ba6e077f353e25c",
-  "vscode-neovim.neovimExecutablePaths.darwin" : "\/usr\/local\/bin\/nvim",
-  "code-runner.executorMap" : {
-    "typescript" : "node -r ts-node\/register"
+  "editor.renderControlCharacters": true,
+  "editor.accessibilitySupport": "off",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "vim.easymotion": true,
+  "editor.wordSeparators": "/\\()\"':,.;<>~!@#$%^&*|+=[]{}`?-",
+  "sync.gist": "d7de17ff8b015a674ba6e077f353e25c",
+  "vscode-neovim.neovimExecutablePaths.darwin": "/usr/local/bin/nvim",
+  "code-runner.executorMap": {
+    "typescript": "node -r ts-node/register"
   },
-  "editor.tabSize" : 8,
-  "editor.minimap.enabled" : false,
-  "workbench.iconTheme" : "vscode-icons",
-  "editor.wordWrap" : "off",
-  "git.ignoreMissingGitWarning" : true,
-  "vim.sneakReplacesF" : true,
-  "[yaml]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "editor.tabSize": 8,
+  "editor.minimap.enabled": false,
+  "workbench.iconTheme": "vscode-icons",
+  "editor.wordWrap": "off",
+  "git.ignoreMissingGitWarning": true,
+  "vim.sneakReplacesF": true,
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "security.workspace.trust.untrustedFiles" : "open",
-  "workbench.startupEditor" : "none",
-  "editor.largeFileOptimizations" : false,
-  "editor.cursorStyle" : "line",
-  "window.zoomLevel" : 1,
-  "code-runner.runInTerminal" : true,
-  "remote.SSH.remotePlatform" : {
-    "yt" : "linux",
-    "ab" : "linux"
+  "security.workspace.trust.untrustedFiles": "open",
+  "workbench.startupEditor": "none",
+  "editor.largeFileOptimizations": false,
+  "editor.cursorStyle": "line",
+  "window.zoomLevel": 1,
+  "code-runner.runInTerminal": true,
+  "remote.SSH.remotePlatform": {
+    "yt": "linux",
+    "ab": "linux"
   },
-  "extensions.ignoreRecommendations" : true,
-  "[typescriptreact]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "extensions.ignoreRecommendations": true,
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "vim.leader" : "<space>",
-  "editor.insertSpaces" : false,
-  "[html]" : {
-    "editor.defaultFormatter" : "esbenp.prettier-vscode"
+  "vim.leader": "<space>",
+  "editor.insertSpaces": false,
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "[rust]" : {
-    "editor.defaultFormatter" : "rust-lang.rust-analyzer"
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
-  "vim.camelCaseMotion.enable" : true,
-  "terminal.external.osxExec" : "iTerm.app",
-  "editor.renderWhitespace" : "all",
-  "vim.neovimUseConfigFile" : true,
-  "vim.neovimPath" : "\/usr\/local\/bin\/nvim",
-  "vim.incsearch" : true,
-  "vim.normalModeKeyBindings" : [
+  "vim.camelCaseMotion.enable": true,
+  "terminal.external.osxExec": "iTerm.app",
+  "editor.renderWhitespace": "all",
+  "vim.neovimUseConfigFile": true,
+  "vim.neovimPath": "/usr/local/bin/nvim",
+  "vim.incsearch": true,
+  "vim.normalModeKeyBindings": [
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "EDITOR=code lf",
-            "folder" : "${fileDirname}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "EDITOR=code lf",
+            "folder": "${fileDirname}"
           }
         }
       ],
-      "before" : [
+      "before": [
         "-"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "xx \"${searchPhrase}\" --editor code",
-            "folder" : "${projectFolder}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "xx \"${searchPhrase}\" --editor code",
+            "folder": "${projectFolder}"
           }
         }
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "a",
         "a"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "xx ${wordUnderCursor} --editor code",
-            "folder" : "${projectFolder}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "xx ${wordUnderCursor} --editor code",
+            "folder": "${projectFolder}"
           }
         }
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "a",
         "s"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "pwd",
-            "folder" : "${projectFolder}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "pwd",
+            "folder": "${projectFolder}"
           }
         }
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "d",
         "d"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "xf --executable code",
-            "folder" : "${projectFolder}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "xf --executable code",
+            "folder": "${projectFolder}"
           }
         }
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "f"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         "workbench.action.openRecent"
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "h"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         {
-          "command" : "cmdlet.runCmd",
-          "args" : {
-            "cmd" : "nvim ${file}"
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "pytest ${file} -k ${wordUnderCursor}"
           }
         }
       ],
-      "before" : [
+      "before": [
+        "<leader>",
+        "k"
+      ]
+    },
+    {
+      "commands": [
+        {
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "nvim ${file}"
+          }
+        }
+      ],
+      "before": [
         "<leader>",
         "o"
       ]
     },
     {
-      "commands" : [
+      "commands": [
+        {
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "python ${file}"
+          }
+        }
+      ],
+      "before": [
+        "<leader>",
+        "r"
+      ]
+    },
+    {
+      "commands": [
         ":w"
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "w"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         ":vsp"
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "v"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         "editor.debug.action.toggleBreakpoint"
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "b"
       ]
     },
     {
-      "commands" : [
+      "commands": [
         "editor.action.formatDocument"
       ],
-      "before" : [
+      "before": [
         "<leader>",
         "x"
       ]
+    },
+    {
+      "commands": [
+        {
+          "command": "cmdlet.runCmd",
+          "args": {
+            "cmd": "pytest ${file}"
+          }
+        }
+      ],
+      "before": [
+        "<leader>",
+        "y"
+      ]
     }
   ],
-  "vim.useSystemClipboard" : true,
-  "files.exclude" : {
-    "**\/.project" : true,
-    "**\/.settings" : true,
-    "**\/.classpath" : true,
-    "**\/.factorypath" : true
+  "vim.useSystemClipboard": true,
+  "files.exclude": {
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.classpath": true,
+    "**/.factorypath": true
   },
-  "terminal.integrated.defaultProfile.linux" : "zsh",
-  "redhat.telemetry.enabled" : false,
+  "terminal.integrated.defaultProfile.linux": "zsh",
+  "redhat.telemetry.enabled": false,
   "vim.easymotionMarkerBackgroundColor": "292c33",
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1"
-  }
+  },
+  "python.formatting.provider": "black",
+  "workbench.activityBar.visible": false
 }
