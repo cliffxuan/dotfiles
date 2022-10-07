@@ -30,10 +30,10 @@ def argument_parser():
 
 
 def get_test_function(line: str) -> t.Optional[str]:
-    try:
-        return re.search(r"^ *def (test.*)\(", line).groups()[0]
-    except (AttributeError, IndexError):
-        return
+    match = re.search(r"^ *def (test.*)\(", line)
+    if match:
+        return match.groups()[0]
+    return None
 
 
 def main(argv=None):
