@@ -1,6 +1,6 @@
 {
   "pdb settrace": {
-    "prefix": "pdb",
+    "prefix": "dd",
     "body": [
       "__import__(\"pdb\").set_trace()  # !!!!!!!!!!"
     ],
@@ -43,5 +43,34 @@
       "assert eval(input) == expected"
     ],
     "description": "pytest parametrize"
+  },
+  "argparse": {
+    "prefix": "ap",
+    "body": [
+      "import argparse",
+      "",
+      "",
+      "def argument_parser():",
+      "    parser = argparse.ArgumentParser(description=\"describe me\")",
+      "    parser.add_argument(",
+      "        \"filename\", type=argparse.FileType(\"r\"), help=\"name of the file to convert\"",
+      "    )",
+      "    parser.add_argument(",
+      "        \"--source_format\", \"-sf\", choices=[\"xml\", \"json\"], help=\"source format\"",
+      "    )",
+      "    parser.add_argument(",
+      "        \"target_format\",",
+      "        default=\"xml\",",
+      "        nargs=\"?\",",
+      "        choices=[\"xml\", \"json\"],",
+      "        help=\"target format\",",
+      "    )",
+      "    return parser",
+      "",
+      "",
+      "def main(argv=None):",
+      "    args = argument_parser().parse_args(argv)"
+    ],
+    "description": "argparse boilerplate"
   }
 }
