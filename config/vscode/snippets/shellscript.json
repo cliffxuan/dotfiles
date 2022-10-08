@@ -1,0 +1,153 @@
+{
+  "sb": {
+    "prefix": "sb",
+    "description": "shebang",
+    "body": [
+      "#!/usr/bin/env bash"
+    ]
+  },
+  "pwd": {
+    "prefix": "pwd",
+    "description": "current directory of the script",
+    "body": [
+      "DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\""
+    ]
+  },
+  "run": {
+    "prefix": "run",
+    "description": "run script boiler plate",
+    "body": [
+      "case \"\\$1\" in",
+      "\"start\")",
+      "    action=\"start\"",
+      "    echo start",
+      "    ;;",
+      "\"clean\")",
+      "    action=\"clean\"",
+      "    echo start",
+      "    echo clean",
+      "    ;;",
+      "*)",
+      "    echo \"usage: run.sh {start,clean} days\"",
+      "    exit 1",
+      "    ;;",
+      "esac"
+    ]
+  },
+  "ts": {
+    "prefix": "ts",
+    "description": "timestamp",
+    "body": [
+      "$(date +\"%m%d%H%M\")"
+    ]
+  },
+  "go": {
+    "prefix": "go",
+    "description": "getopts",
+    "body": [
+      "while getopts \":fb:\" opt",
+      "do",
+      "    case \"$opt\" in",
+      "        f)",
+      "            echo '-f is specified'",
+      "            ;;",
+      "        b)",
+      "            BAR=$OPTARG",
+      "            ;;",
+      "        \\?)",
+      "            echo \"Invalid option: -$OPTARG\" >&2",
+      "            exit 1",
+      "            ;;",
+      "        :)",
+      "            echo \"Option -$OPTARG requires an argument.\" >&2",
+      "            exit 1",
+      "            ;;",
+      "    esac",
+      "done"
+    ]
+  },
+  "ifm": {
+    "prefix": "ifm",
+    "description": "if main ...",
+    "body": [
+      "if [[ \"${BASH_SOURCE[0]}\" == \"\\${0}\" ]]",
+      "then",
+      "  main \"$@\"",
+      "fi"
+    ]
+  },
+  "pro": {
+    "prefix": "pro",
+    "description": "provision",
+    "body": [
+      "#!/usr/bin/env bash",
+      "DIR=\"$( cd \"$( dirname \"${BASH_SOURCE[0]}\" )\" && pwd )\"",
+      "# shellcheck source=../utils.sh",
+      "source \"$DIR/../utils.sh\"",
+      "",
+      "run() {",
+      "  echo \"Nothing to do\"",
+      "}",
+      "",
+      "check() {",
+      "  run | grep -q \"Nothing to do\"",
+      "}",
+      "",
+      "",
+      "provision \"$@\""
+    ]
+  },
+  "argparse": {
+    "prefix": "argparse",
+    "description": "parsing arguments without getopts",
+    "body": [
+      "#!/bin/bash",
+      "# Usage demo-space-separated.sh -e conf -s /etc -l /usr/lib /etc/hosts",
+      "",
+      "# cat >/tmp/demo-space-separated.sh <<'EOF'",
+      "",
+      "POSITIONAL=()",
+      "while [[ \\$# -gt 0 ]]",
+      "do",
+      "  key=\"\\$1\"",
+      "  case $key in",
+      "    -e|--extension)",
+      "    EXTENSION=\"\\$2\"",
+      "    shift # past argument",
+      "    shift # past value",
+      "    ;;",
+      "    -s|--searchpath)",
+      "    SEARCHPATH=\"\\$2\"",
+      "    shift # past argument",
+      "    shift # past value",
+      "    ;;",
+      "    -l|--lib)",
+      "    LIBPATH=\"\\$2\"",
+      "    shift # past argument",
+      "    shift # past value",
+      "    ;;",
+      "    --default)",
+      "    DEFAULT=YES",
+      "    shift # past argument",
+      "    ;;",
+      "    *)    # unknown option",
+      "    POSITIONAL+=(\"\\$1\") # save it in an array for later",
+      "    shift # past argument",
+      "    ;;",
+      "  esac",
+      "done",
+      "set -- \"${POSITIONAL[@]}\" # restore positional parameters",
+      "",
+      "echo \"FILE EXTENSION  = ${EXTENSION}\"",
+      "echo \"SEARCH PATH     = ${SEARCHPATH}\"",
+      "echo \"LIBRARY PATH    = ${LIBPATH}\"",
+      "echo \"DEFAULT         = ${DEFAULT}\"",
+      "echo \"Number files in SEARCH PATH with EXTENSION:\" $(ls -1 \"${SEARCHPATH}\"/*.\"${EXTENSION}\" | wc -l)",
+      "if [[ -n \\$1 ]]; then",
+      "    echo \"Last line of file specified as non-opt/last argument:\"",
+      "    tail -1 \"\\$1\"",
+      "fi",
+      "EOF"
+    ]
+  }
+}

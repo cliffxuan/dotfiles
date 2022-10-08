@@ -1,0 +1,13 @@
+{
+  "jq": {
+    "prefix": "jq",
+    "description": "jquery init",
+    "body": [
+      "!function ($) {",
+      "  $(function() {",
+      "",
+      "  });",
+      "}(window.jQuery);"
+    ]
+  }
+}
