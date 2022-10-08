@@ -4,23 +4,6 @@ import argparse
 import json
 from pathlib import Path
 
-"""
-self._snippets_data = {
-        "ultisnip_file": {
-            "files" = ["sh.snippets", "bash.snippets", "zsh.snippets"],
-            "vscode_file" = Path("/path/to/file.json"),
-            "snippets" = {
-                prefix : {
-                    "prefix": "",
-                    "description": "",
-                    "body": "",
-                },
-                ...
-            }
-        }
-    }
-"""
-
 vim2vscode = {
     "bib": "bibtex",
     "c": "c",
@@ -130,9 +113,7 @@ class UltisnipParser:
 
             snippets = self.parse_snippet(file)
             snippet_data["snippets"].update(snippets)
-            print(
-                f'- {file.name:30} {"-->":10} {snippet_data["vscode_file"].name:30}'
-            )
+            print(f'- {file.name:30} {"-->":10} {snippet_data["vscode_file"].name:30}')
 
             data[file.name] = snippet_data
         print("")

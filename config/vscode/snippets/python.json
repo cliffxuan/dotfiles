@@ -258,11 +258,9 @@
     "body": [
       "import logging",
       "",
-      "format = \"%(asctime)s - %(levelname)s - %(message)s\"",
       "logging.basicConfig(",
-      "    filename=logfile,",
       "    level=logging.DEBUG,",
-      "    format=format,",
+      "    format=\"%(asctime)s - %(levelname)s - %(message)s\",",
       ")"
     ]
   },
@@ -270,12 +268,11 @@
     "prefix": "lgs",
     "description": "logging to stream",
     "body": [
-      "format = '%(asctime)s - %(levelname)s - %(message)s'",
-      "ch = logging.StreamHandler()",
-      "ch.setFormatter(logging.Formatter(format))",
+      "handler = logging.StreamHandler()",
+      "handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))",
       "logger = logging.getLogger()",
       "logger.setLevel(logging.DEBUG)",
-      "logger.addHandler(ch)"
+      "logger.addHandler(handler)"
     ]
   },
   "lgf": {
