@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 
-vim2vscode = {
+VIM2VSCODE = {
     "bib": "bibtex",
     "c": "c",
     "coffee": "coffeescript",
@@ -45,11 +45,42 @@ vim2vscode = {
 }
 
 
+def color_print(text: str, color: str = ""):
+    mapping = {
+        "black": (0, 0, 0),
+        "white": (255, 255, 255),
+        "red": (255, 0, 0),
+        "lime": (0, 255, 0),
+        "blue": (0, 0, 255),
+        "yellow": (255, 255, 0),
+        "cyan": (0, 255, 255),
+        "magenta": (255, 0, 255),
+        "silver": (192, 192, 192),
+        "gray": (128, 128, 128),
+        "maroon": (128, 0, 0),
+        "olive": (128, 128, 0),
+        "green": (0, 128, 0),
+        "purple": (128, 0, 128),
+        "teal": (0, 128, 128),
+        "navy": (0, 0, 128),
+    }
+    if color:
+        try:
+            r, g, b = mapping[color]
+            print(f"\033[38;2;{r};{g};{b}m{text}\033[0m")
+            return
+        except KeyError:
+            print(
+                f'Unsupported color "{color}", use one of "{", ".join(mapping.keys())}".'
+            )
+    else:
+        print(text)
+
+
 class UltisnipParser:
     def __init__(self, ultisnip_dir: Path, vscode_dir: Path):
         self.ultisnip_dir = ultisnip_dir
         self.vscode_dir = vscode_dir
-        self._snippets_data = {}
 
     def _replace_variables(self, string):
         """Replaces all of the ultisnips variables with the corresponding vscode
@@ -99,7 +130,7 @@ class UltisnipParser:
             snippet_data = {
                 "snippets": {},
             }
-            vscode_file_type = vim2vscode.get(file.stem)
+            vscode_file_type = VIM2VSCODE.get(file.stem)
 
             if file.stem == "all":
                 snippet_data["vscode_file"] = self.vscode_dir / "global.code-snippets"
@@ -131,7 +162,7 @@ class UltisnipParser:
                     {
                         "files": [],
                         "vscode_file": Path(
-                            self.vscode_dir / f"{vim2vscode.get(vim_lang)}.json"
+                            self.vscode_dir / f"{VIM2VSCODE.get(vim_lang)}.json"
                         ),
                         "snippets": {},
                     },

@@ -267,5 +267,6 @@
   "terminal.integrated.env.osx": {
     "FIG_NEW_SESSION": "1"
   },
-  "python.formatting.provider": "black"
+  "python.formatting.provider": "black",
+  "workbench.activityBar.visible": false
 }
