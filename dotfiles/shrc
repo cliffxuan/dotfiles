@@ -184,6 +184,8 @@ function transfer {
 }
 
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
+# python instance where virtualenvwrapper is installed
+export VIRTUALENVWRAPPER_PYTHON="/usr/local/bin/python"
 if [[ -f $HOME/.env ]]
 then
   source $HOME/.env

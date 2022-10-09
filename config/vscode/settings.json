@@ -275,10 +275,10 @@
   ],
   "python.linting.mypyEnabled": true,
   "workbench.colorTheme": "Panda Syntax",
-  "workbench.activityBar.visible": false,
   "vim.foldfix": true,
   "[search-result]": {
     "editor.lineNumbers": "on"
   },
-  "zenMode.hideLineNumbers": false
+  "zenMode.hideLineNumbers": false,
+  "workbench.activityBar.visible": false
 }
