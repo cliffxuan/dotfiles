@@ -9,17 +9,13 @@ import argparse
 
 
 def argument_parser():
-    parser = argparse.ArgumentParser(
-        description='split a file by line')
+    parser = argparse.ArgumentParser(description="split a file by line")
     parser.add_argument(
-        'file', type=argparse.FileType('r'),
-        help='name of the file to split')
-    parser.add_argument(
-        'pattern', help='regex for the line')
-    parser.add_argument(
-        '--outdir', '-o', default='.', help='output directory')
-    parser.add_argument(
-        '--ext', '-e', default='', help='extension')
+        "file", type=argparse.FileType("r"), help="name of the file to split"
+    )
+    parser.add_argument("pattern", help="regex for the line")
+    parser.add_argument("--outdir", "-o", default=".", help="output directory")
+    parser.add_argument("--ext", "-e", default="", help="extension")
     return parser
 
 
@@ -36,18 +32,17 @@ def split_by_pattern(fileobj, pattern, output_directory, extension):
     if matching_lines[0] != 0:  # not match on the first line
         matching_lines = [0] + matching_lines
 
-    tmpl = '{{0:0{}d}}'.format(int(math.log10(len(matching_lines)) + 1))
+    tmpl = "{{0:0{}d}}".format(int(math.log10(len(matching_lines)) + 1))
     if extension:
-        tmpl += '.' + extension
+        tmpl += "." + extension
 
     fileobj.seek(0, 0)
 
     line_ind = 0
-    for ind, (s, e) in enumerate(zip(matching_lines,
-                                     matching_lines[1:] + [last_ind])):
+    for ind, (s, e) in enumerate(zip(matching_lines, matching_lines[1:] + [last_ind])):
         filename = os.path.join(output_directory, tmpl.format(ind))
         assert line_ind == s, "{} != {}".format(line_ind, s)
-        with open(filename, 'w') as ff:
+        with open(filename, "w") as ff:
             for line in fileobj:
                 ff.write(line)
                 line_ind += 1
@@ -62,5 +57,5 @@ def main(argv=None):
     split_by_pattern(args.file, pattern, outdir, args.ext)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
