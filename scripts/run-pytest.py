@@ -48,6 +48,7 @@ def argument_parser():
         "filename", type=argparse.FileType("r"), help="name of the file to run"
     )
     parser.add_argument("--line-number", "-l", type=int, help="line number")
+    parser.add_argument("--options", "-o", type=str, help="options for pytest")
     return parser
 
 
@@ -65,7 +66,7 @@ def main(argv=None):
     for line in lines[line_number - 1 : 0 : -1]:
         func = get_test_function(line)
         if func:
-            cmd = ["pytest", f"{args.filename.name}::{func}", "-vv"]
+            cmd = ["pytest", f"{args.filename.name}::{func}", *args.options.split(" ")]
             color_print(" ".join(cmd), "green")
             subprocess.call(cmd)
             break

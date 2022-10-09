@@ -58,7 +58,7 @@
     "key": "cmd+k k",
     "command": "cmdlet.runCmd",
     "args": {
-      "cmd": "run-pytest.py ${file} --line-number ${lineNumber}"
+      "cmd": "run-pytest.py ${file} --line-number ${lineNumber} --options '-vv -s'"
     },
     "when": "vim.mode == 'Normal' && editorLangId == 'python'"
   },

@@ -280,5 +280,6 @@
     "editor.lineNumbers": "on"
   },
   "zenMode.hideLineNumbers": false,
+  "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "workbench.activityBar.visible": false
 }
