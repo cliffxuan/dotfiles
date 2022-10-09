@@ -12,7 +12,6 @@
   "terminal.integrated.scrollback": 10000,
   "vim.enableNeovim": true,
   "vim.visualstar": true,
-  "vim.smartRelativeLine": true,
   "vim.hlsearch": true,
   "python.languageServer": "Pylance",
   "vim.easymotionMarkerForegroundColorOneChar": "#d27272",
@@ -268,5 +267,18 @@
     "FIG_NEW_SESSION": "1"
   },
   "python.formatting.provider": "black",
-  "workbench.activityBar.visible": false
+  "python.linting.flake8Enabled": true,
+  "python.linting.flake8Args": [
+    "--max-line-length=88",
+    "--select=C,E,F,W,B,B950",
+    "--ignore=E203, E501, W503"
+  ],
+  "python.linting.mypyEnabled": true,
+  "workbench.colorTheme": "Panda Syntax",
+  "workbench.activityBar.visible": false,
+  "vim.foldfix": true,
+  "[search-result]": {
+    "editor.lineNumbers": "on"
+  },
+  "zenMode.hideLineNumbers": false
 }

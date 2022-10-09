@@ -16,7 +16,7 @@ def split(fileobj, size):
     def _batch():
         filename = os.path.join(
             outdir, os.path.basename(fileobj.name) + '.{}'.format(batch_cnt))
-        print filename
+        print(filename)
         batch_fileobject = open(filename, 'w')
         batch_fileobject.write(header)
         return batch_fileobject

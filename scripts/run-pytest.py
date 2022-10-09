@@ -32,7 +32,6 @@ def color_print(text: str, color: str = ""):
         try:
             r, g, b = mapping[color]
             print(f"\033[38;2;{r};{g};{b}m{text}\033[0m")
-            return
         except KeyError:
             print(
                 f'Unsupported color "{color}", use one of "{", ".join(mapping.keys())}".'
@@ -77,12 +76,16 @@ def main(argv=None):
         )
 
 
+# tests start
 def test_get_test_function_1():
     assert get_test_function("def test_xyz():") == "test_xyz"
 
 
 def test_get_test_function_2():
     assert get_test_function("def test_xyz(x, y):") == "test_xyz"
+
+
+# tests end
 
 
 if __name__ == "__main__":
