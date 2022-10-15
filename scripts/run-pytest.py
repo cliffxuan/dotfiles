@@ -68,6 +68,9 @@ def main(argv=None):
         if func:
             cmd = ["pytest", f"{args.filename.name}::{func}", *args.options.split(" ")]
             color_print(" ".join(cmd), "green")
+            # copy into clipboard
+            # TODO OS specific
+            subprocess.run("pbcopy", input=" ".join(cmd).encode("utf8"))
             subprocess.call(cmd)
             break
     else:
