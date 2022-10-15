@@ -274,12 +274,13 @@
     "--ignore=E203, E501, W503"
   ],
   "python.linting.mypyEnabled": true,
-  "workbench.colorTheme": "Panda Syntax",
+  "workbench.colorTheme": "Default High Contrast",
   "vim.foldfix": true,
   "[search-result]": {
     "editor.lineNumbers": "on"
   },
   "zenMode.hideLineNumbers": false,
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
+  "vim.smartRelativeLine": true,
   "workbench.activityBar.visible": false
 }
