@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
-packages="virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim autoflake"
+packages="virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim autoflake pyright"
 
 run() {
   for pkg in $packages
