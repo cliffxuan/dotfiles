@@ -60,7 +60,7 @@
     "args": {
       "cmd": "run-pytest.py ${file} --line-number ${lineNumber} --options '-vv -s'"
     },
-    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
+    "when": "editorLangId == 'python'"
   },
   {
     "key": "cmd+k y",
@@ -68,7 +68,7 @@
     "args": {
       "cmd": "pytest ${file}"
     },
-    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
+    "when": "editorLangId == 'python'"
   },
   {
     "key": "cmd+k x",
@@ -76,6 +76,6 @@
     "args": {
       "cmd": "autoflake --remove-all-unused-imports --expand-star-imports --in-place ${file}; isort ${file}; black ${file}"
     },
-    "when": "vim.mode == 'Normal' && editorLangId == 'python'"
+    "when": "editorLangId == 'python'"
   }
 ]
