@@ -388,6 +388,17 @@
       "import typing as t"
     ]
   },
+  "nt": {
+    "prefix": "nt",
+    "description": "now with timezone",
+    "body": [
+      "def now_with_tz(tz=dt.timezone.utc):",
+      "    \"\"\"",
+      "    Return the current time as a zone-aware timestamp.",
+      "    \"\"\"",
+      "    return dt.datetime.now(tz=tz)"
+    ]
+  },
   "setup": {
     "prefix": "setup",
     "description": "setup.py",
