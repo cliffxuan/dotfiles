@@ -6,17 +6,18 @@ return {
   enable_tab_bar = true,
   hide_tab_bar_if_only_one_tab = true,
   keys = {
-    {key="LeftArrow", mods="SUPER", action=wezterm.action{SendString="\x00\x70"}}, -- ctrl-space p
-    {key="RightArrow", mods="SUPER", action=wezterm.action{SendString="\x00\x6e"}}, -- ctrl-space n
-    {key="d", mods="SUPER", action=wezterm.action{SendString="\x00\x25"}}, -- ctrl-space %
-    {key="d", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x22"}}, -- ctrl-space "
-    {key="LeftArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x48"}}, -- ctrl-space H
-    {key="RightArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4c"}}, -- ctrl-space L
-    {key="UpArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4b"}}, -- ctrl-space K
-    {key="DownArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x4a"}}, -- ctrl-space J
-    {key="n", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x63"}}, -- ctrl-space c
-    {key="w", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x00\x78"}}, -- ctrl-space x
-    {key="x", mods="SUPER", action=wezterm.action{SendString="\x00\x5b"}}, -- ctrl-space [
+    -- find SendString use `xxd`, pressing the relevant key, then enter, then CTRL-D
+    {key="LeftArrow", mods="SUPER", action=wezterm.action{SendString="\x02\x70"}}, -- ctrl-b p
+    {key="RightArrow", mods="SUPER", action=wezterm.action{SendString="\x02\x6e"}}, -- ctrl-b n
+    {key="d", mods="SUPER", action=wezterm.action{SendString="\x02\x25"}}, -- ctrl-b %
+    {key="d", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x22"}}, -- ctrl-b "
+    {key="LeftArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x48"}}, -- ctrl-b H
+    {key="RightArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x4c"}}, -- ctrl-b L
+    {key="UpArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x4b"}}, -- ctrl-b K
+    {key="DownArrow", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x4a"}}, -- ctrl-b J
+    {key="n", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x63"}}, -- ctrl-b c
+    {key="w", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x78"}}, -- ctrl-b x
+    {key="x", mods="SUPER", action=wezterm.action{SendString="\x02\x5b"}}, -- ctrl-b [
   },
   window_padding = {
     left = 10,
