@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../../utils.sh
 source "$DIR/../../utils.sh"
 
-if [ -n "$NVIM_VERSION" ]
-then
+if [ -n "$NVIM_VERSION" ]; then
   version=$NVIM_VERSION
 else
   link=$(curl -Ls -o /dev/null -w "%{url_effective}" https://github.com/neovim/neovim/releases/latest)
   echo "$link"
-  version="$(echo "$link"  | grep -Po '(?<=/releases/tag/v).*$')"
+  version="$(echo "$link" | grep -Po '(?<=/releases/tag/v).*$')"
 fi
-if [ -z "$version" ]
-then
+if [ -z "$version" ]; then
   echo "cannot find version from github."
   exit 1
 fi
@@ -36,8 +34,7 @@ build() {
 }
 
 run() {
-  if dpkg --print-architecture | grep -q arm64
-  then
+  if dpkg --print-architecture | grep -q arm64; then
     build
   else
     appimage
