@@ -5,7 +5,6 @@ source "$DIR/../utils.sh"
 
 declare -A packages
 packages=(
-  ["cargo-add"]="cargo-edit"
   ["zoxide"]="zoxide"
 )
 

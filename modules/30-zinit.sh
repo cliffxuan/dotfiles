@@ -6,7 +6,6 @@ source "$BASE_DIR/utils.sh"
 
 
 run() {
-  echo "clone zinit and set it up."
   mkdir -p "$HOME/.zinit"
   if [ -d "$HOME/.zinit/bin" ]
   then

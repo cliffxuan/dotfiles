@@ -104,4 +104,7 @@ fi
 source ~/.shrc
 
 # TODO lazy load
-hash gcloud 2>/dev/null && source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
+if [ -x gcloud ]
+then
+  source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
+fi

@@ -7,8 +7,14 @@ if [ -n "$NVIM_VERSION" ]
 then
   version=$NVIM_VERSION
 else
-  curl -L https://github.com/neovim/neovim/releases/latest > /tmp/neovim-latest.html 2>/dev/null
-  version=$(grep -Po '(?<=/neovim/neovim/releases/download/v).*(?=/nvim.appimage)' /tmp/neovim-latest.html | head -1)
+  link=$(curl -Ls -o /dev/null -w "%{url_effective}" https://github.com/neovim/neovim/releases/latest)
+  echo "$link"
+  version="$(echo "$link"  | grep -Po '(?<=/releases/tag/v).*$')"
+fi
+if [ -z "$version" ]
+then
+  echo "cannot find version from github."
+  exit 1
 fi
 echo version="$version"
 
