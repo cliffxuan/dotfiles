@@ -274,7 +274,7 @@
     "--ignore=E203, E501, W503"
   ],
   "python.linting.mypyEnabled": true,
-  "workbench.colorTheme": "Default High Contrast",
+  "workbench.colorTheme": "GitHub Dark Dimmed",
   "vim.foldfix": true,
   "[search-result]": {
     "editor.lineNumbers": "on"

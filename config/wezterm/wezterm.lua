@@ -18,6 +18,7 @@ return {
     {key="n", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x63"}}, -- ctrl-b c
     {key="w", mods="SUPER|SHIFT", action=wezterm.action{SendString="\x02\x78"}}, -- ctrl-b x
     {key="x", mods="SUPER", action=wezterm.action{SendString="\x02\x5b"}}, -- ctrl-b [
+    {key = "f", mods = 'SHIFT|CTRL', action = wezterm.action.ToggleFullScreen}, -- ? how to use fn key
   },
   window_padding = {
     left = 10,

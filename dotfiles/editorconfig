@@ -11,7 +11,7 @@ insert_final_newline = true
 charset = utf-8
 
 # 4 space indentation
-[*.py]
+[*.{py,ipynb}]
 indent_style = space
 indent_size = 4
 # used by isort
@@ -20,7 +20,7 @@ profile = black
 # 2 space indentation
 [*.{js,ts,sh}]
 indent_style = space
-indent_size = 4
+indent_size = 2
 
 # Tab indentation (no size specified)
 [{Makefile,.go}]
