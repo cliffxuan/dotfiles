@@ -4,10 +4,8 @@
 https://www.rkeplin.com/the-holy-bible-open-source-rest-api/
 """
 import argparse
-import enum
 import json
 import re
-import os
 import typing as t
 import urllib.request
 from dataclasses import dataclass
@@ -206,10 +204,64 @@ def argument_parser():
         "--source",
         "-s",
         choices=["esv", "rkeplin"],
-        default="rkeplin",
+        default="esv",
         help="chapter of the book",
     )
     return parser
+
+
+def get_from_esv(book: Book, chapter: int) -> str:
+    response = urllib.request.urlopen(
+        urllib.request.Request(
+            url=f"https://api.esv.org/v3/passage/text/?q={book.name}+{chapter}",
+            headers={"Authorization": "Token 1a1e2b2cca921c473380316c1b4b59b768e241a3"},
+        )
+    )
+    text = json.loads(response.read())["passages"][0]
+    # text = open(os.path.expanduser("~/tmp/john9.txt")).read()
+
+    verse_mark = re.compile(r"\[(\d+)\]")
+    footnote_mark = re.compile(r"^\((\d+)\)")
+
+    start = 0
+    new_text = []
+    for item in verse_mark.finditer(text):
+        end = item.span()[0]
+        new_text.append(verse_mark.sub(r"\1.", text[start : end - 1]))
+        start = end
+    new_text.append(verse_mark.sub(r"\1.", text[start : len(text)]))
+    new_text = "\n".join(new_text)
+    lines = []
+    verses = []
+    footnotes = []
+    for i, line in enumerate(new_text.split("\n")):
+        match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
+        if i == 0:  # heading 1
+            lines.append(f"# {line}")
+        elif line == "Footnotes":
+            lines.append("## Footnotes")
+        elif match_verse:
+            verse = Verse(
+                book_number=book.number,
+                chapter_number=chapter,
+                number=int(match_verse.groupdict()["number"]),
+                text=match_verse.groupdict()["text"],
+            )
+            verses.append(verse)
+            lines.append(verse.to_markdown())
+        elif footnote_mark.match(line):
+            footnote = footnote_mark.sub(r"- (\1)", line)
+            footnotes.append(footnote)
+            lines.append(footnote)
+        elif "## Footnotes" not in lines:  # before footnote section
+            if line.strip() == "":
+                if lines[-1] != "\n---\n":  # paragraph separator
+                    lines.append("\n---\n")
+            else:
+                lines.append(f"## {line}")  # section header before footnotes
+        elif line.strip() != "":  # footnote section
+            lines.append(line)
+    return "\n".join(lines)
 
 
 def main(argv=None):
@@ -221,61 +273,12 @@ def main(argv=None):
         chapter = Chapter.from_data(response.read())
         print(chapter.to_markdown())
     elif args.source == "esv":
-        # response = urllib.request.urlopen(
-        #     urllib.request.Request(
-        #         url=f"https://api.esv.org/v3/passage/text/?q={args.book.name}+{args.chapter}",
-        #         headers={
-        #             "Authorization": "Token 1a1e2b2cca921c473380316c1b4b59b768e241a3"
-        #         },
-        #     )
-        # )
-        # text = json.loads(response.read())["passages"][0]
-        text = open(os.path.expanduser("~/tmp/john9.txt")).read()
-
-        verse_mark = re.compile(r"\[(\d+)\]")
-        paragraph_mark = re.compile(r"\n\s*\n")
-        footnote_mark = re.compile(r"\n\((\d+)\)")
-
-        start = 0
-        new_text = []
-        for item in verse_mark.finditer(text):
-            end = item.span()[0]
-            new_text.append(verse_mark.sub(r"\1.", text[start : end - 1]))
-            start = end
-        new_text.append(verse_mark.sub(r"\1.", text[start : len(text)]))
-        new_text = "\n".join(new_text)
-        new_text = footnote_mark.sub(r"- (\1)", new_text)
-        new_text = paragraph_mark.sub("\n\n---\n\n", new_text)
-        lines = []
-        verses = []
-        for i, line in enumerate(new_text.split("\n")):
-            match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
-            if i == 0:  # heading 1
-                lines.append(f"# {line}")
-            elif line == "Footnotes":
-                lines.append("## Footnotes")
-            elif match_verse:
-                verse = Verse(
-                    book_number=args.book.number,
-                    chapter_number=args.chapter,
-                    number=int(match_verse.groupdict()["number"]),
-                    text=match_verse.groupdict()["text"],
-                )
-                verses.append(verse)
-                lines.append(verse.to_markdown())
-            elif "## Footnotes" not in lines and line.strip() not in (
-                "",
-                "---",
-            ):  # sub heading before footnotes
-                lines.append(f"## {line}")
-            else:
-                lines.append(line)
-        print("\n".join(lines))
+        print(get_from_esv(args.book, args.chapter))
 
 
 if __name__ == "__main__":
-    main(["43", "9", "-s", "esv"])
-    # main()
+    # main(["43", "9", "-s", "esv"])
+    main()
 
 
 #  ======================================= tests ======================================
