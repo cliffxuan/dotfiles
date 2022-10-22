@@ -8,6 +8,7 @@ import json
 import re
 import typing as t
 import urllib.request
+import urllib.parse
 from dataclasses import dataclass
 
 BOOKS = {
@@ -81,18 +82,34 @@ BOOKS = {
 
 REVERSE_LOOKUP = {v.lower().replace(" ", ""): k for k, v in BOOKS.items()}
 SPECIAL_ABBREVATIONS = {
-    "pm": "Philemon",
-    "phm": "Philemon",
-    "pp": "Philippians",
-    "php": "Philippians",
-    "ml": "Malachi",
-    "mt": "Matthew",
+    "dn": "Daniel",
+    "dt": "Deuteronomy",
+    "gn": "Genesis",
+    "hb": "Habakkuk",
+    "hg": "Haggai",
+    "jb": "Job",
+    "jd": "Jude",
+    "jdg": "Judges",
+    "jg": "Judges",
+    "jl": "Joel",
+    "jm": "James",
+    "jn": "John",
+    "jr": "Jeremiah",
+    "lk": "Luke",
+    "lv": "Leviticus",
+    "mc": "Micah",
     "mk": "Mark",
+    "ml": "Malachi",
     "mr": "Mark",
     "mrk": "Mark",
-    "jd": "Jude",
-    "jg": "Judges",
-    "jdg": "Judges",
+    "mt": "Matthew",
+    "nb": "Numbers",
+    "phm": "Philemon",
+    "php": "Philippians",
+    "pm": "Philemon",
+    "pp": "Philippians",
+    "zc": "Zechariah",
+    "zp": "Zephaniah",
 }
 
 
@@ -148,15 +165,23 @@ class Verse:
     def to_markdown(self) -> str:
         linebreak = "\n    "
         text = self.text
-        # open quote
-        one, two, three = text.partition(' "')
-        if two:
-            text = f"{one.strip()}{linebreak}{two.strip()}{three}"
 
-        # full stop not at the end of the sentence
-        one, two, three = text.partition(". ")
-        if two:
-            text = f"{one.strip()}{two.strip()}{linebreak}{three}"
+        def break_line_before_sep(s: str, sep: str):  # recur
+            one, two, three = s.partition(sep)
+            if two:
+                s = f"{one.strip()}{linebreak}{two.strip()}{break_line_before_sep(three, sep)}"
+            return s
+
+        def break_line_after_sep(s: str, sep: str):  # recur
+            one, two, three = s.partition(sep)
+            if two:
+                s = f"{one.strip()}{two.strip()}{linebreak}{break_line_after_sep(three, sep)}"
+            return s
+
+        text = break_line_before_sep(text, ' "')
+        text = break_line_after_sep(text, '" ')
+        text = break_line_after_sep(text, ". ")
+
         return f"{self.number}. {text}"
 
 
@@ -211,13 +236,21 @@ def argument_parser():
 
 
 def get_from_esv(book: Book, chapter: int) -> str:
+    query = urllib.parse.urlencode({"q": f"{book.name}+{chapter}"})
     response = urllib.request.urlopen(
         urllib.request.Request(
-            url=f"https://api.esv.org/v3/passage/text/?q={book.name}+{chapter}",
+            url=f"https://api.esv.org/v3/passage/text/?{query}",
             headers={"Authorization": "Token 1a1e2b2cca921c473380316c1b4b59b768e241a3"},
         )
     )
     text = json.loads(response.read())["passages"][0]
+    for old, new in [
+        ("“", '"'),
+        ("”", '"'),
+        ("‘", "'"),
+        ("’", "'"),
+    ]:
+        text = text.replace(old, new)
     # text = open(os.path.expanduser("~/tmp/john9.txt")).read()
 
     verse_mark = re.compile(r"\[(\d+)\]")
@@ -363,6 +396,30 @@ class TestVerse(TestCase):
                 """
                 9. And at once the man was healed, and he took up his bed and walked.
                     Now that day was the Sabbath.
+                """,
+            ),
+            (
+                21,
+                'And they asked him, "What then? Are you Elijah?" He said, "I am not." "Are you the Prophet?" And he answered, "No."',
+                """
+                21. And they asked him,
+                    "What then? Are you Elijah?"
+                    He said,
+                    "I am not."
+                    "Are you the Prophet?"
+                    And he answered,
+                    "No."
+                """,
+            ),
+            (
+                42,
+                'He brought him to Jesus. Jesus looked at him and said, "You are Simon the son of John. You shall be called Cephas" (which means Peter(12)).',
+                """
+                42. He brought him to Jesus.
+                    Jesus looked at him and said,
+                    "You are Simon the son of John.
+                    You shall be called Cephas"
+                    (which means Peter(12)).
                 """,
             ),
         ]
