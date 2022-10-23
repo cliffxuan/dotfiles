@@ -187,7 +187,7 @@ class Verse:
         for link_word in [
             "so that",
             "but",
-            "and",
+            # "and",
             "because",
             "therefore",
             "for",
@@ -202,6 +202,11 @@ class Verse:
         text = re.sub(
             r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
             rf"\1\2{linebreak}as ",
+            text,
+        )
+        text = re.sub(
+            r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # not oxford comma
+            rf"\1\2{linebreak}and ",
             text,
         )
         return f"{self.number}. {text}"
@@ -650,8 +655,7 @@ class TestVerse(TestCase):
                 5,
                 "I have oxen, donkeys, flocks, male servants, and female servants. I have sent to tell my lord, in order that I may find favor in your sight.'\"",
                 """
-                5. I have oxen, donkeys, flocks, male servants,
-                    and female servants.
+                5. I have oxen, donkeys, flocks, male servants, and female servants.
                     I have sent to tell my lord,
                     in order that I may find favor in your sight.'"
                 """,
@@ -702,6 +706,20 @@ class TestVerse(TestCase):
                     and every beast of the earth with you, as many as came out of the ark; it is for every beast of the earth.
                 """,
             ),
+            (
+                22,
+                "The sons of Shem: Elam, Asshur, Arpachshad, Lud, and Aram.",
+                """
+                22. The sons of Shem: Elam, Asshur, Arpachshad, Lud, and Aram.
+                """,
+            ),
+            (
+                29,
+                "Ophir, Havilah, and Jobab; all these were the sons of Joktan.",
+                """
+                29. Ophir, Havilah, and Jobab; all these were the sons of Joktan.
+                """
+            )
         ]
         for number, text, result in verses:
             verse = Verse(
