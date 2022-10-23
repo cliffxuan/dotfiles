@@ -282,6 +282,7 @@ def get_from_esv(book: Book, chapter: int) -> str:
             )
             verses.append(verse)
             lines.append(verse.to_markdown())
+            lines.append("\n")  # extra line break after a verse TODO compact option
         elif footnote_mark.match(line):
             footnote = footnote_mark.sub(r"- (\1)", line)
             footnotes.append(footnote)
