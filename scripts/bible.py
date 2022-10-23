@@ -174,15 +174,30 @@ class Verse:
         text = re.sub(r' "', f'{linebreak}"', text)
         # close quote
         text = re.sub(r'" ', f'"{linebreak}', text)
+        # open quote
+        text = re.sub(r" '", f"{linebreak}'", text)
+        # close quote
+        text = re.sub(r"' ", f"'{linebreak}", text)
         # . not followed by ', ", $
         text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
         # question mark
         text = re.sub(r"\? ", f"?{linebreak}", text)
         # exclaimation mark
         text = re.sub(r"! ", f"!{linebreak}", text)
-        # so that
-        text = re.sub(r" so that", f"{linebreak}so that", text)
-
+        for link_word in [
+            "so that",
+            "but",
+            "and",
+            "because",
+            "therefore",
+            "for",
+            "in order that",
+        ]:
+            text = re.sub(
+                rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
+                rf"\1\2{linebreak}{link_word} ",
+                text,
+            )
         return f"{self.number}. {text}"
 
 
@@ -517,7 +532,8 @@ class TestVerse(TestCase):
                 1,
                 "After this there was a feast of the Jews, and Jesus went up to Jerusalem.",
                 """
-                1. After this there was a feast of the Jews, and Jesus went up to Jerusalem.
+                1. After this there was a feast of the Jews,
+                    and Jesus went up to Jerusalem.
                 """,
             ),
             (
@@ -532,7 +548,8 @@ class TestVerse(TestCase):
                 9,
                 "And at once the man was healed, and he took up his bed and walked. Now that day was the Sabbath.",
                 """
-                9. And at once the man was healed, and he took up his bed and walked.
+                9. And at once the man was healed,
+                    and he took up his bed and walked.
                     Now that day was the Sabbath.
                 """,
             ),
@@ -585,6 +602,70 @@ class TestVerse(TestCase):
                 """
                 14. so that in Christ Jesus the blessing of Abraham might come to the Gentiles,
                     so that we might receive the promised Spirit(5) through faith.
+                """,
+            ),
+            (
+                8,
+                'The wind(5) blows where it wishes, and you hear its sound, but you do not know where it comes from or where it goes. So it is with everyone who is born of the Spirit."',
+                """
+                8. The wind(5) blows where it wishes,
+                    and you hear its sound,
+                    but you do not know where it comes from or where it goes.
+                    So it is with everyone who is born of the Spirit."
+                """,
+            ),
+            (
+                27,
+                "And he has given him authority to execute judgment, because he is the Son of Man.",
+                """
+                27. And he has given him authority to execute judgment,
+                    because he is the Son of Man.
+                """,
+            ),
+            (
+                15,
+                "If you were of the world, the world would love you as its own; but because you are not of the world, but I chose you out of the world, therefore the world hates you.",
+                """
+                15. If you were of the world, the world would love you as its own;
+                    but because you are not of the world,
+                    but I chose you out of the world,
+                    therefore the world hates you.
+                """,
+            ),
+            (
+                25,
+                "and needed no one to bear witness about man, for he himself knew what was in man.",
+                """
+            25. and needed no one to bear witness about man,
+                for he himself knew what was in man.
+            """,
+            ),
+            (
+                5,
+                "I have oxen, donkeys, flocks, male servants, and female servants. I have sent to tell my lord, in order that I may find favor in your sight.'\"",
+                """
+                5. I have oxen, donkeys, flocks, male servants,
+                    and female servants.
+                    I have sent to tell my lord,
+                    in order that I may find favor in your sight.'"
+                """,
+            ),
+            (
+                22,
+                "If I had not come and spoken to them, they would not have been guilty of sin,(2) but now they have no excuse for their sin.",
+                """
+                22. If I had not come and spoken to them, they would not have been guilty of sin,(2)
+                    but now they have no excuse for their sin.
+                """,
+            ),
+            (
+                20,
+                "Remember the word that I said to you: 'A servant is not greater than his master.' If they persecuted me, they will also persecute you. If they kept my word, they will also keep yours.",
+                """
+                20. Remember the word that I said to you:
+                    'A servant is not greater than his master.'
+                    If they persecuted me, they will also persecute you.
+                    If they kept my word, they will also keep yours.
                 """,
             ),
         ]
