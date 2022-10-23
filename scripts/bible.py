@@ -300,8 +300,15 @@ def get_from_esv(query: str) -> str:
             if line.strip() == "":
                 if lines[-1] != "\n---\n":  # paragraph separator
                     lines.append("\n---\n")
-            else:
-                lines.append(f"## {line}")  # section header before footnotes
+            elif line.startswith(" "):  # non section header, e.g. John 12:15
+                """
+                [15] “Fear not, daughter of Zion;
+                behold, your king is coming,
+                    sitting on a donkey’s colt!”
+                """
+                lines.append(line)
+            else:  # section header before footnotes
+                lines.append(f"## {line}")
         elif line.strip() != "":  # footnote section
             lines.append(line)
     return "\n".join(lines)
