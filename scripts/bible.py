@@ -81,27 +81,23 @@ BOOKS = {
 }
 
 REVERSE_LOOKUP = {v.lower().replace(" ", ""): k for k, v in BOOKS.items()}
+
 SPECIAL_ABBREVATIONS = {
     "dn": "Daniel",
     "dt": "Deuteronomy",
     "gn": "Genesis",
     "hb": "Habakkuk",
     "hg": "Haggai",
-    "jb": "Job",
-    "jd": "Jude",
     "jdg": "Judges",
     "jg": "Judges",
-    "jl": "Joel",
     "jm": "James",
     "jn": "John",
     "jr": "Jeremiah",
-    "lk": "Luke",
     "lv": "Leviticus",
     "mc": "Micah",
     "mk": "Mark",
     "ml": "Malachi",
     "mr": "Mark",
-    "mrk": "Mark",
     "mt": "Matthew",
     "nb": "Numbers",
     "phm": "Philemon",
@@ -110,6 +106,9 @@ SPECIAL_ABBREVATIONS = {
     "pp": "Philippians",
     "zc": "Zechariah",
     "zp": "Zephaniah",
+}
+REVERSE_LOOKUP_NO_VOWELS = {
+    re.sub(r"[a|e|i|o|u|A|E|I|O|O]", "", k): v for k, v in REVERSE_LOOKUP.items()
 }
 
 
@@ -127,14 +126,18 @@ class Book:
         except ValueError:
             pass
 
+        if value in REVERSE_LOOKUP:
+            number = REVERSE_LOOKUP[value]
+            return cls(number=number, name=BOOKS[number])
+
         if value in SPECIAL_ABBREVATIONS:
             number = REVERSE_LOOKUP[
                 SPECIAL_ABBREVATIONS[value].lower().replace(" ", "")
             ]
             return cls(number=number, name=BOOKS[number])
 
-        if value in REVERSE_LOOKUP:
-            number = REVERSE_LOOKUP[value]
+        if value in REVERSE_LOOKUP_NO_VOWELS:
+            number = REVERSE_LOOKUP_NO_VOWELS[value]
             return cls(number=number, name=BOOKS[number])
 
         for key in REVERSE_LOOKUP:
@@ -449,6 +452,8 @@ class TestBook(TestCase):
             ("pm", "Philemon"),
             ("pp", "Philippians"),
             ("php", "Philippians"),
+            ("lk", "Luke"),
+            ("jhn", "John"),
         ]
         for string, book in books:
             with self.subTest():
@@ -487,6 +492,14 @@ class TestBook(TestCase):
     def test_5_initials(self):
         dups = self._find_dups(5)
         self.assertEqual(len(dups), 0)
+
+    def test_reverse_lookup_no_vowels_no_dups(self):
+        assert len(REVERSE_LOOKUP_NO_VOWELS) == len(BOOKS)
+
+    def test_reverse_lookup_no_vowels_no_overlap(self):
+        assert (
+            set(REVERSE_LOOKUP_NO_VOWELS.keys()) & SPECIAL_ABBREVATIONS.keys() == set()
+        )
 
 
 class TestVerse(TestCase):
