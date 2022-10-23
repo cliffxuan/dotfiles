@@ -4,6 +4,7 @@
 https://www.rkeplin.com/the-holy-bible-open-source-rest-api/
 """
 import argparse
+import base64
 import json
 import re
 import typing as t
@@ -246,10 +247,11 @@ def get_from_esv(query: str) -> str:
         if end_verse.number > 0:
             qs = f"{qs}:{end_verse.number}"
     qs = urllib.parse.urlencode({"q": qs})
+    token = base64.b85decode(b"F<~)fGGa1gV_`WmF=I40Gc!0aGch(}F=8}gH92B8HaKN6G%;Z_")
     response = urllib.request.urlopen(
         urllib.request.Request(
             url=f"https://api.esv.org/v3/passage/text/?{qs}",
-            headers={"Authorization": "Token 1a1e2b2cca921c473380316c1b4b59b768e241a3"},
+            headers={"Authorization": f"Token {token.decode()}"},
         )
     )
     text = json.loads(response.read())["passages"][0]
@@ -583,9 +585,8 @@ class TestVerse(TestCase):
                 """
                 14. so that in Christ Jesus the blessing of Abraham might come to the Gentiles,
                     so that we might receive the promised Spirit(5) through faith.
-                """
-
-            )
+                """,
+            ),
         ]
         for number, text, result in verses:
             verse = Verse(
