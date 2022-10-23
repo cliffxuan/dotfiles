@@ -184,6 +184,8 @@ class Verse:
         text = break_line_before_sep(text, ' "')
         text = break_line_after_sep(text, '" ')
         text = break_line_after_sep(text, ". ")
+        text = break_line_after_sep(text, "? ")
+        text = break_line_after_sep(text, "! ")
 
         return f"{self.number}. {text}"
 
@@ -535,7 +537,8 @@ class TestVerse(TestCase):
                 'And they asked him, "What then? Are you Elijah?" He said, "I am not." "Are you the Prophet?" And he answered, "No."',
                 """
                 21. And they asked him,
-                    "What then? Are you Elijah?"
+                    "What then?
+                    Are you Elijah?"
                     He said,
                     "I am not."
                     "Are you the Prophet?"
@@ -554,6 +557,15 @@ class TestVerse(TestCase):
                     (which means Peter(12)).
                 """,
             ),
+            (
+                4,
+                'Nicodemus said to him, "How can a man be born when he is old? Can he enter a second time into his mother\'s womb and be born?"',
+                """
+                4. Nicodemus said to him,
+                    "How can a man be born when he is old?
+                    Can he enter a second time into his mother's womb and be born?"
+                """
+            )
         ]
         for number, text, result in verses:
             verse = Verse(
