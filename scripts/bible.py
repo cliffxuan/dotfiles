@@ -179,6 +179,8 @@ class Verse:
         text = re.sub(r"\? ", f"?{linebreak}", text)
         # exclaimation mark
         text = re.sub(r"! ", f"!{linebreak}", text)
+        # so that
+        text = re.sub(r" so that", f"{linebreak}so that", text)
 
         return f"{self.number}. {text}"
 
@@ -568,6 +570,15 @@ class TestVerse(TestCase):
                     (4) Whoever believes in me, though he die, yet shall he live,
                 """,
             ),
+            (
+                14,
+                "so that in Christ Jesus the blessing of Abraham might come to the Gentiles, so that we might receive the promised Spirit(5) through faith.",
+                """
+                14. so that in Christ Jesus the blessing of Abraham might come to the Gentiles,
+                    so that we might receive the promised Spirit(5) through faith.
+                """
+
+            )
         ]
         for number, text, result in verses:
             verse = Verse(
