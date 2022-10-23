@@ -157,10 +157,10 @@ class Verse:
     }
     """
 
-    book_number: int
+    book: Book
     chapter_number: int
     number: int
-    text: str
+    text: str = ""
 
     def to_markdown(self) -> str:
         linebreak = "\n    "
@@ -203,7 +203,7 @@ class Chapter:
             book=book,
             verses=[
                 Verse(
-                    book_number=book_number,
+                    book=Book.get_book(book_number),
                     chapter_number=number,
                     number=v["verseId"],
                     text=v["verse"],
@@ -220,11 +220,11 @@ class Chapter:
 
 
 def argument_parser():
-    parser = argparse.ArgumentParser(description="make md file for bible chapters")
+    parser = argparse.ArgumentParser(description="make md file for bible verses")
     parser.add_argument(
-        "book", type=Book.get_book, help=f"book name or number of the bible {BOOKS}"
+        "query",
+        help="query of bible books and verses",
     )
-    parser.add_argument("chapter", type=int, help="chapter of the book")
     parser.add_argument(
         "--source",
         "-s",
@@ -235,11 +235,13 @@ def argument_parser():
     return parser
 
 
-def get_from_esv(book: Book, chapter: int) -> str:
-    query = urllib.parse.urlencode({"q": f"{book.name}+{chapter}"})
+def get_from_esv(query: str) -> str:
+    start_verse, _ = parse_query(query)
+    book = start_verse.book
+    qs = urllib.parse.urlencode({"q": f"{book.name}+{start_verse.chapter_number}"})
     response = urllib.request.urlopen(
         urllib.request.Request(
-            url=f"https://api.esv.org/v3/passage/text/?{query}",
+            url=f"https://api.esv.org/v3/passage/text/?{qs}",
             headers={"Authorization": "Token 1a1e2b2cca921c473380316c1b4b59b768e241a3"},
         )
     )
@@ -275,8 +277,8 @@ def get_from_esv(book: Book, chapter: int) -> str:
             lines.append("## Footnotes")
         elif match_verse:
             verse = Verse(
-                book_number=book.number,
-                chapter_number=chapter,
+                book=book,
+                chapter_number=int(start_verse.chapter_number),
                 number=int(match_verse.groupdict()["number"]),
                 text=match_verse.groupdict()["text"],
             )
@@ -298,6 +300,29 @@ def get_from_esv(book: Book, chapter: int) -> str:
     return "\n".join(lines)
 
 
+def parse_single_chapter(query: str) -> tuple[str, int]:
+    try:
+        int(query[-1])
+    except (IndexError, ValueError):
+        query = query + "1"  # no chapter then 1
+    match = re.match(r"(?P<book>^.+?)(?P<chapter>\d+)", query)
+    if not match:
+        return "1", 1
+    return match.groupdict()["book"], int(match.groupdict()["chapter"])
+
+
+def parse_query(query: str) -> tuple[Verse, t.Optional[Verse]]:
+    book, chapter = parse_single_chapter(query)
+    return (
+        Verse(
+            book=Book.get_book(book),
+            chapter_number=int(chapter),
+            number=1,
+        ),
+        None,
+    )
+
+
 def main(argv=None):
     args = argument_parser().parse_args(argv)
     if args.source == "rkeplin":
@@ -307,7 +332,7 @@ def main(argv=None):
         chapter = Chapter.from_data(response.read())
         print(chapter.to_markdown())
     elif args.source == "esv":
-        print(get_from_esv(args.book, args.chapter))
+        print(get_from_esv(args.query))
 
 
 if __name__ == "__main__":
@@ -425,6 +450,21 @@ class TestVerse(TestCase):
             ),
         ]
         for number, text, result in verses:
-            verse = Verse(book_number=43, chapter_number=5, number=number, text=text)
+            verse = Verse(
+                book=Book.get_book("43"), chapter_number=5, number=number, text=text
+            )
             with self.subTest():
                 self.assertEqual(verse.to_markdown(), dedent(result).strip())
+
+
+class TestParseQuery(TestCase):
+    def test_parse_single_chapter(self):
+        for query, result in [
+            ("", ("1", 1)),
+            ("g1", ("g", 1)),
+            ("1cor2", ("1cor", 2)),
+            ("111", ("1", 11)),
+            ("1j", ("1j", 1)),
+        ]:
+            with self.subTest():
+                assert parse_single_chapter(query) == result
