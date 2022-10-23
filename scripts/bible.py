@@ -192,12 +192,18 @@ class Verse:
             "therefore",
             "for",
             "in order that",
+            "unless",
         ]:
             text = re.sub(
                 rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
                 rf"\1\2{linebreak}{link_word} ",
                 text,
             )
+        text = re.sub(
+            r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
+            rf"\1\2{linebreak}as ",
+            text,
+        )
         return f"{self.number}. {text}"
 
 
@@ -666,6 +672,34 @@ class TestVerse(TestCase):
                     'A servant is not greater than his master.'
                     If they persecuted me, they will also persecute you.
                     If they kept my word, they will also keep yours.
+                """,
+            ),
+            (
+                30,
+                "How could one have chased a thousand, and two have put ten thousand to flight, unless their Rock had sold them, and the LORD had given them up?",
+                """
+                30. How could one have chased a thousand,
+                    and two have put ten thousand to flight,
+                    unless their Rock had sold them,
+                    and the LORD had given them up?
+                """,
+            ),
+            (
+                4,
+                "So Abram went, as the LORD had told him, and Lot went with him. Abram was seventy-five years old when he departed from Haran.",
+                """
+                4. So Abram went,
+                    as the LORD had told him,
+                    and Lot went with him.
+                    Abram was seventy-five years old when he departed from Haran.
+                """,
+            ),
+            (
+                10,
+                "and with every living creature that is with you, the birds, the livestock, and every beast of the earth with you, as many as came out of the ark; it is for every beast of the earth.",
+                """
+                10. and with every living creature that is with you, the birds, the livestock,
+                    and every beast of the earth with you, as many as came out of the ark; it is for every beast of the earth.
                 """,
             ),
         ]
