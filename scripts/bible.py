@@ -245,7 +245,9 @@ def get_from_esv(query: str) -> str:
     if start_verse.number > 0:
         qs = f"{qs}:{start_verse.number}"
     if end_verse:
-        qs = f"{qs}-{end_verse.chapter_number}:{end_verse.number}"
+        qs = f"{qs}-{end_verse.chapter_number}"
+        if end_verse.number > 0:
+            qs = f"{qs}:{end_verse.number}"
     qs = urllib.parse.urlencode({"q": qs})
     response = urllib.request.urlopen(
         urllib.request.Request(
@@ -353,7 +355,7 @@ def parse_chapters_with_verses(
     query: str,
 ) -> t.Optional[tuple[str, int, int, int, int]]:
     match = re.match(
-        r"^(?P<book>^.+?)(?P<start_chapter>\d+):(?P<start_verse>\d+)-(?P<end_chapter>\d+):(?P<end_verse>\d+)$",
+        r"^(?P<book>^.+?)(?P<start_chapter>\d+)(:(?P<start_verse>\d+)|)-(?P<end_chapter>\d+)(:(?P<end_verse>\d+)|)$",
         query,
     )
     if not match:
@@ -361,9 +363,9 @@ def parse_chapters_with_verses(
     return (
         match.groupdict()["book"],
         int(match.groupdict()["start_chapter"]),
-        int(match.groupdict()["start_verse"]),
+        int(match.groupdict()["start_verse"] or "0"),
         int(match.groupdict()["end_chapter"]),
-        int(match.groupdict()["end_verse"]),
+        int(match.groupdict()["end_verse"] or "0"),
     )
 
 
@@ -595,6 +597,8 @@ class TestParseQuery(TestCase):
         for query, result in [
             ("g1:1-2:10", ("g", 1, 1, 2, 10)),
             ("g1:12-2:24", ("g", 1, 12, 2, 24)),
+            ("1john1-2:10", ("1john", 1, 0, 2, 10)),
+            ("1john1-2", ("1john", 1, 0, 2, 0)),
             ("1cor2:11-4:13", ("1cor", 2, 11, 4, 13)),
         ]:
             with self.subTest():
