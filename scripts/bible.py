@@ -169,23 +169,16 @@ class Verse:
         linebreak = "\n    "
         text = self.text
 
-        def break_line_before_sep(s: str, sep: str):  # recur
-            one, two, three = s.partition(sep)
-            if two:
-                s = f"{one.strip()}{linebreak}{two.strip()}{break_line_before_sep(three, sep)}"
-            return s
-
-        def break_line_after_sep(s: str, sep: str):  # recur
-            one, two, three = s.partition(sep)
-            if two:
-                s = f"{one.strip()}{two.strip()}{linebreak}{break_line_after_sep(three, sep)}"
-            return s
-
-        text = break_line_before_sep(text, ' "')
-        text = break_line_after_sep(text, '" ')
-        text = break_line_after_sep(text, ". ")
-        text = break_line_after_sep(text, "? ")
-        text = break_line_after_sep(text, "! ")
+        # open quote
+        text = re.sub(r' "', f'{linebreak}"', text)
+        # close quote
+        text = re.sub(r'" ', f'"{linebreak}', text)
+        # . not followed by ', ", $
+        text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
+        # question mark
+        text = re.sub(r"\? ", f"?{linebreak}", text)
+        # exclaimation mark
+        text = re.sub(r"! ", f"!{linebreak}", text)
 
         return f"{self.number}. {text}"
 
@@ -564,8 +557,17 @@ class TestVerse(TestCase):
                 4. Nicodemus said to him,
                     "How can a man be born when he is old?
                     Can he enter a second time into his mother's womb and be born?"
+                """,
+            ),
+            (
+                25,
+                'Jesus said to her, "I am the resurrection and the life.(4) Whoever believes in me, though he die, yet shall he live,',
                 """
-            )
+                25. Jesus said to her,
+                    "I am the resurrection and the life.
+                    (4) Whoever believes in me, though he die, yet shall he live,
+                """,
+            ),
         ]
         for number, text, result in verses:
             verse = Verse(
