@@ -7,8 +7,8 @@ import argparse
 import json
 import re
 import typing as t
-import urllib.request
 import urllib.parse
+import urllib.request
 from dataclasses import dataclass
 
 BOOKS = {
@@ -236,9 +236,14 @@ def argument_parser():
 
 
 def get_from_esv(query: str) -> str:
-    start_verse, _ = parse_query(query)
+    start_verse, end_verse = parse_query(query)
     book = start_verse.book
-    qs = urllib.parse.urlencode({"q": f"{book.name}+{start_verse.chapter_number}"})
+    qs = f"{book.name}+{start_verse.chapter_number}"
+    if start_verse.number > 0:
+        qs = f"{qs}:{start_verse.number}"
+    if end_verse:
+        qs = f"{qs}-{end_verse.chapter_number}:{end_verse.number}"
+    qs = urllib.parse.urlencode({"q": qs})
     response = urllib.request.urlopen(
         urllib.request.Request(
             url=f"https://api.esv.org/v3/passage/text/?{qs}",
@@ -300,9 +305,9 @@ def get_from_esv(query: str) -> str:
     return "\n".join(lines)
 
 
-def parse_single_chapter(query: str) -> tuple[str, int]:
+def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
     try:
-        int(query[-1])
+        int(query[-1])  # TODO maybe this should return the whole book?
     except (IndexError, ValueError):
         query = query + "1"  # no chapter then 1
     match = re.match(r"(?P<book>^.+?)(?P<chapter>\d+)", query)
@@ -311,13 +316,99 @@ def parse_single_chapter(query: str) -> tuple[str, int]:
     return match.groupdict()["book"], int(match.groupdict()["chapter"])
 
 
+def parse_single_chapter_with_start_verse(
+    query: str,
+) -> t.Optional[tuple[str, int, int]]:
+    match = re.match(r"^(?P<book>^.+?)(?P<chapter>\d+):(?P<verse>\d+)$", query)
+    if not match:
+        return None
+    return (
+        match.groupdict()["book"],
+        int(match.groupdict()["chapter"]),
+        int(match.groupdict()["verse"] or "1"),
+    )
+
+
+def parse_single_chapter_with_verses(
+    query: str,
+) -> t.Optional[tuple[str, int, int, int]]:
+    match = re.match(
+        r"^(?P<book>^.+?)(?P<chapter>\d+):(?P<start_verse>\d+)-(?P<end_verse>\d+)$",
+        query,
+    )
+    if not match:
+        return None
+    return (
+        match.groupdict()["book"],
+        int(match.groupdict()["chapter"]),
+        int(match.groupdict()["start_verse"]),
+        int(match.groupdict()["end_verse"]),
+    )
+
+
+def parse_chapters_with_verses(
+    query: str,
+) -> t.Optional[tuple[str, int, int, int, int]]:
+    match = re.match(
+        r"^(?P<book>^.+?)(?P<start_chapter>\d+):(?P<start_verse>\d+)-(?P<end_chapter>\d+):(?P<end_verse>\d+)$",
+        query,
+    )
+    if not match:
+        return None
+    return (
+        match.groupdict()["book"],
+        int(match.groupdict()["start_chapter"]),
+        int(match.groupdict()["start_verse"]),
+        int(match.groupdict()["end_chapter"]),
+        int(match.groupdict()["end_verse"]),
+    )
+
+
 def parse_query(query: str) -> tuple[Verse, t.Optional[Verse]]:
-    book, chapter = parse_single_chapter(query)
+    parsed = parse_chapters_with_verses(query)
+    if parsed:
+        book, start_chapter, start_verse, end_chapter, end_verse = parsed
+        return Verse(
+            book=Book.get_book(book),
+            chapter_number=int(start_chapter),
+            number=start_verse,
+        ), Verse(
+            book=Book.get_book(book),
+            chapter_number=int(end_chapter),
+            number=end_verse,
+        )
+
+    parsed = parse_single_chapter_with_verses(query)
+    if parsed:
+        book, chapter, start_verse, end_verse = parsed
+        return Verse(
+            book=Book.get_book(book),
+            chapter_number=int(chapter),
+            number=start_verse,
+        ), Verse(
+            book=Book.get_book(book),
+            chapter_number=int(chapter),
+            number=end_verse,
+        )
+
+    parsed = parse_single_chapter_with_start_verse(query)
+    if parsed:
+        book, chapter, verse = parsed
+        return (
+            Verse(
+                book=Book.get_book(book),
+                chapter_number=int(chapter),
+                number=verse,
+            ),
+            None,
+        )
+
+    book, chapter = parse_single_chapter_no_verse(query)
     return (
         Verse(
             book=Book.get_book(book),
             chapter_number=int(chapter),
-            number=1,
+            number=0,  # entire book
         ),
         None,
     )
@@ -458,7 +549,7 @@ class TestVerse(TestCase):
 
 
 class TestParseQuery(TestCase):
-    def test_parse_single_chapter(self):
+    def test_parse_single_chapter_no_verse(self):
         for query, result in [
             ("", ("1", 1)),
             ("g1", ("g", 1)),
@@ -467,4 +558,31 @@ class TestParseQuery(TestCase):
             ("1j", ("1j", 1)),
         ]:
             with self.subTest():
-                assert parse_single_chapter(query) == result
+                assert parse_single_chapter_no_verse(query) == result
+
+    def test_parse_single_chapter_with_start_verse(self):
+        for query, result in [
+            ("g1:1", ("g", 1, 1)),
+            ("g1:12", ("g", 1, 12)),
+            ("1cor2:11", ("1cor", 2, 11)),
+        ]:
+            with self.subTest():
+                assert parse_single_chapter_with_start_verse(query) == result
+
+    def test_parse_single_chapter_with_verses(self):
+        for query, result in [
+            ("g1:1-20", ("g", 1, 1, 20)),
+            ("g1:12-24", ("g", 1, 12, 24)),
+            ("1cor2:11-13", ("1cor", 2, 11, 13)),
+        ]:
+            with self.subTest():
+                assert parse_single_chapter_with_verses(query) == result
+
+    def test_parse_chapters_with_verses(self):
+        for query, result in [
+            ("g1:1-2:10", ("g", 1, 1, 2, 10)),
+            ("g1:12-2:24", ("g", 1, 12, 2, 24)),
+            ("1cor2:11-4:13", ("1cor", 2, 11, 4, 13)),
+        ]:
+            with self.subTest():
+                assert parse_chapters_with_verses(query) == result
