@@ -149,6 +149,52 @@ class Book:
         raise ValueError(f"Cannot find book {string}")
 
 
+def verse_to_markdown(number: int, text: str) -> str:
+    linebreak = "\n    "
+
+    # open quote
+    text = re.sub(r' "', f'{linebreak}"', text)
+    # open quote
+    text = re.sub(r" '", f"{linebreak}'", text)
+    text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
+    # closing marks
+    for mark in [
+        "!",
+        ";",
+        "'",
+        '"',
+        "?",
+    ]:
+        text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
+    for link_word in [
+        "so that",
+        "but",
+        "because",
+        "not because",
+        "therefore",
+        "for",
+        "in order that",
+        "unless",
+        "not only",
+    ]:
+        text = re.sub(
+            rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
+            rf"\1\2{linebreak}{link_word} ",
+            text,
+        )
+    text = re.sub(
+        r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
+        rf"\1\2{linebreak}as ",
+        text,
+    )
+    text = re.sub(
+        r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # not oxford comma
+        rf"\1\2{linebreak}and ",
+        text,
+    )
+    return f"{number}. {text}"
+
+
 @dataclass
 class Verse:
     """
@@ -167,50 +213,7 @@ class Verse:
     text: str = ""
 
     def to_markdown(self) -> str:
-        linebreak = "\n    "
-        text = self.text
-
-        # open quote
-        text = re.sub(r' "', f'{linebreak}"', text)
-        # open quote
-        text = re.sub(r" '", f"{linebreak}'", text)
-        text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
-        # closing marks
-        for mark in [
-            "!",
-            ";",
-            "'",
-            '"',
-            "?",
-        ]:
-            text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
-        for link_word in [
-            "so that",
-            "but",
-            "because",
-            "not because",
-            "therefore",
-            "for",
-            "in order that",
-            "unless",
-            "not only",
-        ]:
-            text = re.sub(
-                rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
-                rf"\1\2{linebreak}{link_word} ",
-                text,
-            )
-        text = re.sub(
-            r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
-            rf"\1\2{linebreak}as ",
-            text,
-        )
-        text = re.sub(
-            r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # not oxford comma
-            rf"\1\2{linebreak}and ",
-            text,
-        )
-        return f"{self.number}. {text}"
+        return verse_to_markdown(self.number, self.text)
 
 
 @dataclass
@@ -287,7 +290,7 @@ def get_esv_passages(start_verse: Verse, end_verse: t.Optional[Verse]) -> str:
     return json.loads(response.read())["passages"][0]
 
 
-def preprocess(text: str) -> list[str]:
+def process_1(text: str) -> str:
     for old, new in [
         ("“", '"'),
         ("”", '"'),
@@ -305,7 +308,51 @@ def preprocess(text: str) -> list[str]:
         result.append(verse_mark.sub(r"\1.", text[start : end - 1]))
         start = end
     result.append(verse_mark.sub(r"\1.", text[start : len(text)]))
-    return "\n".join(result).split("\n")
+    return "\n".join(result)
+
+
+def process_2(text: str) -> str:
+    LINE_BREAK = "\n"
+    PARAGRAPH_BREAK = "\n---\n"
+    footnote_mark = re.compile(r"^\((\d+)\)")
+    lines = []
+    footnotes = []
+    for i, line in enumerate(text.split(LINE_BREAK)):
+        match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
+        if i == 0:  # heading 1
+            lines.append(f"# {line}")
+        elif line == "Footnotes":
+            lines.append("## Footnotes")
+        elif match_verse:
+            if lines[-1] not in (LINE_BREAK, PARAGRAPH_BREAK):  # john12:36
+                lines.append(LINE_BREAK)
+            lines.append(
+                verse_to_markdown(
+                    number=int(match_verse.groupdict()["number"]),
+                    text=match_verse.groupdict()["text"],
+                )
+            )
+            lines.append(
+                LINE_BREAK
+            )  # extra line break after a verse TODO compact option
+        elif footnote_mark.match(line):
+            footnote = footnote_mark.sub(r"- (\1)", line)
+            footnotes.append(footnote)
+            lines.append(footnote)
+        elif "## Footnotes" not in lines:  # before footnote section
+            if line.strip() == "":
+                if lines[-1] != PARAGRAPH_BREAK:  # paragraph break
+                    lines.append(PARAGRAPH_BREAK)
+            elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
+                # previous line strip ending line break
+                if lines[-1] == LINE_BREAK:
+                    lines.pop(-1)
+                lines.append(line)
+            else:  # section header before footnotes
+                lines.append(f"## {line}")
+        elif line.strip() != "":  # footnote section
+            lines.append(line)
+    return LINE_BREAK.join(lines)
 
 
 def get_from_esv(query: str, debug: bool = False) -> str:
@@ -315,53 +362,7 @@ def get_from_esv(query: str, debug: bool = False) -> str:
         with open(f"/tmp/{query}.txt", "w") as f:
             f.write(text)
     # text = open(f"/tmp/{query}.txt").read()
-    for old, new in [
-        ("“", '"'),
-        ("”", '"'),
-        ("‘", "'"),
-        ("’", "'"),
-    ]:
-        text = text.replace(old, new)
-
-    footnote_mark = re.compile(r"^\((\d+)\)")
-    lines = []
-    verses = []
-    footnotes = []
-    for i, line in enumerate(preprocess(text)):
-        match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
-        if i == 0:  # heading 1
-            lines.append(f"# {line}")
-        elif line == "Footnotes":
-            lines.append("## Footnotes")
-        elif match_verse:
-            verse = Verse(
-                book=start_verse.book,
-                chapter_number=int(start_verse.chapter_number),
-                number=int(match_verse.groupdict()["number"]),
-                text=match_verse.groupdict()["text"],
-            )
-            verses.append(verse)
-            lines.append(verse.to_markdown())
-            lines.append("\n")  # extra line break after a verse TODO compact option
-        elif footnote_mark.match(line):
-            footnote = footnote_mark.sub(r"- (\1)", line)
-            footnotes.append(footnote)
-            lines.append(footnote)
-        elif "## Footnotes" not in lines:  # before footnote section
-            if line.strip() == "":
-                if lines[-1] != "\n---\n":  # paragraph separator
-                    lines.append("\n---\n")
-            elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
-                verses[-1].text += f"\n{line}"
-                # previous line strip ending line break
-                if lines[-1] == "\n":
-                    lines.pop(-1)
-                lines[-1] = verses[-1].to_markdown()
-            else:  # section header before footnotes
-                lines.append(f"## {line}")
-        elif line.strip() != "":  # footnote section
-            lines.append(line)
-    return "\n".join(lines)
+    return process_2(process_1(text))
 
 
 def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
@@ -772,11 +773,10 @@ class TestVerse(TestCase):
             ),
         ]
         for number, text, result in verses:
-            verse = Verse(
-                book=Book.get_book("43"), chapter_number=5, number=number, text=text
-            )
             with self.subTest():
-                self.assertEqual(verse.to_markdown(), dedent(result).strip())
+                self.assertEqual(
+                    verse_to_markdown(number=number, text=text), dedent(result).strip()
+                )
 
 
 class TestParseQuery(TestCase):
