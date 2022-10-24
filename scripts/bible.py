@@ -172,27 +172,28 @@ class Verse:
 
         # open quote
         text = re.sub(r' "', f'{linebreak}"', text)
-        # close quote
-        text = re.sub(r'" ', f'"{linebreak}', text)
         # open quote
         text = re.sub(r" '", f"{linebreak}'", text)
-        # close quote
-        text = re.sub(r"' ", f"'{linebreak}", text)
-        # . not followed by ', ", $
         text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
-        # question mark
-        text = re.sub(r"\? ", f"?{linebreak}", text)
-        # exclaimation mark
-        text = re.sub(r"! ", f"!{linebreak}", text)
+        # closing marks
+        for mark in [
+            "!",
+            ";",
+            "'",
+            '"',
+            "?",
+        ]:
+            text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
         for link_word in [
             "so that",
             "but",
-            # "and",
             "because",
+            "not because",
             "therefore",
             "for",
             "in order that",
             "unless",
+            "not only",
         ]:
             text = re.sub(
                 rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
@@ -703,7 +704,8 @@ class TestVerse(TestCase):
                 "and with every living creature that is with you, the birds, the livestock, and every beast of the earth with you, as many as came out of the ark; it is for every beast of the earth.",
                 """
                 10. and with every living creature that is with you, the birds, the livestock,
-                    and every beast of the earth with you, as many as came out of the ark; it is for every beast of the earth.
+                    and every beast of the earth with you, as many as came out of the ark;
+                    it is for every beast of the earth.
                 """,
             ),
             (
@@ -717,9 +719,36 @@ class TestVerse(TestCase):
                 29,
                 "Ophir, Havilah, and Jobab; all these were the sons of Joktan.",
                 """
-                29. Ophir, Havilah, and Jobab; all these were the sons of Joktan.
+                29. Ophir, Havilah, and Jobab;
+                    all these were the sons of Joktan.
+                """,
+            ),
+            (
+                6,
+                "He said this, not because he cared about the poor, but because he was a thief, and having charge of the moneybag he used to help himself to what was put into it.",
                 """
-            )
+                6. He said this,
+                    not because he cared about the poor,
+                    but because he was a thief,
+                    and having charge of the moneybag he used to help himself to what was put into it.
+                """,
+            ),
+            (
+                9,
+                "When the large crowd of the Jews learned that Jesus(4) was there, they came, not only on account of him but also to see Lazarus, whom he had raised from the dead.",
+                """
+                9. When the large crowd of the Jews learned that Jesus(4) was there, they came,
+                    not only on account of him but also to see Lazarus, whom he had raised from the dead.
+                """,
+            ),
+            (
+                31,
+                "Now is the judgment of this world; now will the ruler of this world be cast out.",
+                """
+                31. Now is the judgment of this world;
+                    now will the ruler of this world be cast out.
+                """,
+            ),
         ]
         for number, text, result in verses:
             verse = Verse(
