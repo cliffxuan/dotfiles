@@ -260,13 +260,16 @@ def argument_parser():
         default="esv",
         help="chapter of the book",
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="debug",
+    )
     return parser
 
 
-def get_from_esv(query: str) -> str:
-    start_verse, end_verse = parse_query(query)
-    book = start_verse.book
-    qs = f"{book.name}+{start_verse.chapter_number}"
+def get_esv_passages(start_verse: Verse, end_verse: t.Optional[Verse]) -> str:
+    qs = f"{start_verse.book.name}+{start_verse.chapter_number}"
     if start_verse.number > 0:
         qs = f"{qs}:{start_verse.number}"
     if end_verse:
@@ -281,7 +284,10 @@ def get_from_esv(query: str) -> str:
             headers={"Authorization": f"Token {token.decode()}"},
         )
     )
-    text = json.loads(response.read())["passages"][0]
+    return json.loads(response.read())["passages"][0]
+
+
+def preprocess(text: str) -> list[str]:
     for old, new in [
         ("“", '"'),
         ("”", '"'),
@@ -289,23 +295,39 @@ def get_from_esv(query: str) -> str:
         ("’", "'"),
     ]:
         text = text.replace(old, new)
-    # text = open(os.path.expanduser("~/tmp/john9.txt")).read()
 
     verse_mark = re.compile(r"\[(\d+)\]")
-    footnote_mark = re.compile(r"^\((\d+)\)")
 
     start = 0
-    new_text = []
+    result = []
     for item in verse_mark.finditer(text):
         end = item.span()[0]
-        new_text.append(verse_mark.sub(r"\1.", text[start : end - 1]))
+        result.append(verse_mark.sub(r"\1.", text[start : end - 1]))
         start = end
-    new_text.append(verse_mark.sub(r"\1.", text[start : len(text)]))
-    new_text = "\n".join(new_text)
+    result.append(verse_mark.sub(r"\1.", text[start : len(text)]))
+    return "\n".join(result).split("\n")
+
+
+def get_from_esv(query: str, debug: bool = False) -> str:
+    start_verse, end_verse = parse_query(query)
+    text = get_esv_passages(start_verse, end_verse)
+    if debug:
+        with open(f"/tmp/{query}.txt", "w") as f:
+            f.write(text)
+    # text = open(f"/tmp/{query}.txt").read()
+    for old, new in [
+        ("“", '"'),
+        ("”", '"'),
+        ("‘", "'"),
+        ("’", "'"),
+    ]:
+        text = text.replace(old, new)
+
+    footnote_mark = re.compile(r"^\((\d+)\)")
     lines = []
     verses = []
     footnotes = []
-    for i, line in enumerate(new_text.split("\n")):
+    for i, line in enumerate(preprocess(text)):
         match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
         if i == 0:  # heading 1
             lines.append(f"# {line}")
@@ -313,7 +335,7 @@ def get_from_esv(query: str) -> str:
             lines.append("## Footnotes")
         elif match_verse:
             verse = Verse(
-                book=book,
+                book=start_verse.book,
                 chapter_number=int(start_verse.chapter_number),
                 number=int(match_verse.groupdict()["number"]),
                 text=match_verse.groupdict()["text"],
@@ -329,13 +351,12 @@ def get_from_esv(query: str) -> str:
             if line.strip() == "":
                 if lines[-1] != "\n---\n":  # paragraph separator
                     lines.append("\n---\n")
-            elif line.startswith(" "):  # non section header, e.g. John 12:15
-                """
-                [15] “Fear not, daughter of Zion;
-                behold, your king is coming,
-                    sitting on a donkey’s colt!”
-                """
-                lines.append(line)
+            elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
+                verses[-1].text += f"\n{line}"
+                # previous line strip ending line break
+                if lines[-1] == "\n":
+                    lines.pop(-1)
+                lines[-1] = verses[-1].to_markdown()
             else:  # section header before footnotes
                 lines.append(f"## {line}")
         elif line.strip() != "":  # footnote section
@@ -461,7 +482,7 @@ def main(argv=None):
         chapter = Chapter.from_data(response.read())
         print(chapter.to_markdown())
     elif args.source == "esv":
-        print(get_from_esv(args.query))
+        print(get_from_esv(args.query, args.debug))
 
 
 if __name__ == "__main__":
