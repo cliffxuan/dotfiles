@@ -313,7 +313,7 @@ def process_1(text: str) -> str:
 
 def process_2(text: str) -> str:
     LINE_BREAK = "\n"
-    PARAGRAPH_BREAK = "\n---\n"
+    PARAGRAPH_BREAK = "---\n"
     HEADER = "#"
     SECTION_HEADER = "##"
     footnote_mark = re.compile(r"^\((\d+)\)")
@@ -322,11 +322,14 @@ def process_2(text: str) -> str:
     for i, line in enumerate(text.split(LINE_BREAK)):
         match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
         if i == 0:  # heading 1
-            lines.append(f"{HEADER} {line}")
+            lines.append(f"{HEADER} {line}{LINE_BREAK}")
         elif line == "Footnotes":
             lines.append(f"{SECTION_HEADER} Footnotes")
         elif match_verse:
-            if lines[-1] not in (LINE_BREAK, PARAGRAPH_BREAK):  # john12:36
+            if lines[-1] not in (
+                LINE_BREAK,
+                PARAGRAPH_BREAK,
+            ):  # header within verse, e.g. john12:36, john16:4
                 lines.append(LINE_BREAK)
             lines.append(
                 verse_to_markdown(
@@ -348,9 +351,12 @@ def process_2(text: str) -> str:
                 ):  # paragraph break
                     lines.append(PARAGRAPH_BREAK)
             elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
-                # previous line strip ending line break
-                if lines[-1] == LINE_BREAK:
+                if lines[-1] == LINE_BREAK:  # previous line strip ending line break
                     lines.pop(-1)
+                if lines[-1].startswith(
+                    SECTION_HEADER
+                ):  # previous line strip ending line break
+                    lines.append("")
                 lines.append(line)
             else:  # section header before footnotes
                 lines.append(f"{SECTION_HEADER} {line}")
@@ -831,23 +837,102 @@ class TestParseQuery(TestCase):
 
 class TestProcess(TestCase):
     def test_process(self):
-        text = """
-        John 15:18
+        cases = [
+            # 0. ordinary verse
+            (
+                """
+John 15:18
 
-        The Hatred of the World
+The Hatred of the World
 
-          [18] “If the world hates you, know that it has hated me before it hated you. (ESV)
-        """
-        expected = """
-        # John 15:18
+  [18] “If the world hates you, know that it has hated me before it hated you. (ESV)
+""",
+                """
+# John 15:18
 
-        ---
+---
 
-        ## The Hatred of the World
+## The Hatred of the World
 
 
-        18. "If the world hates you, know that it has hated me before it hated you.
-            (ESV)
-        """
+18. "If the world hates you, know that it has hated me before it hated you.
+    (ESV)
+""",
+            ),
+            # 1. multi-line verse
+            (
+                """
+John 12:15
+
+    [15] “Fear not, daughter of Zion;
+    behold, your king is coming,
+        sitting on a donkey’s colt!” (ESV)
+                """,
+                """
+# John 12:15
+
+---
+
+15. "Fear not, daughter of Zion;
+    behold, your king is coming,
+        sitting on a donkey's colt!" (ESV)
+                """,
+            ),
+            # 2. header within verse and 2nd part no need of breaking
+            (
+                """
+John 12:36
+
+  [36] While you have the light, believe in the light, that you may become sons of light.”
+
+The Unbelief of the People
+
+  When Jesus had said these things, he departed and hid himself from them. (ESV)
+""",
+                """
+# John 12:36
+
+---
+
+36. While you have the light, believe in the light, that you may become sons of light."
+
+
+---
+
+## The Unbelief of the People
+
+  When Jesus had said these things, he departed and hid himself from them. (ESV)
+""",
+            ),
+            # 3. header within verse and 2nd part needs breaking
+            (
+                """
+John 16:4
+
+  [4] But I have said these things to you, that when their hour comes you may remember that I told them to you.
+
+The Work of the Holy Spirit
+
+  “I did not say these things to you from the beginning, because I was with you. (ESV)
+""",
+                """
+# John 16:4
+
+---
+
+4. But I have said these things to you, that when their hour comes you may remember that I told them to you.
+
+
+---
+
+## The Work of the Holy Spirit
+
+  "I did not say these things to you from the beginning, because I was with you. (ESV)
+
+""",
+            ),
+        ]
         edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
-        self.assertEqual(process(edit(text)), dedent(edit(expected)))
+        for text, expected in cases[:]:
+            with self.subTest():
+                self.assertEqual(process(edit(text)), dedent(edit(expected)))
