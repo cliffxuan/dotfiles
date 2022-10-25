@@ -156,7 +156,8 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
     text = re.sub(r' "', f'{linebreak}"', text)
     # open quote
     text = re.sub(r" '", f"{linebreak}'", text)
-    text = re.sub(r"\.(?!($|'|\")) *", f".{linebreak}", text)
+    # full stop not followed by quote with optional ref to footnote
+    text = re.sub(r"\.(?!($|'|\"))(\(\d+\)|) +", rf".\2{linebreak}", text)
     # closing marks
     for mark in [
         "!",
@@ -197,7 +198,7 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         text,
     )
     text = re.sub(
-        r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # not oxford comma
+        r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # and but not oxford comma
         rf"\1\2{linebreak}and ",
         text,
     )
@@ -656,8 +657,8 @@ class TestVerse(TestCase):
                 'Jesus said to her, "I am the resurrection and the life.(4) Whoever believes in me, though he die, yet shall he live,',
                 """
                 25. Jesus said to her,
-                    "I am the resurrection and the life.
-                    (4) Whoever believes in me, though he die, yet shall he live,
+                    "I am the resurrection and the life.(4)
+                    Whoever believes in me, though he die, yet shall he live,
                 """,
             ),
             (
@@ -885,6 +886,13 @@ class TestVerse(TestCase):
                     of which the LORD’s tribute was 72.
                 """,
             ),
+            (
+                24,
+                "(Now they had been sent from the Pharisees.)",
+                """
+                24. (Now they had been sent from the Pharisees.)
+                """
+            )
         ]
         for number, text, result in verses:
             with self.subTest():
