@@ -149,7 +149,7 @@ class Book:
         raise ValueError(f"Cannot find book {string}")
 
 
-def verse_to_markdown(number: int, text: str) -> str:
+def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
     linebreak = "\n    "
 
     # open quote
@@ -192,7 +192,10 @@ def verse_to_markdown(number: int, text: str) -> str:
         rf"\1\2{linebreak}and ",
         text,
     )
-    return f"{number}. {text}"
+    if number:
+        return f"{number}. {text}"
+    else:
+        return text
 
 
 @dataclass
@@ -213,7 +216,7 @@ class Verse:
     text: str = ""
 
     def to_markdown(self) -> str:
-        return verse_to_markdown(self.number, self.text)
+        return verse_to_markdown(self.text, self.number)
 
 
 @dataclass
@@ -333,8 +336,8 @@ def process_2(text: str) -> str:
                 lines.append(LINE_BREAK)
             lines.append(
                 verse_to_markdown(
-                    number=int(match_verse.groupdict()["number"]),
                     text=match_verse.groupdict()["text"],
+                    number=int(match_verse.groupdict()["number"]),
                 )
             )
             lines.append(
@@ -357,7 +360,11 @@ def process_2(text: str) -> str:
                     SECTION_HEADER
                 ):  # previous line strip ending line break
                     lines.append("")
-                lines.append(line)
+                match = re.match(r"^( +)(.*)$", line)
+                if match:
+                    lines.append(match[1] + verse_to_markdown(match[2]))
+                else:
+                    lines.append(line)
             else:  # section header before footnotes
                 lines.append(f"{SECTION_HEADER} {line}")
         elif line.strip() != "":  # footnote section
@@ -875,7 +882,8 @@ John 12:15
 
 15. "Fear not, daughter of Zion;
     behold, your king is coming,
-        sitting on a donkey's colt!" (ESV)
+        sitting on a donkey's colt!"
+    (ESV)
                 """,
             ),
             # 2. header within verse and 2nd part no need of breaking
@@ -901,7 +909,8 @@ The Unbelief of the People
 
 ## The Unbelief of the People
 
-  When Jesus had said these things, he departed and hid himself from them. (ESV)
+  When Jesus had said these things, he departed and hid himself from them.
+    (ESV)
 """,
             ),
             # 3. header within verse and 2nd part needs breaking
@@ -927,8 +936,9 @@ The Work of the Holy Spirit
 
 ## The Work of the Holy Spirit
 
-  "I did not say these things to you from the beginning, because I was with you. (ESV)
-
+  "I did not say these things to you from the beginning,
+    because I was with you.
+    (ESV)
 """,
             ),
         ]
