@@ -164,6 +164,7 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         "'",
         '"',
         "?",
+        ":",
     ]:
         text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
     for link_word in [
@@ -755,7 +756,8 @@ class TestVerse(TestCase):
                 22,
                 "The sons of Shem: Elam, Asshur, Arpachshad, Lud, and Aram.",
                 """
-                22. The sons of Shem: Elam, Asshur, Arpachshad, Lud, and Aram.
+                22. The sons of Shem:
+                    Elam, Asshur, Arpachshad, Lud, and Aram.
                 """,
             ),
             (
@@ -790,6 +792,16 @@ class TestVerse(TestCase):
                 """
                 31. Now is the judgment of this world;
                     now will the ruler of this world be cast out.
+                """,
+            ),
+            (
+                7,
+                "Nevertheless, I tell you the truth: it is to your advantage that I go away, for if I do not go away, the Helper will not come to you. But if I go, I will send him to you.",
+                """
+                7. Nevertheless, I tell you the truth:
+                    it is to your advantage that I go away,
+                    for if I do not go away, the Helper will not come to you.
+                    But if I go, I will send him to you.
                 """,
             ),
         ]
