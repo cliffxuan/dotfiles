@@ -177,6 +177,14 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         "in order that",
         "unless",
         "not only",
+        "which",
+        "where",
+        "when",
+        "who",
+        "whose",
+        "whom",
+        "of whom",
+        "of which",
     ]:
         text = re.sub(
             rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
@@ -783,7 +791,8 @@ class TestVerse(TestCase):
                 "When the large crowd of the Jews learned that Jesus(4) was there, they came, not only on account of him but also to see Lazarus, whom he had raised from the dead.",
                 """
                 9. When the large crowd of the Jews learned that Jesus(4) was there, they came,
-                    not only on account of him but also to see Lazarus, whom he had raised from the dead.
+                    not only on account of him but also to see Lazarus,
+                    whom he had raised from the dead.
                 """,
             ),
             (
@@ -802,6 +811,78 @@ class TestVerse(TestCase):
                     it is to your advantage that I go away,
                     for if I do not go away, the Helper will not come to you.
                     But if I go, I will send him to you.
+                """,
+            ),
+            (
+                9,
+                "The true light, which gives light to everyone, was coming into the world.",
+                """
+                9. The true light,
+                    which gives light to everyone, was coming into the world.
+                """,
+            ),
+            (
+                38,
+                "He set the sticks that he had peeled in front of the flocks in the troughs, that is, the watering places, where the flocks came to drink. And since they bred when they came to drink,",
+                """
+                38. He set the sticks that he had peeled in front of the flocks in the troughs, that is, the watering places,
+                    where the flocks came to drink.
+                    And since they bred when they came to drink,
+             """,
+            ),
+            (
+                19,
+                'And this is the testimony of John, when the Jews sent priests and Levites from Jerusalem to ask him, "Who are you?"',
+                """
+                19. And this is the testimony of John,
+                    when the Jews sent priests and Levites from Jerusalem to ask him,
+                    "Who are you?"
+                """,
+            ),
+            (
+                12,
+                "But to all who did receive him, who believed in his name, he gave the right to become children of God,",
+                """
+                12. But to all who did receive him,
+                    who believed in his name, he gave the right to become children of God,
+                """,
+            ),
+            (
+                24,
+                "Moreover, his concubine, whose name was Reumah, bore Tebah, Gaham, Tahash, and Maacah.",
+                """
+                24. Moreover, his concubine,
+                    whose name was Reumah, bore Tebah, Gaham, Tahash, and Maacah.
+                """,
+            ),
+            (
+                15,
+                "And Hagar bore Abram a son, and Abram called the name of his son, whom Hagar bore, Ishmael.",
+                """
+                15. And Hagar bore Abram a son,
+                    and Abram called the name of his son,
+                    whom Hagar bore, Ishmael.
+                """,
+            ),
+            (
+                1,
+                'Now Boaz had gone up to the gate and sat down there. And behold, the redeemer, of whom Boaz had spoken, came by. So Boaz said, "Turn aside, friend; sit down here." And he turned aside and sat down.',
+                """
+                1. Now Boaz had gone up to the gate and sat down there.
+                    And behold, the redeemer,
+                    of whom Boaz had spoken, came by.
+                    So Boaz said,
+                    "Turn aside, friend;
+                    sit down here."
+                    And he turned aside and sat down.
+                """,
+            ),
+            (
+                38,
+                "The cattle were 36,000, of which the LORD’s tribute was 72.",
+                """
+                38. The cattle were 36,000,
+                    of which the LORD’s tribute was 72.
                 """,
             ),
         ]
