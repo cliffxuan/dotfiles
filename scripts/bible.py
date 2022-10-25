@@ -314,15 +314,17 @@ def process_1(text: str) -> str:
 def process_2(text: str) -> str:
     LINE_BREAK = "\n"
     PARAGRAPH_BREAK = "\n---\n"
+    HEADER = "#"
+    SECTION_HEADER = "##"
     footnote_mark = re.compile(r"^\((\d+)\)")
     lines = []
     footnotes = []
     for i, line in enumerate(text.split(LINE_BREAK)):
         match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
         if i == 0:  # heading 1
-            lines.append(f"# {line}")
+            lines.append(f"{HEADER} {line}")
         elif line == "Footnotes":
-            lines.append("## Footnotes")
+            lines.append(f"{SECTION_HEADER} Footnotes")
         elif match_verse:
             if lines[-1] not in (LINE_BREAK, PARAGRAPH_BREAK):  # john12:36
                 lines.append(LINE_BREAK)
@@ -339,9 +341,11 @@ def process_2(text: str) -> str:
             footnote = footnote_mark.sub(r"- (\1)", line)
             footnotes.append(footnote)
             lines.append(footnote)
-        elif "## Footnotes" not in lines:  # before footnote section
+        elif f"{SECTION_HEADER} Footnotes" not in lines:  # before footnote section
             if line.strip() == "":
-                if lines[-1] != PARAGRAPH_BREAK:  # paragraph break
+                if lines[-1] != PARAGRAPH_BREAK and not lines[-1].startswith(
+                    SECTION_HEADER
+                ):  # paragraph break
                     lines.append(PARAGRAPH_BREAK)
             elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
                 # previous line strip ending line break
@@ -349,10 +353,14 @@ def process_2(text: str) -> str:
                     lines.pop(-1)
                 lines.append(line)
             else:  # section header before footnotes
-                lines.append(f"## {line}")
+                lines.append(f"{SECTION_HEADER} {line}")
         elif line.strip() != "":  # footnote section
             lines.append(line)
-    return LINE_BREAK.join(lines)
+    return LINE_BREAK.join(lines).strip()
+
+
+def process(text: str) -> str:
+    return process_2(process_1(text))
 
 
 def get_from_esv(query: str, debug: bool = False) -> str:
@@ -362,7 +370,7 @@ def get_from_esv(query: str, debug: bool = False) -> str:
         with open(f"/tmp/{query}.txt", "w") as f:
             f.write(text)
     # text = open(f"/tmp/{query}.txt").read()
-    return process_2(process_1(text))
+    return process(text)
 
 
 def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
@@ -819,3 +827,27 @@ class TestParseQuery(TestCase):
         ]:
             with self.subTest():
                 assert parse_chapters_with_verses(query) == result
+
+
+class TestProcess(TestCase):
+    def test_process(self):
+        text = """
+        John 15:18
+
+        The Hatred of the World
+
+          [18] “If the world hates you, know that it has hated me before it hated you. (ESV)
+        """
+        expected = """
+        # John 15:18
+
+        ---
+
+        ## The Hatred of the World
+
+
+        18. "If the world hates you, know that it has hated me before it hated you.
+            (ESV)
+        """
+        edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
+        self.assertEqual(process(edit(text)), dedent(edit(expected)))
