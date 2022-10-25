@@ -186,6 +186,7 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         "whom",
         "of whom",
         "of which",
+        "even though",
     ]:
         text = re.sub(
             rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
@@ -891,8 +892,16 @@ class TestVerse(TestCase):
                 "(Now they had been sent from the Pharisees.)",
                 """
                 24. (Now they had been sent from the Pharisees.)
+                """,
+            ),
+            (
+                19,
+                "who sets his heart to seek God, the LORD, the God of his fathers, even though not according to the sanctuary's rules of cleanness.\"",
                 """
-            )
+                19. who sets his heart to seek God, the LORD, the God of his fathers,
+                    even though not according to the sanctuary's rules of cleanness."
+                """,
+            ),
         ]
         for number, text, result in verses:
             with self.subTest():
