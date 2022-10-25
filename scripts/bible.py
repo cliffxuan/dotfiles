@@ -156,8 +156,8 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
     text = re.sub(r' "', f'{linebreak}"', text)
     # open quote
     text = re.sub(r" '", f"{linebreak}'", text)
-    # full stop not followed by quote with optional ref to footnote
-    text = re.sub(r"\.(?!($|'|\"))(\(\d+\)|) +", rf".\2{linebreak}", text)
+    # full stop followed by space with optional quote or ref to footnote
+    text = re.sub(r"\.('|\"|)(\(\d+\)|) +", rf".\1\2{linebreak}", text)
     # closing marks
     for mark in [
         "!",
@@ -902,6 +902,18 @@ class TestVerse(TestCase):
                     even though not according to the sanctuary's rules of cleanness."
                 """,
             ),
+            (
+                5,
+                'They answered him, "Jesus of Nazareth." Jesus said to them, "I am he."(1) Judas, who betrayed him, was standing with them.',
+                """
+                5. They answered him,
+                    "Jesus of Nazareth."
+                    Jesus said to them,
+                    "I am he."(1)
+                    Judas,
+                    who betrayed him, was standing with them.
+                """
+            )
         ]
         for number, text, result in verses:
             with self.subTest():
