@@ -188,13 +188,14 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         "of whom",
         "of which",
         "even though",
+        "since",
     ]:
         text = re.sub(
             rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
             rf"\1\2{linebreak}{link_word} ",
             text,
         )
-    for conjunction in ["When", "But when"]:
+    for conjunction in ["When", "But when", "So when"]:
         text = re.sub(rf"(^{conjunction}( \w+)+,) ", rf"\1{linebreak}", text)
     text = re.sub(
         r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
@@ -941,6 +942,25 @@ class TestVerse(TestCase):
                 """
                 33. But when they came to Jesus and saw that he was already dead,
                     they did not break his legs.
+                """,
+            ),
+            (
+                13,
+                "So when Pilate heard these words, he brought Jesus out and sat down on the judgment seat at a place called The Stone Pavement, and in Aramaic(2) Gabbatha.",
+                """
+                13. So when Pilate heard these words,
+                    he brought Jesus out and sat down on the judgment seat at a place called The Stone Pavement,
+                    and in Aramaic(2) Gabbatha.
+                """,
+            ),
+            (
+                8,
+                "If she does not please her master, who has designated her for himself, then he shall let her be redeemed. He shall have no right to sell her to a foreign people, since he has broken faith with her.",
+                """
+                8. If she does not please her master,
+                    who has designated her for himself, then he shall let her be redeemed.
+                    He shall have no right to sell her to a foreign people,
+                    since he has broken faith with her.
                 """,
             ),
         ]
