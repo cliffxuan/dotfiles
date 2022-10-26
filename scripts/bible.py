@@ -194,7 +194,8 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
             rf"\1\2{linebreak}{link_word} ",
             text,
         )
-    text = re.sub(r"(^When( \w+)+,) ", rf"\1{linebreak}", text)
+    for conjunction in ["When", "But when"]:
+        text = re.sub(rf"(^{conjunction}( \w+)+,) ", rf"\1{linebreak}", text)
     text = re.sub(
         r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
         rf"\1\2{linebreak}as ",
@@ -932,7 +933,15 @@ class TestVerse(TestCase):
                 26. When Jesus saw his mother and the disciple whom he loved standing nearby,
                     he said to his mother,
                     "Woman, behold, your son!"
+                """,
+            ),
+            (
+                33,
+                "But when they came to Jesus and saw that he was already dead, they did not break his legs.",
                 """
+                33. But when they came to Jesus and saw that he was already dead,
+                    they did not break his legs.
+                """,
             ),
         ]
         for number, text, result in verses:
