@@ -149,15 +149,20 @@ class Book:
         raise ValueError(f"Cannot find book {string}")
 
 
-def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
-    linebreak = "\n    "
+def verse_to_markdown(
+    text: str, number: t.Optional[int] = None, strict: bool = False
+) -> str:
+    if not strict:
+        indent_break = "\n    "
+    else:
+        indent_break = f"<br>{'&nbsp;' * 4}"
 
     # open quote
-    text = re.sub(r' "', f'{linebreak}"', text)
+    text = re.sub(r' "', f'{indent_break}"', text)
     # open quote
-    text = re.sub(r" '", f"{linebreak}'", text)
+    text = re.sub(r" '", f"{indent_break}'", text)
     # full stop followed by space with optional quote or ref to footnote
-    text = re.sub(r"\.('|\"|)(\(\d+\)|) +", rf".\1\2{linebreak}", text)
+    text = re.sub(r"\.('|\"|)(\(\d+\)|) +", rf".\1\2{indent_break}", text)
     # closing marks
     for mark in [
         "!",
@@ -167,7 +172,7 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
         "?",
         ":",
     ]:
-        text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
+        text = re.sub(rf"\{mark} ", f"{mark}{indent_break}", text)
     for link_word in [
         "so",
         # "so that",
@@ -192,19 +197,19 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
     ]:
         text = re.sub(
             rf"(,|;)(?P<ref>\(\d+\)|) {link_word} ",
-            rf"\1\2{linebreak}{link_word} ",
+            rf"\1\2{indent_break}{link_word} ",
             text,
         )
     for conjunction in ["When", "But when", "So when"]:
-        text = re.sub(rf"(^{conjunction}( \w+)+,) ", rf"\1{linebreak}", text)
+        text = re.sub(rf"(^{conjunction}( \w+)+,) ", rf"\1{indent_break}", text)
     text = re.sub(
         r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
-        rf"\1\2{linebreak}as ",
+        rf"\1\2{indent_break}as ",
         text,
     )
     text = re.sub(
         r"(,|;)(?P<ref>\(\d+\)|) and (?!(\w+ |)(\w+)(\.|;))",  # and but not oxford comma
-        rf"\1\2{linebreak}and ",
+        rf"\1\2{indent_break}and ",
         text,
     )
     if number:
@@ -282,6 +287,11 @@ def argument_parser():
         help="chapter of the book",
     )
     parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="strict",
+    )
+    parser.add_argument(
         "--debug",
         action="store_true",
         help="debug",
@@ -308,7 +318,7 @@ def get_esv_passages(start_verse: Verse, end_verse: t.Optional[Verse]) -> str:
     return json.loads(response.read())["passages"][0]
 
 
-def process_1(text: str) -> str:
+def process_1(text: str, strict: bool = False) -> str:
     for old, new in [
         ("“", '"'),
         ("”", '"'),
@@ -329,7 +339,7 @@ def process_1(text: str) -> str:
     return "\n".join(result)
 
 
-def process_2(text: str) -> str:
+def process_2(text: str, strict: bool = False) -> str:
     LINE_BREAK = "\n"
     PARAGRAPH_BREAK = "---\n"
     HEADER = "#"
@@ -337,7 +347,7 @@ def process_2(text: str) -> str:
     footnote_mark = re.compile(r"^\((\d+)\)")
     lines = []
     footnotes = []
-    for i, line in enumerate(text.split(LINE_BREAK)):
+    for i, line in enumerate(text.split("\n")):
         match_verse = re.match(r"^(?P<number>\d+)\. (?P<text>.*)$", line)
         if i == 0:  # heading 1
             lines.append(f"{HEADER} {line}{LINE_BREAK}")
@@ -353,6 +363,7 @@ def process_2(text: str) -> str:
                 verse_to_markdown(
                     text=match_verse.groupdict()["text"],
                     number=int(match_verse.groupdict()["number"]),
+                    strict=strict,
                 )
             )
             lines.append(
@@ -385,28 +396,34 @@ def process_2(text: str) -> str:
                     lines.append("")
                 match = re.match(r"^( +)(.*)$", line)
                 if match:
-                    lines.append(match[1] + verse_to_markdown(match[2]))
+                    lines.append(
+                        match[1]
+                        + verse_to_markdown(
+                            match[2],
+                            strict=strict,
+                        )
+                    )
                 else:
                     lines.append(line)
             else:  # section header before footnotes
                 lines.append(f"{SECTION_HEADER} {line}")
         elif line.strip() != "":  # footnote section
             lines.append(line)
-    return LINE_BREAK.join(lines).strip()
+    return "\n".join(lines).strip()
 
 
-def process(text: str) -> str:
-    return process_2(process_1(text))
+def process(text: str, strict: bool = False) -> str:
+    return process_2(process_1(text, strict), strict)
 
 
-def get_from_esv(query: str, debug: bool = False) -> str:
+def get_from_esv(query: str, strict: bool = False, debug: bool = False) -> str:
     start_verse, end_verse = parse_query(query)
     text = get_esv_passages(start_verse, end_verse)
     if debug:
         with open(f"/tmp/{query}.txt", "w") as f:
             f.write(text)
     # text = open(f"/tmp/{query}.txt").read()
-    return process(text)
+    return process(text, strict)
 
 
 def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
@@ -527,7 +544,7 @@ def main(argv=None):
         chapter = Chapter.from_data(response.read())
         print(chapter.to_markdown())
     elif args.source == "esv":
-        print(get_from_esv(args.query, args.debug))
+        print(get_from_esv(args.query, not args.strict, args.debug))
 
 
 if __name__ == "__main__":
