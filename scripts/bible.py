@@ -111,6 +111,7 @@ SPECIAL_ABBREVATIONS = {
 REVERSE_LOOKUP_NO_VOWELS = {
     re.sub(r"[a|e|i|o|u|A|E|I|O|O]", "", k): v for k, v in REVERSE_LOOKUP.items()
 }
+EMPTY_SPACE = "  "  # U+2003
 
 
 @dataclass
@@ -331,9 +332,17 @@ def process_1(text: str, strict: bool = False) -> str:
 
     start = 0
     result = []
-    for item in verse_mark.finditer(text):
+    verse_num = 0
+    for i, item in enumerate(verse_mark.finditer(text)):
         end = item.span()[0]
         result.append(verse_mark.sub(r"\1.", text[start : end - 1]))
+        if i == 0:
+            verse_num = int(item.groups()[0])
+        else:
+            verse_num += 1
+            while verse_num < int(item.groups()[0]):
+                result.append(f"{verse_num}. {EMPTY_SPACE}")
+                verse_num += 1
         start = end
     result.append(verse_mark.sub(r"\1.", text[start : len(text)]))
     return "\n".join(result)
@@ -396,8 +405,12 @@ def process_2(text: str, strict: bool = False) -> str:
                     lines.append("")
                 match = re.match(r"^( +)(.*)$", line)
                 if match:
+                    if strict:
+                        whitespace = match[1].replace(" ", "&nbsp;")
+                    else:
+                        whitespace = match[1]
                     lines.append(
-                        match[1]
+                        whitespace
                         + verse_to_markdown(
                             match[2],
                             strict=strict,
@@ -544,7 +557,7 @@ def main(argv=None):
         chapter = Chapter.from_data(response.read())
         print(chapter.to_markdown())
     elif args.source == "esv":
-        print(get_from_esv(args.query, not args.strict, args.debug))
+        print(get_from_esv(args.query, args.strict, args.debug))
 
 
 if __name__ == "__main__":
@@ -1167,6 +1180,46 @@ John 19:24
       So the soldiers did these things, (ESV)
                 """,
             ),
+            # 5. missing a verse
+            (
+                """
+John 5:3–5
+
+  [3] In these lay a multitude of invalids—blind, lame, and paralyzed.(1) [5] One man was there who had been an invalid for thirty-eight years.
+
+Footnotes
+
+(1) 5:3 Some manuscripts insert, wholly or in part, *waiting for the moving of the water; [4] for an angel of the Lord went down at certain seasons into the pool, and stirred the water: whoever stepped in first after the stirring of the water was healed of whatever disease he had*
+ (ESV)
+                """,
+                """
+# John 5:3–5
+
+---
+
+3. In these lay a multitude of invalids—blind, lame, and paralyzed.(1)
+
+
+4.   
+
+
+5. One man was there who had been an invalid for thirty-eight years.
+
+
+---
+
+## Footnotes
+- (1) 5:3 Some manuscripts insert, wholly or in part, *waiting for the moving of the water;
+
+
+4. for an angel of the Lord went down at certain seasons into the pool,
+    and stirred the water:
+    whoever stepped in first after the stirring of the water was healed of whatever disease he had*
+
+
+ (ESV)
+                """
+            )
         ]
         edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
         for text, expected in cases[:]:
