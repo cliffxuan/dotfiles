@@ -169,7 +169,8 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
     ]:
         text = re.sub(rf"\{mark} ", f"{mark}{linebreak}", text)
     for link_word in [
-        "so that",
+        "so",
+        # "so that",
         "but",
         "because",
         "not because",
@@ -193,6 +194,7 @@ def verse_to_markdown(text: str, number: t.Optional[int] = None) -> str:
             rf"\1\2{linebreak}{link_word} ",
             text,
         )
+    text = re.sub(r"(^When( \w+)+,) ", rf"\1{linebreak}", text)
     text = re.sub(
         r"(,|;)(?P<ref>\(\d+\)|) as (?!\w+ as)",  # not as many|well|far|... as
         rf"\1\2{linebreak}as ",
@@ -606,7 +608,8 @@ class TestVerse(TestCase):
                 6,
                 'When Jesus saw him lying there and knew that he had already been there a long time, he said to him, "Do you want to be healed?"',
                 """
-                6. When Jesus saw him lying there and knew that he had already been there a long time, he said to him,
+                6. When Jesus saw him lying there and knew that he had already been there a long time,
+                    he said to him,
                     "Do you want to be healed?"
                 """,
             ),
@@ -912,8 +915,25 @@ class TestVerse(TestCase):
                     "I am he."(1)
                     Judas,
                     who betrayed him, was standing with them.
+                """,
+            ),
+            (
+                29,
+                "A jar full of sour wine stood there, so they put a sponge full of the sour wine on a hyssop branch and held it to his mouth.",
                 """
-            )
+                29. A jar full of sour wine stood there,
+                    so they put a sponge full of the sour wine on a hyssop branch and held it to his mouth.
+                """,
+            ),
+            (
+                26,
+                'When Jesus saw his mother and the disciple whom he loved standing nearby, he said to his mother, "Woman, behold, your son!"',
+                """
+                26. When Jesus saw his mother and the disciple whom he loved standing nearby,
+                    he said to his mother,
+                    "Woman, behold, your son!"
+                """
+            ),
         ]
         for number, text, result in verses:
             with self.subTest():
@@ -1031,7 +1051,8 @@ The Unbelief of the People
 
 ## The Unbelief of the People
 
-  When Jesus had said these things, he departed and hid himself from them.
+  When Jesus had said these things,
+    he departed and hid himself from them.
     (ESV)
 """,
             ),
