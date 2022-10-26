@@ -364,13 +364,21 @@ def process_2(text: str) -> str:
             lines.append(footnote)
         elif f"{SECTION_HEADER} Footnotes" not in lines:  # before footnote section
             if line.strip() == "":
-                if lines[-1] != PARAGRAPH_BREAK and not lines[-1].startswith(
-                    SECTION_HEADER
+                if (
+                    lines[-1] != PARAGRAPH_BREAK
+                    and not lines[-1].startswith(SECTION_HEADER)
+                    and lines[-1] != ""
                 ):  # paragraph break
                     lines.append(PARAGRAPH_BREAK)
             elif line.startswith(" "):  # a verse across multiple lines, e.g. John 12:15
                 if lines[-1] == LINE_BREAK:  # previous line strip ending line break
                     lines.pop(-1)
+                if lines[-1] == PARAGRAPH_BREAK:  # should not be a paragraph break
+                    lines.pop(-1)
+                    if lines[-1] == LINE_BREAK:
+                        lines.pop(-1)
+                    if lines[-1].strip() != "":
+                        lines.append("")
                 if lines[-1].startswith(
                     SECTION_HEADER
                 ):  # previous line strip ending line break
@@ -1112,6 +1120,35 @@ The Work of the Holy Spirit
     because I was with you.
     (ESV)
 """,
+            ),
+            # 4. quote of scripture within verse
+            (
+                """
+John 19:24
+
+  [24] so they said to one another, “Let us not tear it, but cast lots for it to see whose it shall be.” This was to fulfill the Scripture which says,
+
+    “They divided my garments among them,
+        and for my clothing they cast lots.”
+
+
+      So the soldiers did these things, (ESV)
+                """,
+                """
+# John 19:24
+
+---
+
+24. so they said to one another,
+    "Let us not tear it,
+    but cast lots for it to see whose it shall be."
+    This was to fulfill the Scripture which says,
+
+    "They divided my garments among them,
+        and for my clothing they cast lots."
+
+      So the soldiers did these things, (ESV)
+                """,
             ),
         ]
         edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
