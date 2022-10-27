@@ -111,7 +111,7 @@ SPECIAL_ABBREVATIONS = {
 REVERSE_LOOKUP_NO_VOWELS = {
     re.sub(r"[a|e|i|o|u|A|E|I|O|O]", "", k): v for k, v in REVERSE_LOOKUP.items()
 }
-EMPTY_SPACE = "  "  # U+2003
+EMPTY_SPACE = " "  # U+2003
 
 
 @dataclass
@@ -156,7 +156,7 @@ def verse_to_markdown(
     if not strict:
         indent_break = "\n    "
     else:
-        indent_break = f"<br>{'&nbsp;' * 4}"
+        indent_break = f"<br>{EMPTY_SPACE}"
 
     # open quote
     text = re.sub(r' "', f'{indent_break}"', text)
@@ -244,7 +244,7 @@ class Verse:
 class Chapter:
     number: int
     book: Book
-    verses: list[Verse]
+    verses: t.List[Verse]
 
     @classmethod
     def from_data(cls, data: t.Union[str, bytes]) -> "Chapter":
@@ -406,18 +406,16 @@ def process_2(text: str, strict: bool = False) -> str:
                 match = re.match(r"^( +)(.*)$", line)
                 if match:
                     if strict:
-                        whitespace = match[1].replace(" ", "&nbsp;")
+                        whitespace = match[1].replace(" ", EMPTY_SPACE)
                     else:
                         whitespace = match[1]
-                    lines.append(
-                        whitespace
-                        + verse_to_markdown(
-                            match[2],
-                            strict=strict,
-                        )
+                    remaining = whitespace + verse_to_markdown(
+                        match[2],
+                        strict=strict,
                     )
                 else:
-                    lines.append(line)
+                    remaining = line
+                lines[-1] += ("<br>" if strict else LINE_BREAK) + remaining
             else:  # section header before footnotes
                 lines.append(f"{SECTION_HEADER} {line}")
         elif line.strip() != "":  # footnote section
@@ -439,7 +437,7 @@ def get_from_esv(query: str, strict: bool = False, debug: bool = False) -> str:
     return process(text, strict)
 
 
-def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
+def parse_single_chapter_no_verse(query: str) -> t.Tuple[str, int]:
     try:
         int(query[-1])  # TODO maybe this should return the whole book?
     except (IndexError, ValueError):
@@ -452,7 +450,7 @@ def parse_single_chapter_no_verse(query: str) -> tuple[str, int]:
 
 def parse_single_chapter_with_start_verse(
     query: str,
-) -> t.Optional[tuple[str, int, int]]:
+) -> t.Optional[t.Tuple[str, int, int]]:
     match = re.match(r"^(?P<book>^.+?)(?P<chapter>\d+):(?P<verse>\d+)$", query)
     if not match:
         return None
@@ -465,7 +463,7 @@ def parse_single_chapter_with_start_verse(
 
 def parse_single_chapter_with_verses(
     query: str,
-) -> t.Optional[tuple[str, int, int, int]]:
+) -> t.Optional[t.Tuple[str, int, int, int]]:
     match = re.match(
         r"^(?P<book>^.+?)(?P<chapter>\d+):(?P<start_verse>\d+)-(?P<end_verse>\d+)$",
         query,
@@ -482,7 +480,7 @@ def parse_single_chapter_with_verses(
 
 def parse_chapters_with_verses(
     query: str,
-) -> t.Optional[tuple[str, int, int, int, int]]:
+) -> t.Optional[t.Tuple[str, int, int, int, int]]:
     match = re.match(
         r"^(?P<book>^.+?)(?P<start_chapter>\d+)(:(?P<start_verse>\d+)|)-(?P<end_chapter>\d+)(:(?P<end_verse>\d+)|)$",
         query,
@@ -498,7 +496,7 @@ def parse_chapters_with_verses(
     )
 
 
-def parse_query(query: str) -> tuple[Verse, t.Optional[Verse]]:
+def parse_query(query: str) -> t.Tuple[Verse, t.Optional[Verse]]:
     parsed = parse_chapters_with_verses(query)
     if parsed:
         book, start_chapter, start_verse, end_chapter, end_verse = parsed
@@ -1200,7 +1198,7 @@ Footnotes
 3. In these lay a multitude of invalids—blind, lame, and paralyzed.(1)
 
 
-4.   
+4.  
 
 
 5. One man was there who had been an invalid for thirty-eight years.
@@ -1218,8 +1216,8 @@ Footnotes
 
 
  (ESV)
-                """
-            )
+                """,
+            ),
         ]
         edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
         for text, expected in cases[:]:
