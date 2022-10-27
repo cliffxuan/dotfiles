@@ -406,7 +406,7 @@ def process_2(text: str, strict: bool = False) -> str:
                 match = re.match(r"^( +)(.*)$", line)
                 if match:
                     if strict:
-                        whitespace = match[1].replace(" ", EMPTY_SPACE)
+                        whitespace = match[1].replace(" ", "")
                     else:
                         whitespace = match[1]
                     remaining = whitespace + verse_to_markdown(
@@ -416,6 +416,7 @@ def process_2(text: str, strict: bool = False) -> str:
                 else:
                     remaining = line
                 lines[-1] += ("<br>" if strict else LINE_BREAK) + remaining
+                lines.append(LINE_BREAK)
             else:  # section header before footnotes
                 lines.append(f"{SECTION_HEADER} {line}")
         elif line.strip() != "":  # footnote section
@@ -1076,20 +1077,29 @@ The Hatred of the World
             # 1. multi-line verse
             (
                 """
-John 12:15
+John 12:15-16
 
     [15] “Fear not, daughter of Zion;
     behold, your king is coming,
-        sitting on a donkey’s colt!” (ESV)
+        sitting on a donkey’s colt!”
+
+
+      [16] His disciples did not understand these things at first, but when Jesus was glorified, then they remembered that these things had been written about him and had been done to him. (ESV)
                 """,
                 """
-# John 12:15
+# John 12:15-16
 
 ---
 
 15. "Fear not, daughter of Zion;
     behold, your king is coming,
         sitting on a donkey's colt!"
+
+
+---
+
+16. His disciples did not understand these things at first,
+    but when Jesus was glorified, then they remembered that these things had been written about him and had been done to him.
     (ESV)
                 """,
             ),
@@ -1221,5 +1231,6 @@ Footnotes
         ]
         edit = lambda s: dedent(s.lstrip("\n").rstrip())  # noqa: E731
         for text, expected in cases[:]:
+            # print(process(edit(text)))
             with self.subTest():
                 self.assertEqual(process(edit(text)), dedent(edit(expected)))
