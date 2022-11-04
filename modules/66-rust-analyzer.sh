@@ -4,7 +4,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/../utils.sh"
 
 run() {
-  rustup component add rust-analyzer
+  rustup component add rust-analyzer --toolchain stable
   ln -s "$(rustup which --toolchain stable rust-analyzer)" ~/.local/bin/
 }
 
