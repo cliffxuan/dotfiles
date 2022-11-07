@@ -1,12 +1,85 @@
 #!/usr/bin/env bash
+#
+mk_cargo() {
+  filename="$1"
+  direcotry=$(dirname "$filename")
+  bname=$(basename "$filename")
+  cd "$direcotry" || exit 1
+  cat <<EOF >Cargo.toml
+[package]
+name = "${bname%.*}"
+version = "0.1.0"
+edition = "2021"
 
-# rust
-function runrust {
-  filename=$(basename "$1")
-  exe=/tmp/${filename%.*}
-  rm -f "$exe"
-  rustc "$1" -o "$exe" && "$exe"
+[[bin]]
+name = "${bname%.*}"
+path = "$bname"
+EOF
+  echo "$direcotry/Cargo.toml"
 }
 
+setup() {
+  dirname="$1"
+  filename="$2"
+  cp "$filename" "$dirname/"
+  mk_cargo "$dirname/$(basename "$filename")"
+}
 
-runrust "$@"
+cargo_run() {
+  curdir=$(dirname "$1")
+  if [ -f "$curdir/Cargo.toml" ]; then
+    cd "$curdir" || exit 1
+    cargo run
+  else
+    tmpdir=$(mktemp -d)
+    setup "$tmpdir" "$1"
+    cargo run
+    rm -rf "$tmpdir"
+  fi
+}
+
+cargo_test() {
+  curdir=$(dirname "$1")
+  shift
+  if [ -f "$curdir/Cargo.toml" ]; then
+    cd "$curdir" || exit 1
+    cargo test "$@"
+  else
+    dirname=$(mktemp -d)
+    setup "$dirname" "$1"
+    cargo test
+    rm -rf "$dirname"
+  fi
+}
+
+main() {
+  POSITIONAL=()
+  while [[ $# -gt 0 ]]; do
+    key="$1"
+    case $key in
+    -c | --make-cargo)
+      MK_CARGO=YES
+      shift
+      ;;
+    -t | --test)
+      TEST=YES
+      shift
+      ;;
+    *)                   # unknown option
+      POSITIONAL+=("$1") # save it in an array for later
+      shift              # past argument
+      ;;
+    esac
+  done
+  set -- "${POSITIONAL[@]}" # restore positional parameters
+
+  if [ "$MK_CARGO" = YES ]; then
+    mk_cargo "$1"
+  elif [ "$TEST" = YES ]; then
+    cargo_test "${POSITIONAL[@]}"
+  else
+    cargo_run "${POSITIONAL[@]}"
+  fi
+}
+
+main "$@"
