@@ -44,6 +44,9 @@ cargo_test() {
   if [ -f "$curdir/Cargo.toml" ]; then
     cd "$curdir" || exit 1
     cargo test "$@"
+  elif [ "$curdir" = "tests" ] && [ -f "$curdir/../Cargo.toml" ]; then
+    cd "$curdir/.." || exit 1
+    cargo test "$@"
   else
     dirname=$(mktemp -d)
     setup "$dirname" "$1"
