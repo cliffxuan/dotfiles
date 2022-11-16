@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import argparse
 import json
+import sys
 from pathlib import Path
 
 VIM2VSCODE = {
@@ -184,14 +185,19 @@ class UltisnipParser:
                 json.dump(snippet_data.get("snippets"), f, indent=2)
 
 
+def default_dir() -> str:
+    if sys.platform == "win32":
+        return "~/AppData/Roaming/Code/User/snippets/"
+    else:
+        return "~/Library/Application Support/Code/User/snippets/"
+
+
 def argument_parser():
     parser = argparse.ArgumentParser(
         description="convert vim ultisnip to vscode snippets"
     )
     parser.add_argument("--ultisnips", default="~/.vim/UltiSnips/")
-    parser.add_argument(
-        "--vscode-snippets", default="~/Library/Application Support/Code/User/snippets/"
-    )
+    parser.add_argument("--vscode-snippets", default=default_dir())
     return parser
 
 
