@@ -2,10 +2,13 @@
     excludesfile = ~/.gitignore_global
     filemode = false
     editor = vim
+    eol = lf
+    autocrlf = input
+
 [user]
     name = Cliff Xuan
     email = cliff.xuan@gmail.com
-	signingkey = BD140839328746A9
+    signingkey = BD140839328746A9
 
 [color]
     ui = auto
