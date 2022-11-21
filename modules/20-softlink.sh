@@ -15,7 +15,7 @@ run() {
   do
     dotfile=$(basename "$ff")
     echo "symlink $DOTFILE_DIR/$dotfile $HOME/.$dotfile"
-    ln -fs "$DOTFILE_DIR/$dotfile" "$HOME/.$dotfile"
+    ln "$DOTFILE_DIR/$dotfile" "$HOME/.$dotfile"
   done
 
   mkdir -p "$HOME/.local/bin"
@@ -23,7 +23,7 @@ run() {
   do
     script=$(basename "$ff")
     echo "symlink $SCRIPT_DIR/$script $HOME/.local/bin/$script"
-    ln -fs "$SCRIPT_DIR/$script" "$HOME/.local/bin/$script"
+    ln "$SCRIPT_DIR/$script" "$HOME/.local/bin/$script"
   done
 }
 
