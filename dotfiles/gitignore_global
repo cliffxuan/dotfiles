@@ -144,3 +144,4 @@ dist-newstyle/
 # rust
 target/
 Cargo.lock
+*.code-workspace
