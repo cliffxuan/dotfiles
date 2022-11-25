@@ -3,7 +3,7 @@
 # path
 if [[ $OSTYPE == darwin* ]]
 then
-  export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/opt/grep/libexec/gnubin:/usr/local/opt/gnu-sed/libexec/gnubin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/openjdk/bin:$PATH
+  export PATH=$HOME/.local/bin:$HOME/bin:/usr/local/opt/grep/libexec/gnubin:/opt/homebrew/opt/grep/libexec/gnubin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/openjdk/bin:$PATH
 else
   if grep -vq "/usr/local/bin" <<< "$PATH"
   then
