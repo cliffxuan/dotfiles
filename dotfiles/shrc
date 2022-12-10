@@ -1,20 +1,10 @@
-# vi: ft=bash
+#!/usr/bin/env bash
+# vi: ft=sh
 # config for both zsh and bash
-# path
-if [[ $OSTYPE == darwin* ]]
-then
-  export PATH=$HOME/.local/bin:$HOME/bin:/opt/homebrew/opt/gnu-sed/libexec/gnubin:/opt/homebrew/opt/grep/libexec/gnubin:/usr/local/bin:/usr/local/sbin:/usr/local/opt/openjdk/bin:$PATH
-else
-  if grep -vq "/usr/local/bin" <<< "$PATH"
-  then
-    export PATH=/usr/local/bin:$PATH
-  fi
-  export PATH=$HOME/bin:$HOME/.local/bin:$PATH
-fi
 
 #vim
 alias uvim="vim -u NONE"
-alias svim="vim -u $HOME/.vimfiles/sensible.vim"
+alias svim="vim -u \$HOME/.vim/vimrc"
 alias neobundle="vim +NeoBundleInstall +qall"
 alias n="nvim"
 
@@ -36,49 +26,10 @@ export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 #ssh reverse tunneling
 alias sshl="ssh -R 19999:localhost:22"
 
-#haskell
-if [[ -d $HOME/Library/Haskell/bin ]]
-then
-  PATH=$HOME/Library/Haskell/bin:$PATH
-fi
-if [[ -d $HOME/.cabal/bin ]]
-then
-  PATH=$HOME/.cabal/bin:$PATH
-fi
-
-function _all_vms() {
-  reply=(`VBoxManage list vms | awk '{gsub("\"",""); print $1}'`)
-}
-
-function _running_vms() {
-  reply=(`VBoxManage list runningvms | awk '{gsub("\"",""); print $1}'`)
-}
-
-function startvm {
-  VBoxManage startvm $1 --type=headless
-}
-compctl -K _all_vms startvm
-
-function poweroffvm {
-  VBoxManage controlvm $1 poweroff
-}
-compctl -K _running_vms poweroffvm
-
-function controlvm {
-  VBoxManage controlvm $1 $2
-}
-compctl -K _all_vms controlvm
-
-function removevm {
-  VBoxManage unregistervm $1 --delete
-}
-compctl -K _all_vms removevm
-
 #show the rear of a file
 function rear {
   python -c "ff=open('$1', 'rb'); ff.seek(-$2,2); print ff.read($2)"
 }
-
 
 #alias
 alias ..g='git rev-parse && cd "$(git rev-parse --show-cdup)"'
@@ -91,8 +42,7 @@ alias gl="git log"
 alias wo=workon
 
 function ga {
-  if [ -z "$1" ]
-  then
+  if [ -z "$1" ]; then
     git add -u
   else
     git add "$@"
@@ -118,98 +68,74 @@ EOF
 function update_ssh_auth_sock {
   # Predictable SSH authentication socket location.
   SOCK="/tmp/ssh-agent-$USER-screen"
-  if test $SSH_AUTH_SOCK && [ $SSH_AUTH_SOCK != $SOCK ]
-  then
-    rm -f /tmp/ssh-agent-$USER-screen
-    ln -sf $SSH_AUTH_SOCK $SOCK
+  if test "$SSH_AUTH_SOCK" && [ "$SSH_AUTH_SOCK" != "$SOCK" ]; then
+    rm -f "/tmp/ssh-agent-$USER-screen"
+    ln -sf "$SSH_AUTH_SOCK" "$SOCK"
     export SSH_AUTH_SOCK=$SOCK
   fi
 }
 
 update_ssh_auth_sock
 
-# docker
-function synctime {
-  docker-machine ssh $1 sudo ntpclient -s -h pool.ntp.org
-}
-compctl -K _dk_vms synctime
-
-function refreshdns {
-  docker-machine ssh $1 sudo udhcpc
-}
-compctl -K _dk_vms refreshdns
-
-function gdns {
-  docker-machine ssh $1 "sudo echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
-}
-compctl -K _dk_vms gdns
-
 # c
 function c {
-exe=/tmp/${1%.*}
-rm -f $exe
-gcc $@ -o $exe && $exe
+  exe=/tmp/${1%.*}
+  rm -f "$exe"
+  gcc "$@" -o "$exe" && $exe
 }
 
 # ssl
 function showcrt {
-  openssl x509 -in $1 -text -noout
+  openssl x509 -in "$1" -text -noout
 }
-
 
 alias h="python3 -m http.server"
 
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
-if [ -f $NIX_SH ]
-then
-  source $NIX_SH
+if [ -f "$NIX_SH" ]; then
+  # shellcheck source=/dev/null
+  source "$NIX_SH"
 fi
 
-function gkill {
-  ps aux | grep "$*" | grep -v grep | awk '{print $2}' | xargs kill -9
-}
-
-
-function transfer {
-  if [ $# -eq 0 ];
-  then echo -e "No arguments specified. Usage:\necho transfer /tmp/test.md\ncat /tmp/test.md | transfer test.md";
-    return 1;
-  fi
-  tmpfile=$( mktemp -t transferXXX );
-  if tty -s;
-  then basefile=$(basename "$1" | sed -e 's/[^a-zA-Z0-9._-]/-/g'); curl --progress-bar --upload-file "$1" "https://transfer.sh/$basefile" >> $tmpfile;
-  else curl --progress-bar --upload-file "-" "https://transfer.sh/$1" >> $tmpfile ;
-  fi;
-  cat $tmpfile; rm -f $tmpfile;
-}
 
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 # python instance where virtualenvwrapper is installed
 export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="/usr/local/bin/python"}
-if [[ -f $HOME/.env ]]
-then
-  source $HOME/.env
-fi
 export GOPATH=$HOME/.go
-if [[ -d $GOPATH ]]
-then
-  PATH=$PATH:$GOPATH/bin
-fi
-
-# solana
-if [[ -d $HOME/.local/share/solana/install/active_release/bin ]]
-then
-  PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
+if [[ -f $HOME/.env ]]; then
+  # shellcheck source=/dev/null
+  source "$HOME/.env"
 fi
 
 #display for WSL
-if [[ -f /proc/version ]]
-then
-  if grep -q microsoft /proc/version
-  then
-    export DISPLAY=$(cat /etc/resolv.conf | grep nameserver | awk '{print $2}'):0
+if [[ -f /proc/version ]]; then
+  if grep -q microsoft /proc/version; then
+    DISPLAY=$(grep nameserver /etc/resolv.conf | awk '{print $2}'):0
+    export DISPLAY
   fi
 fi
 
 export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
+safe_prepend_path() {
+  local new_path=$1
+  if [[ -d $new_path ]] && grep -vq "$new_path" <<<"$PATH"; then
+    export PATH=$new_path:$PATH
+  fi
+}
+
+paths=(
+  /usr/local/bin
+  "$HOME/.local/bin"
+  "$HOME/Library/Haskell/bin"
+  "$HOME/.cabal/bin"
+  "$GOPATH/bin"
+)
+for new_path in "${paths[@]}"; do
+  safe_prepend_path "$new_path"
+done
+
+if [[ $OSTYPE == darwin* ]]; then
+  safe_prepend_path /opt/homebrew/bin
+fi
