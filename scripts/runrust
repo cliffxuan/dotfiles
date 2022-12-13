@@ -21,21 +21,40 @@ EOF
 setup() {
   dirname="$1"
   filename="$2"
+  cargo_file="$3"
   cp "$filename" "$dirname/"
-  mk_cargo "$dirname/$(basename "$filename")"
+  if [ -z "$cargo_file" ]; then
+    mk_cargo "$dirname/$(basename "$filename")"
+  else
+    cp "$cargo_file" "$dirname/Cargo.toml"
+    bname=$(basename "$filename")
+    cat <<EOF >> "$dirname/Cargo.toml"
+
+[[bin]]
+name = "${bname%.*}"
+path = "$bname"
+EOF
+    echo "$dirname/Cargo.toml"
+  fi
 }
 
 cargo_run() {
   curdir=$(dirname "$1")
+  echo "$curdir"
   if [ -f "$curdir/Cargo.toml" ]; then
-    cd "$curdir" || exit 1
+    cd "$curdir" || return 1
     cargo run
-  else
-    tmpdir=$(mktemp -d)
-    setup "$tmpdir" "$1"
-    cargo run
-    rm -rf "$tmpdir"
+    return $?
   fi
+  tmpdir=$(mktemp -d)
+  if [ -f "$curdir/../Cargo.toml" ]; then
+    setup "$tmpdir" "$1" "$curdir/../Cargo.toml"
+  else
+    setup "$tmpdir" "$1"
+  fi
+  cd "$tmpdir" || return 1
+  cargo run
+  rm -rf "$tmpdir"
 }
 
 cargo_test() {
