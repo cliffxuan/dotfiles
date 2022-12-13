@@ -10,10 +10,6 @@ mk_cargo() {
 name = "${bname%.*}"
 version = "0.1.0"
 edition = "2021"
-
-[[bin]]
-name = "${bname%.*}"
-path = "$bname"
 EOF
   echo "$direcotry/Cargo.toml"
 }
@@ -27,15 +23,15 @@ setup() {
     mk_cargo "$dirname/$(basename "$filename")"
   else
     cp "$cargo_file" "$dirname/Cargo.toml"
-    bname=$(basename "$filename")
-    cat <<EOF >> "$dirname/Cargo.toml"
+  fi
+  bname=$(basename "$filename")
+  cat <<EOF >> "$dirname/Cargo.toml"
 
 [[bin]]
 name = "${bname%.*}"
 path = "$bname"
 EOF
     echo "$dirname/Cargo.toml"
-  fi
 }
 
 cargo_run() {
