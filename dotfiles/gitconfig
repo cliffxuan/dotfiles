@@ -59,3 +59,5 @@
 
 [pull]
 	ff = only
+[http]
+	sslCAInfo = /home/xuanclix3/work/ca.cert

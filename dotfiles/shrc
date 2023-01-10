@@ -102,10 +102,6 @@ fi
 # python instance where virtualenvwrapper is installed
 export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="/usr/local/bin/python"}
 export GOPATH=$HOME/.go
-if [[ -f $HOME/.env ]]; then
-  # shellcheck source=/dev/null
-  source "$HOME/.env"
-fi
 
 #display for WSL
 if [[ -f /proc/version ]]; then
@@ -130,6 +126,7 @@ paths=(
   "$HOME/.local/bin"
   "$HOME/Library/Haskell/bin"
   "$HOME/.cabal/bin"
+  "$HOME/.node/bin"
   "$GOPATH/bin"
 )
 for new_path in "${paths[@]}"; do
@@ -138,4 +135,9 @@ done
 
 if [[ $OSTYPE == darwin* ]]; then
   safe_prepend_path /opt/homebrew/bin
+fi
+
+if [[ -f $HOME/.env ]]; then
+  # shellcheck source=/dev/null
+  source "$HOME/.env"
 fi
