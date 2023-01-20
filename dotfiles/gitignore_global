@@ -144,3 +144,6 @@ dist-newstyle/
 # rust
 target/
 Cargo.lock
+
+# hypothesis
+.hypothesis/
