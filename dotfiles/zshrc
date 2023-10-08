@@ -74,9 +74,9 @@ zinit ice wait lucid \
 zinit light junegunn/fzf
 
 # virtualenvwrapper
-zinit ice wait lucid from'gh' \
+zinit ice wait lucid from \
   atinit'[[ -z $VIRTUAL_ENV ]] && source virtualenvwrapper.sh'
-zinit light cliffxuan/virtualenvwrapper
+zinit light python-virtualenvwrapper/virtualenvwrapper
 
 # nvm
 zinit ice wait"2" lucid atinit'export NVM_DIR="$PWD"' atload='source bash_completion'\
@@ -114,3 +114,6 @@ if [ -x gcloud ]
 then
   source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
 fi
+
+# bun completions
+[ -s "/Users/cliff/.bun/_bun" ] && source "/Users/cliff/.bun/_bun"

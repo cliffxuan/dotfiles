@@ -100,7 +100,7 @@ fi
 
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 # python instance where virtualenvwrapper is installed
-export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="/usr/local/bin/python"}
+export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="$HOME/.local/bin/python"}
 export GOPATH=$HOME/.go
 
 #display for WSL
@@ -123,11 +123,12 @@ safe_prepend_path() {
 
 paths=(
   /usr/local/bin
-  "$HOME/.local/bin"
   "$HOME/Library/Haskell/bin"
+  "$GOPATH/bin"
   "$HOME/.cabal/bin"
   "$HOME/.node/bin"
-  "$GOPATH/bin"
+  "$HOME/.rye/shims"
+  "$HOME/.local/bin"
 )
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"

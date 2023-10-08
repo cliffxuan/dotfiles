@@ -11,7 +11,6 @@ name = "${bname%.*}"
 version = "0.1.0"
 edition = "2021"
 EOF
-  echo "$direcotry/Cargo.toml"
 }
 
 setup() {
@@ -32,6 +31,7 @@ name = "${bname%.*}"
 path = "$bname"
 EOF
     echo "$dirname/Cargo.toml"
+    cat "$dirname/Cargo.toml"
 }
 
 cargo_run() {
@@ -44,6 +44,8 @@ cargo_run() {
   fi
   tmpdir=$(mktemp -d)
   if [ -f "$curdir/../Cargo.toml" ]; then
+    # reason to copy Cargo.toml is to get the dependencies.
+    # but maybe this should copy the entire directory?
     setup "$tmpdir" "$1" "$curdir/../Cargo.toml"
   else
     setup "$tmpdir" "$1"
@@ -56,17 +58,21 @@ cargo_run() {
 cargo_test() {
   curdir=$(dirname "$1")
   echo "$curdir"
-  shift
+  # export RUST_BACKTRACE=1
   if [ -f "$curdir/Cargo.toml" ]; then
     cd "$curdir" || exit 1
+    shift
     cargo test "$@"
-  elif [ "$(basename "$curdir")" = "tests" ] && [ -f "$curdir/../Cargo.toml" ]; then
+  # elif [ "$(basename "$curdir")" = "tests" ] && [ -f "$curdir/../Cargo.toml" ]; then
+  elif [ -f "$curdir/../Cargo.toml" ]; then
     cd "$curdir/.." || exit 1
+    shift
     cargo test "$@"
   else
     dirname=$(mktemp -d)
     setup "$dirname" "$1"
-    cargo test
+    shift
+    cargo test "$@"
     rm -rf "$dirname"
   fi
 }
@@ -101,4 +107,5 @@ main() {
   fi
 }
 
+echo "$@"
 main "$@"
