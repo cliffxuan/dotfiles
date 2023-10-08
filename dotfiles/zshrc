@@ -101,12 +101,6 @@ zinit light ajeetdsouza/zoxide
 ############ end of zinit ################
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
 
-if [ -e "${HOME}/.iterm2_shell_integration.zsh" ]; then
-  source "${HOME}/.iterm2_shell_integration.zsh"
-fi
-if [ -e "${HOME}/.env" ]; then
-  source ~/.env
-fi
 source ~/.shrc
 
 # TODO lazy load
