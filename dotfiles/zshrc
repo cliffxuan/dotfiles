@@ -108,6 +108,3 @@ if [ -x gcloud ]
 then
   source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
 fi
-
-# bun completions
-[ -s "/Users/cliff/.bun/_bun" ] && source "/Users/cliff/.bun/_bun"
