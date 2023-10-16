@@ -89,6 +89,22 @@ function showcrt {
   openssl x509 -in "$1" -text -noout
 }
 
+# venv
+function venv {
+  if [ -f "$PWD/.venv/bin/activate" ]; then
+    # shellcheck disable=SC1091
+    source "$PWD/.venv/bin/activate"
+  else
+    echo "no .venv found in current directory"
+    exit 1
+  fi
+
+  if [ -f "$PWD/.myvenv" ]; then
+    # shellcheck disable=SC1091
+    source "$PWD/.myvenv"
+  fi
+}
+
 alias h="python3 -m http.server"
 
 NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
@@ -100,7 +116,6 @@ fi
 if [[ -s "$HOME/.bun/_bun" ]]; then
   source "$HOME/.bun/_bun"
 fi
-
 
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 # python instance where virtualenvwrapper is installed
