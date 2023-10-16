@@ -116,7 +116,9 @@ fi
 if [[ -s "$HOME/.bun/_bun" ]]; then
   source "$HOME/.bun/_bun"
 fi
-
+if command -v fnm &> /dev/null ; then
+  eval $(fnm env)
+fi
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 # python instance where virtualenvwrapper is installed
 export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="$HOME/.local/bin/python"}
@@ -146,8 +148,8 @@ paths=(
   "$GOPATH/bin"
   "$HOME/.cabal/bin"
   "$HOME/.node/bin"
-  "$HOME/.rye/shims"
   "$HOME/.local/bin"
+  "$HOME/.rye/shims"
 )
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"
