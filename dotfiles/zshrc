@@ -78,11 +78,6 @@ zinit ice wait lucid from \
   atinit'[[ -z $VIRTUAL_ENV ]] && source virtualenvwrapper.sh'
 zinit light python-virtualenvwrapper/virtualenvwrapper
 
-# nvm
-zinit ice wait"2" lucid atinit'export NVM_DIR="$PWD"' atload='source bash_completion'\
-  as'command' src"nvm.sh" nocompile'!'
-zinit light nvm-sh/nvm
-
 # bottom
 zinit ice as"command" from"gh-r"
 zinit light ClementTsang/bottom
