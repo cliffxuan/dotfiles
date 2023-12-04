@@ -96,7 +96,7 @@ function venv {
     source "$PWD/.venv/bin/activate"
   else
     echo "no .venv found in current directory"
-    exit 1
+    return 1
   fi
 
   if [ -f "$PWD/.myvenv" ]; then
@@ -142,6 +142,10 @@ safe_prepend_path() {
   fi
 }
 
+if [[ $OSTYPE == darwin* ]]; then
+  safe_prepend_path /opt/homebrew/bin
+fi
+
 paths=(
   /usr/local/bin
   "$HOME/Library/Haskell/bin"
@@ -154,10 +158,6 @@ paths=(
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"
 done
-
-if [[ $OSTYPE == darwin* ]]; then
-  safe_prepend_path /opt/homebrew/bin
-fi
 
 if [[ -f $HOME/.env ]]; then
   # shellcheck source=/dev/null
