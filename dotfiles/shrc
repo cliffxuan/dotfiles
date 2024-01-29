@@ -116,7 +116,7 @@ fi
 if [[ -s "$HOME/.bun/_bun" ]]; then
   source "$HOME/.bun/_bun"
 fi
-if command -v fnm &> /dev/null ; then
+if command -v fnm &>/dev/null; then
   eval $(fnm env)
 fi
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
@@ -137,8 +137,10 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 safe_prepend_path() {
   local new_path=$1
-  if [[ -d $new_path ]] && grep -vq "$new_path" <<<"$PATH"; then
-    export PATH=$new_path:$PATH
+  if [[ -d $new_path ]]; then
+    if [[ -n $TMUX ]] || grep -vq "$new_path" <<<"$PATH"; then
+      export PATH=$new_path:$PATH
+    fi
   fi
 }
 
