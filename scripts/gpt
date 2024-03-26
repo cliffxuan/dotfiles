@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+if ! hash sgpt 2>/dev/null; then
+  echo "cannot find shell-gtp. run pip install shell-gtp"
+  exit 1
+fi
+
+if [ -z "$OPENAI_API_KEY" ]; then
+  if [ -f /tmp/openai_api_key ]; then
+    OPENAI_API_KEY="$(cat /tmp/openai_api_key)"
+  else
+    echo "cannot find openai api key. run export OPENAI_API_KEY=your_api_key"
+    exit 1
+  fi
+fi
+# export OPENAI_API_KEY
+
+quoted_args=$(printf "%s " "$@")
+echo "sgpt $quoted_args"
+OPENAI_API_KEY="$OPENAI_API_KEY" sgpt "$quoted_args"

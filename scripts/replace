@@ -1,8 +1,16 @@
 #!/usr/bin/env bash
-if [[ -z $1 ]] || [[ -z $2 ]]
-then
+
+if [[ -z $1 ]] || [[ -z $2 ]]; then
   echo "usage: replace old new"
   exit 1
 fi
 
-rg -l "$1" | xargs -n 1 sed -i "s/$1/$2/g"
+if [[ $3 == "-w" ]]; then
+  whole_word=true
+fi
+
+if [[ $whole_word == true ]]; then
+  rg -l "$1" | xargs -n 1 sed -i "s/\b$1\b/$2/g"
+else
+  rg -l "$1" | xargs -n 1 sed -i "s/$1/$2/g"
+fi
