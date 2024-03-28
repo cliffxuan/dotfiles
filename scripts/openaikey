@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+if [ -f /tmp/openai_api_key ]; then
+    cat /tmp/openai_api_key
+    exit 0
+fi
+
+if [[ -n $OPENAI_API_KEY ]]; then
+    echo "$OPENAI_API_KEY"
+fi
+
+exit 0
