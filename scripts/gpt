@@ -4,15 +4,11 @@ if ! hash sgpt 2>/dev/null; then
   exit 1
 fi
 
+OPENAI_API_KEY="$(openaikey)"
 if [ -z "$OPENAI_API_KEY" ]; then
-  if [ -f /tmp/openai_api_key ]; then
-    OPENAI_API_KEY="$(cat /tmp/openai_api_key)"
-  else
-    echo "cannot find openai api key. run export OPENAI_API_KEY=your_api_key"
-    exit 1
-  fi
+  echo "OPENAI_API_KEY is not set."
+  exit 1
 fi
-# export OPENAI_API_KEY
 
 quoted_args=$(printf "%s " "$@")
 echo "sgpt $quoted_args"
