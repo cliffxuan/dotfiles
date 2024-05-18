@@ -44,6 +44,7 @@ Thumbs.db
 *.py[cod]
 .mypy_cache/
 .python-version
+.venv/
 
 # C extensions
 *.so

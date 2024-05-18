@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
 
-if [ -f /tmp/openai_api_key ]; then
-    cat /tmp/openai_api_key
+for file in /tmp/openai_api_key "$HOME"/.config/openai_api_key; do
+  if [ -f "$file" ]; then
+    cat "$file"
     exit 0
-fi
+  fi
+done
 
 if [[ -n $OPENAI_API_KEY ]]; then
-    echo "$OPENAI_API_KEY"
+  echo "$OPENAI_API_KEY"
 fi
 
 exit 0
