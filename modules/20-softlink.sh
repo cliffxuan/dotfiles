@@ -7,6 +7,7 @@ source "$DIR/../utils.sh"
 run() {
   DOTFILE_DIR=$(realpath "$DIR"/../dotfiles)
   SCRIPT_DIR="$(realpath "$DIR"/../scripts)"
+  CONFIG_DIR=$(realpath "$DIR"/../config)
   echo "\$DIR=$DIR"
   echo "\$DOTFILE_DIR=$DOTFILE_DIR"
   echo "\$SCRIPT_DIR=$SCRIPT_DIR"
@@ -20,10 +21,10 @@ run() {
   done
 
   mkdir -p "$HOME/.config"
-  for ff in "$DOTFILE_DIR/config"/*; do
-    dotfile=$(basename "$ff")
-    echo "symlink $DOTFILE_DIR/config/$dotfile $HOME/.config/$dotfile"
-    ln -fs "$DOTFILE_DIR/config/$dotfile" "$HOME/.config/$dotfile"
+  for ff in "$CONFIG_DIR"/*; do
+    name=$(basename "$ff")
+    echo "symlink $CONFIG_DIR/$name$HOME/.config/$name"
+    ln -fns "$CONFIG_DIR/$name" "$HOME/.config/$name"
   done
 
   mkdir -p "$HOME/.local/bin"
