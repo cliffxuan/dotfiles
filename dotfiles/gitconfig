@@ -52,7 +52,7 @@
     options = --highlight --line-numbers
 
 [credential]
-	helper = cache
+	helper = store
 
 [gpg]
 	program = gpg
