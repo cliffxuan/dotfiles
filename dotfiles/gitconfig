@@ -52,10 +52,13 @@
     options = --highlight --line-numbers
 
 [credential]
-	helper = store
+    helper = /usr/local/bin/git-credential-manager
 
 [gpg]
-	program = gpg
+    program = gpg
 
 [pull]
-	ff = only
+    ff = only
+
+[credential "https://dev.azure.com"]
+    useHttpPath = true
