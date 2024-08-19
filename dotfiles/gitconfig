@@ -52,7 +52,7 @@
     options = --highlight --line-numbers
 
 [credential]
-    helper = /usr/local/bin/git-credential-manager
+	helper = store
 
 [gpg]
     program = gpg
