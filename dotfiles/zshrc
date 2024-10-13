@@ -103,3 +103,20 @@ if [ -x gcloud ]
 then
   source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
 fi
+
+# Shell-GPT integration ZSH v0.2
+_sgpt_zsh() {
+if [[ -n "$BUFFER" ]]; then
+    _sgpt_prev_cmd=$BUFFER
+    BUFFER+="⌛"
+    zle -I && zle redisplay
+    BUFFER=$(sgpt --shell <<< "$_sgpt_prev_cmd" --no-interaction)
+    zle end-of-line
+fi
+}
+zle -N _sgpt_zsh
+
+bindkey -M emacs '^O' _sgpt_zsh
+bindkey -M vicmd '^O' _sgpt_zsh
+bindkey -M viins '^O' _sgpt_zsh
+# Shell-GPT integration ZSH v0.2
