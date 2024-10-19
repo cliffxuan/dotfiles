@@ -5,7 +5,6 @@
 #vim
 alias uvim="vim -u NONE"
 alias svim="vim -u \$HOME/.vim/vimrc"
-alias neobundle="vim +NeoBundleInstall +qall"
 alias n="nvim"
 
 #term
