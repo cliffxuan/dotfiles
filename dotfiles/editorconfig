@@ -18,10 +18,15 @@ indent_size = 4
 profile = black
 
 # 2 space indentation
-[*.{js,ts,sh}]
+[*.{js,ts,sh,lua}]
 indent_style = space
 indent_size = 2
 
 # Tab indentation (no size specified)
 [{Makefile,.go}]
 indent_style = tab
+
+[*.lua]
+max_line_length = 120
+quote_type = single
+call_parentheses = none
