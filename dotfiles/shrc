@@ -131,8 +131,12 @@ if [[ -f /proc/version ]]; then
   fi
 fi
 
-export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+export FZF_DEFAULT_COMMAND='rg --files'
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+export FZF_CTRL_T_OPTS="
+  --walker-skip .git,node_modules,target
+  --preview 'bat -n --color=always {}'
+  --bind 'ctrl-/:change-preview-window(down|hidden|),ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down'"
 
 safe_prepend_path() {
   local new_path=$1
