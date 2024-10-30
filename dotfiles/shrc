@@ -137,6 +137,11 @@ export FZF_CTRL_T_OPTS="
   --walker-skip .git,node_modules,target
   --preview 'bat -n --color=always {}'
   --bind 'ctrl-/:change-preview-window(down|hidden|),ctrl-u:preview-half-page-up,ctrl-d:preview-half-page-down'"
+export FZF_CTRL_R_OPTS="
+  --height 50%
+  --color header:italic
+  --preview 'echo {2..} | bat --color=always -pl sh'
+  --preview-window 'wrap,up,5'"
 
 safe_prepend_path() {
   local new_path=$1
