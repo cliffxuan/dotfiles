@@ -98,6 +98,7 @@ function venv {
     return 1
   fi
 
+  export PYTHONBREAKPOINT=ipdb.set_trace
   if [ -f "$PWD/.myvenv" ]; then
     # shellcheck disable=SC1091
     source "$PWD/.myvenv"
