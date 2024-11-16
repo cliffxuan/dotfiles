@@ -168,7 +168,6 @@ paths=(
   "$HOME/.cabal/bin"
   "$HOME/.node/bin"
   "$HOME/.local/bin"
-  "$HOME/.rye/shims"
   "$HOME/.cargo/bin"
 )
 for new_path in "${paths[@]}"; do
