@@ -15,6 +15,7 @@ fi
 if [ -n "$GO_VERSION" ]; then
   version=$GO_VERSION
 else
+  curl -o /tmp/go-dl.html https://go.dev/dl/
   version=$(grep -Po '(?<=href=")(/dl/go.*)(?=">)' /tmp/go-dl.html | grep $format | head -1 | grep -Po "(?<=go)([0-9]*\.[0-9]*\.[0-9]*)")
 fi
 
