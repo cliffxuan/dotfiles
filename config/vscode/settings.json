@@ -7,7 +7,7 @@
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.fontFamily": "'Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
+  "editor.fontFamily": "'Hack Nerd Font','Menlo for Powerline',Menlo, Monaco, 'Courier New', monospace",
   "terminal.integrated.copyOnSelection": true,
   "terminal.integrated.scrollback": 10000,
   "vim.enableNeovim": true,
@@ -282,5 +282,5 @@
   "zenMode.hideLineNumbers": false,
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "vim.smartRelativeLine": true,
-  "workbench.activityBar.visible": false
+  "workbench.activityBar.location": "hidden"
 }
