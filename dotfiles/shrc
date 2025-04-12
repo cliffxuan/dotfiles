@@ -99,7 +99,7 @@ function venv {
   fi
 
   # Check for pudb first, then ipdb, and set PYTHONBREAKPOINT accordingly
-  if python -c 'import pudb' 2 >/dev/null; then
+  if python -c 'import pudb' 2>/dev/null; then
     export PYTHONBREAKPOINT='pudb.set_trace'
   elif python -c 'import ipdb' 2>/dev/null; then
     export PYTHONBREAKPOINT='ipdb.set_trace'
