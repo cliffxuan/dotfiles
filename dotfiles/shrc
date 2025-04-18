@@ -106,6 +106,7 @@ function venv {
   else
     export PYTHONBREAKPOINT='pdb.set_trace'
   fi
+  echo \$PYTHONBREAKPOINT=$PYTHONBREAKPOINT
 
   if [ -f "$PWD/.myvenv" ]; then
     # shellcheck disable=SC1091
