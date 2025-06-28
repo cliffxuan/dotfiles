@@ -18,9 +18,9 @@ echo version="$version"
 
 appimage() {
   cd /tmp || exit
-  curl -OL "https://github.com/neovim/neovim/releases/download/v$version/nvim.appimage"
-  chmod +x nvim.appimage
-  sudo mv nvim.appimage /usr/local/bin/nvim
+  curl -OL "https://github.com/neovim/neovim/releases/download/v$version/nvim-linux-x86_64.appimage"
+  chmod +x nvim-linux-x86_64.appimage
+  sudo mv nvim-linux-x86_64.appimage /usr/local/bin/nvim
 }
 
 build() {
