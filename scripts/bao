@@ -1,0 +1,149 @@
+#!/usr/bin/env bash
+
+# bao - Create shell archives from directories
+# Usage: bao [OPTIONS] DIRECTORY
+
+set -euo pipefail
+
+show_help() {
+  cat <<EOF
+bao - Create shell archives from directories
+
+USAGE:
+    bao [OPTIONS] DIRECTORY
+
+DESCRIPTION:
+    Creates a shell archive (.shar) containing all files from the specified directory.
+    The archive can be extracted by running it as a shell script.
+
+OPTIONS:
+    -h, --help          Show this help message
+    -o, --output FILE   Output archive to FILE (default: stdout)
+    -v, --verbose       Show files being archived
+    -n, --name NAME     Set archive name/title
+    -x, --exclude PATTERN   Exclude files matching pattern (can be used multiple times)
+
+EXAMPLES:
+    bao my_project/                     # Archive to stdout
+    bao -o backup.shar my_project/      # Archive to file
+    bao -v -n "My Project" src/         # Verbose with custom name
+    bao -x "*.log" -x "*.tmp" src/      # Exclude log and tmp files
+
+DEPENDENCIES:
+    - fd (find alternative)
+    - shar (shell archiver)
+
+EOF
+}
+
+# Default values
+output_file=""
+verbose=false
+archive_name=""
+exclude_patterns=()
+
+# Parse command line arguments
+while [[ $# -gt 0 ]]; do
+  case $1 in
+  -h | --help)
+    show_help
+    exit 0
+    ;;
+  -o | --output)
+    output_file="$2"
+    shift 2
+    ;;
+  -v | --verbose)
+    verbose=true
+    shift
+    ;;
+  -n | --name)
+    archive_name="$2"
+    shift 2
+    ;;
+  -x | --exclude)
+    exclude_patterns+=("$2")
+    shift 2
+    ;;
+  -*)
+    echo "Error: Unknown option $1" >&2
+    echo "Use 'bao --help' for usage information." >&2
+    exit 1
+    ;;
+  *)
+    # This should be the directory argument
+    if [[ -n "${directory:-}" ]]; then
+      echo "Error: Multiple directories specified. Only one directory is allowed." >&2
+      exit 1
+    fi
+    directory="$1"
+    shift
+    ;;
+  esac
+done
+
+# Check if directory was provided
+if [[ -z "${directory:-}" ]]; then
+  echo "Error: No directory specified." >&2
+  echo "Use 'bao --help' for usage information." >&2
+  exit 1
+fi
+
+# Check if directory exists
+if [[ ! -d "$directory" ]]; then
+  echo "Error: Directory '$directory' does not exist." >&2
+  exit 1
+fi
+
+# Normalize directory path and get basename
+directory=$(realpath "$directory")
+directory_basename=$(basename "$directory")
+directory_parent=$(dirname "$directory")
+
+# Check dependencies
+if ! command -v fd &>/dev/null; then
+  echo "Error: 'fd' command not found. Please install fd-find." >&2
+  exit 1
+fi
+
+if ! command -v shar &>/dev/null; then
+  echo "Error: 'shar' command not found. Please install sharutils." >&2
+  exit 1
+fi
+
+# Build fd command with exclude patterns
+fd_cmd=(fd . "$directory_basename" -t f)
+for pattern in "${exclude_patterns[@]}"; do
+  fd_cmd+=(-E "$pattern")
+done
+
+# Build shar command
+shar_cmd=(shar)
+if [[ -n "$archive_name" ]]; then
+  shar_cmd+=(-n "$archive_name")
+fi
+if [[ "$verbose" == true ]]; then
+  shar_cmd+=(-v)
+fi
+
+# Show what we're doing if verbose
+if [[ "$verbose" == true ]]; then
+  echo "Creating shell archive from: $directory_basename" >&2
+  if [[ ${#exclude_patterns[@]} -gt 0 ]]; then
+    echo "Excluding patterns: ${exclude_patterns[*]}" >&2
+  fi
+  if [[ -n "$output_file" ]]; then
+    echo "Output file: $output_file" >&2
+  fi
+  echo >&2
+fi
+
+# Execute the command
+if [[ -n "$output_file" ]]; then
+  (cd "$directory_parent" && "${fd_cmd[@]}" | xargs "${shar_cmd[@]}") >"$output_file"
+  if [[ "$verbose" == true ]]; then
+    echo "Archive created: $output_file" >&2
+  fi
+else
+  (cd "$directory_parent" && "${fd_cmd[@]}" | xargs "${shar_cmd[@]}")
+fi
