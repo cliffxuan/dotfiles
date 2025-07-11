@@ -179,6 +179,7 @@ paths=(
   "$HOME/.node/bin"
   "$HOME/.local/bin"
   "$HOME/.cargo/bin"
+  "$HOME/.lean/bin"
 )
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"
