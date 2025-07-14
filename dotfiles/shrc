@@ -169,6 +169,11 @@ safe_prepend_path() {
 
 if [[ $OSTYPE == darwin* ]]; then
   safe_prepend_path /opt/homebrew/bin
+  if type brew &>/dev/null; then
+    HOMEBREW_PREFIX=$(brew --prefix)
+    # gnubin; gnuman
+    for d in "${HOMEBREW_PREFIX}"/opt/*/libexec/gnubin; do safe_prepend_path "$d"; done
+  fi
 fi
 
 paths=(
