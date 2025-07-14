@@ -1,20 +1,30 @@
-#!/usr/bin/env bash
+#!/usr/bin/env python3
 
-# bao - Create shell archives from directories
-# Usage: bao [OPTIONS] DIRECTORY
+"""
+bao - Create human-readable archives from directories
+Usage: bao [OPTIONS] DIRECTORY
+"""
 
-set -euo pipefail
+import os
+import sys
+import argparse
+import stat
+import base64
+import fnmatch
+from pathlib import Path
 
-show_help() {
-  cat <<EOF
-bao - Create shell archives from directories
+
+def show_help():
+    help_text = """
+bao - Create human-readable archives from directories
 
 USAGE:
     bao [OPTIONS] DIRECTORY
 
 DESCRIPTION:
-    Creates a shell archive (.shar) containing all files from the specified directory.
-    The archive can be extracted by running it as a shell script.
+    Creates a human-readable archive containing all files from the specified directory.
+    The archive preserves directory structure and file permissions and can be extracted
+    by running it as a Python script.
 
 OPTIONS:
     -h, --help          Show this help message
@@ -25,125 +35,178 @@ OPTIONS:
 
 EXAMPLES:
     bao my_project/                     # Archive to stdout
-    bao -o backup.shar my_project/      # Archive to file
+    bao -o backup.bao my_project/       # Archive to file
     bao -v -n "My Project" src/         # Verbose with custom name
     bao -x "*.log" -x "*.tmp" src/      # Exclude log and tmp files
 
-DEPENDENCIES:
-    - fd (find alternative)
-    - shar (shell archiver)
+The generated archive is a self-extracting Python script that preserves:
+    - Directory structure
+    - File permissions (read/write/execute)
+    - Binary and text files
+"""
+    print(help_text)
 
-EOF
-}
 
-# Default values
-output_file=""
-verbose=false
-archive_name=""
-exclude_patterns=()
+def is_binary_file(filepath):
+    """Check if a file is binary by looking for null bytes."""
+    try:
+        with open(filepath, 'rb') as f:
+            chunk = f.read(1024)
+            return b'\0' in chunk
+    except (IOError, OSError):
+        return False
 
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-  case $1 in
-  -h | --help)
-    show_help
-    exit 0
-    ;;
-  -o | --output)
-    output_file="$2"
-    shift 2
-    ;;
-  -v | --verbose)
-    verbose=true
-    shift
-    ;;
-  -n | --name)
-    archive_name="$2"
-    shift 2
-    ;;
-  -x | --exclude)
-    exclude_patterns+=("$2")
-    shift 2
-    ;;
-  -*)
-    echo "Error: Unknown option $1" >&2
-    echo "Use 'bao --help' for usage information." >&2
-    exit 1
-    ;;
-  *)
-    # This should be the directory argument
-    if [[ -n "${directory:-}" ]]; then
-      echo "Error: Multiple directories specified. Only one directory is allowed." >&2
-      exit 1
-    fi
-    directory="$1"
-    shift
-    ;;
-  esac
-done
 
-# Check if directory was provided
-if [[ -z "${directory:-}" ]]; then
-  echo "Error: No directory specified." >&2
-  echo "Use 'bao --help' for usage information." >&2
-  exit 1
-fi
+def should_exclude(filepath, exclude_patterns):
+    """Check if file should be excluded based on patterns."""
+    filename = os.path.basename(filepath)
+    for pattern in exclude_patterns:
+        if fnmatch.fnmatch(filename, pattern) or fnmatch.fnmatch(filepath, pattern):
+            return True
+    return False
 
-# Check if directory exists
-if [[ ! -d "$directory" ]]; then
-  echo "Error: Directory '$directory' does not exist." >&2
-  exit 1
-fi
 
-# Normalize directory path and get basename
-directory=$(realpath "$directory")
-directory_basename=$(basename "$directory")
-directory_parent=$(dirname "$directory")
+def get_file_mode_string(mode):
+    """Convert file mode to octal string."""
+    return oct(stat.S_IMODE(mode))
 
-# Check dependencies
-if ! command -v fd &>/dev/null; then
-  echo "Error: 'fd' command not found. Please install fd-find." >&2
-  exit 1
-fi
 
-if ! command -v shar &>/dev/null; then
-  echo "Error: 'shar' command not found. Please install sharutils." >&2
-  exit 1
-fi
+def create_archive(directory, output_file=None, verbose=False, archive_name="", exclude_patterns=None):
+    """Create the archive."""
+    if exclude_patterns is None:
+        exclude_patterns = []
+    
+    directory = os.path.abspath(directory)
+    directory_name = os.path.basename(directory)
+    
+    if not archive_name:
+        archive_name = directory_name
+    
+    # Collect all files
+    files_to_archive = []
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            filepath = os.path.join(root, file)
+            relative_path = os.path.relpath(filepath, directory)
+            
+            if should_exclude(relative_path, exclude_patterns):
+                if verbose:
+                    print(f"Excluding: {relative_path}", file=sys.stderr)
+                continue
+            
+            files_to_archive.append((filepath, relative_path))
+            if verbose:
+                print(f"Adding: {relative_path}", file=sys.stderr)
+    
+    # Generate the archive content
+    archive_lines = [
+        "#!/usr/bin/env python3",
+        '"""',
+        f'Self-extracting archive: {archive_name}',
+        f'Generated by bao from: {directory_name}',
+        '"""',
+        "",
+        "import os",
+        "import sys",
+        "import base64",
+        "import stat",
+        "",
+        "def extract_archive():",
+        '    """Extract the archive contents."""',
+        "    files = [",
+    ]
+    
+    # Add file data
+    for filepath, relative_path in files_to_archive:
+        file_stat = os.stat(filepath)
+        file_mode = get_file_mode_string(file_stat.st_mode)
+        
+        if is_binary_file(filepath):
+            with open(filepath, 'rb') as f:
+                content = base64.b64encode(f.read()).decode('ascii')
+            archive_lines.append(f'        ("{relative_path}", "{file_mode}", "binary", "{content}"),')
+        else:
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                # Escape quotes and backslashes
+                content = content.replace('\\', '\\\\').replace('"', '\\"').replace('\n', '\\n')
+                archive_lines.append(f'        ("{relative_path}", "{file_mode}", "text", "{content}"),')
+            except UnicodeDecodeError:
+                # Treat as binary if we can't decode as UTF-8
+                with open(filepath, 'rb') as f:
+                    content = base64.b64encode(f.read()).decode('ascii')
+                archive_lines.append(f'        ("{relative_path}", "{file_mode}", "binary", "{content}"),')
+    
+    archive_lines.extend([
+        "    ]",
+        "",
+        f"    # Create base directory: {directory_name}",
+        f"    base_dir = '{directory_name}'",
+        "    os.makedirs(base_dir, exist_ok=True)",
+        "",
+        "    for relative_path, file_mode, content_type, content in files:",
+        "        # Full path includes base directory",
+        "        full_path = os.path.join(base_dir, relative_path)",
+        "        ",
+        "        # Create directory if needed",
+        "        dir_path = os.path.dirname(full_path)",
+        "        if dir_path:",
+        "            os.makedirs(dir_path, exist_ok=True)",
+        "",
+        "        # Write file content",
+        "        if content_type == 'binary':",
+        "            with open(full_path, 'wb') as f:",
+        "                f.write(base64.b64decode(content))",
+        "        else:",
+        "            with open(full_path, 'w', encoding='utf-8') as f:",
+        "                f.write(content)",
+        "",
+        "        # Set file permissions",
+        "        os.chmod(full_path, int(file_mode, 8))",
+        "",
+        "if __name__ == '__main__':",
+        "    extract_archive()",
+        f"    print('Extracted archive: {archive_name}')",
+    ])
+    
+    archive_content = '\n'.join(archive_lines)
+    
+    # Output the archive
+    if output_file:
+        with open(output_file, 'w') as f:
+            f.write(archive_content)
+        # Make the output file executable
+        os.chmod(output_file, 0o755)
+        if verbose:
+            print(f"Archive created: {output_file}", file=sys.stderr)
+    else:
+        print(archive_content)
 
-# Build fd command with exclude patterns
-fd_cmd=(fd . "$directory_basename" -t f)
-for pattern in "${exclude_patterns[@]}"; do
-  fd_cmd+=(-E "$pattern")
-done
 
-# Build shar command
-shar_cmd=(shar)
-if [[ -n "$archive_name" ]]; then
-  shar_cmd+=(-n "$archive_name")
-fi
-if [[ "$verbose" == true ]]; then
-  shar_cmd+=(-v)
-fi
+def main():
+    parser = argparse.ArgumentParser(description='Create human-readable archives from directories')
+    parser.add_argument('directory', help='Directory to archive')
+    parser.add_argument('-o', '--output', help='Output archive to FILE (default: stdout)')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Show files being archived')
+    parser.add_argument('-n', '--name', help='Set archive name/title')
+    parser.add_argument('-x', '--exclude', action='append', default=[], help='Exclude files matching pattern')
+    
+    args = parser.parse_args()
+    
+    # Check if directory exists
+    if not os.path.isdir(args.directory):
+        print(f"Error: Directory '{args.directory}' does not exist.", file=sys.stderr)
+        sys.exit(1)
+    
+    create_archive(
+        directory=args.directory,
+        output_file=args.output,
+        verbose=args.verbose,
+        archive_name=args.name or "",
+        exclude_patterns=args.exclude
+    )
 
-# Show what we're doing if verbose
-if [[ "$verbose" == true ]]; then
-  echo "Creating shell archive from: $directory_basename" >&2
-  if [[ ${#exclude_patterns[@]} -gt 0 ]]; then
-    echo "Excluding patterns: ${exclude_patterns[*]}" >&2
-  fi
-  if [[ -n "$output_file" ]]; then
-    echo "Output file: $output_file" >&2
-  fi
-  echo >&2
-fi
 
-# Execute the command
-if [[ -n "$output_file" ]]; then
-  (cd "$directory_parent" && "${fd_cmd[@]}" | xargs "${shar_cmd[@]}") >"$output_file"
-  if [[ "$verbose" == true ]]; then
-    echo "Archive created: $output_file" >&2
-  fi
-else
-  (cd "$directory_parent" && "${fd_cmd[@]}" | xargs "${shar_cmd[@]}")
-fi
+if __name__ == '__main__':
+    main()
