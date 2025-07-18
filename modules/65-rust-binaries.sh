@@ -6,6 +6,7 @@ source "$DIR/../utils.sh"
 declare -A packages
 packages=(
   ["zoxide"]="zoxide"
+  ["stylua"]="stylua"
 )
 
 run() {
