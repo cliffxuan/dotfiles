@@ -50,7 +50,7 @@ scoop config '7ZIPEXTRACT_USE_EXTERNAL' $true
 cmd
 directory:  
 `mklink /J new old `
-`mklink /J C:\home\.config\nvim C:\home\dev\dotfiles\vimfiles`
+`mklink /J C:\home\.config\nvim C:\home\dev\dotfiles\nvim-config`
 file
 `mklink /H new old`
 

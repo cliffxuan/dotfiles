@@ -1,4 +1,4 @@
-vimfiles
+nvim-config
 emacs.d
 docker/id_rsa
 proxy/*
