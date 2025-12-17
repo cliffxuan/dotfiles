@@ -48,6 +48,31 @@ function ga {
   fi
 }
 
+gc() {
+  local temp_msg
+  temp_msg=$(mktemp)
+  echo "Generating commit message with AI..."
+  git diff --cached | sgpt "write a short git commit message" --no-md >"$temp_msg"
+  if [ -s "$temp_msg" ]; then
+    git commit -F "$temp_msg" --edit
+  else
+    echo "Commit aborted: empty message"
+  fi
+  rm -f "$temp_msg"
+}
+
+gt() {
+  for dir in */; do
+    if [ -d "$dir/.git" ]; then
+      echo "=== $dir ==="
+      (
+        cd "$dir" && "$@"
+      )
+      echo
+    fi
+  done
+}
+
 #web pastebins
 #hastebin.com
 function haste {
