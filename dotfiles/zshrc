@@ -123,6 +123,3 @@ bindkey -M emacs '^O' _sgpt_zsh
 bindkey -M vicmd '^O' _sgpt_zsh
 bindkey -M viins '^O' _sgpt_zsh
 # Shell-GPT integration ZSH v0.2
-
-# Added by Antigravity
-export PATH="/Users/cliff/.antigravity/antigravity/bin:$PATH"

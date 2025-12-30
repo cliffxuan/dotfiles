@@ -48,20 +48,25 @@ function ga {
   fi
 }
 
-gc() {
-  local temp_msg
-  temp_msg=$(mktemp)
-  echo "Generating commit message with AI..."
-  git diff --cached | sgpt "write a short git commit message" --no-md >"$temp_msg"
-  if [ -s "$temp_msg" ]; then
+function gc {
+  local raw_msg
+  raw_msg=$(git diff --cached | sgpt "write a short git commit message" --no-md)
+  # Remove triple backtick wrappers if present
+  local trimmed_msg
+  trimmed_msg=$(printf '%s' "$raw_msg" | sed -e '/^```/d' -e '/^```$/d')
+
+  if [ -n "$trimmed_msg" ]; then
+    local temp_msg
+    temp_msg=$(mktemp)
+    printf '%s\n' "$trimmed_msg" >"$temp_msg"
     git commit -F "$temp_msg" --edit
+    rm -f "$temp_msg"
   else
     echo "Commit aborted: empty message"
   fi
-  rm -f "$temp_msg"
 }
 
-gt() {
+function gt {
   for dir in */; do
     if [ -d "$dir/.git" ]; then
       echo "=== $dir ==="
@@ -210,6 +215,7 @@ paths=(
   "$HOME/.local/bin"
   "$HOME/.cargo/bin"
   "$HOME/.lean/bin"
+  "$HOME/.antigravity/antigravity/bin"
 )
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"
