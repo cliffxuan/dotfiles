@@ -123,10 +123,3 @@ bindkey -M emacs '^O' _sgpt_zsh
 bindkey -M vicmd '^O' _sgpt_zsh
 bindkey -M viins '^O' _sgpt_zsh
 # Shell-GPT integration ZSH v0.2
-# The following lines have been added by Docker Desktop to enable Docker CLI completions.
-fpath=(/Users/cliff/.docker/completions $fpath)
-autoload -Uz compinit
-compinit
-# End of Docker CLI completions
-
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
