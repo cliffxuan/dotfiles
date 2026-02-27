@@ -282,5 +282,7 @@
   "zenMode.hideLineNumbers": false,
   "python.defaultInterpreterPath": "/usr/local/bin/python3",
   "vim.smartRelativeLine": true,
-  "workbench.activityBar.location": "hidden"
+  "workbench.activityBar.location": "hidden",
+  "github.copilot.nextEditSuggestions.enabled": true,
+  "security.promptForLocalFileProtocolHandling": false
 }

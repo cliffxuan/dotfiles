@@ -160,7 +160,7 @@ if command -v fnm &>/dev/null; then
 fi
 # export VIRTUALENVWRAPPER_VIRTUALENV_ARGS='--system-site-packages'
 # python instance where virtualenvwrapper is installed
-export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="$HOME/.local/bin/python"}
+# export VIRTUALENVWRAPPER_PYTHON=${VIRTUALENVWRAPPER_PYTHON:="$HOME/.local/bin/python"}
 export GOPATH=$HOME/.go
 
 #display for WSL
@@ -211,11 +211,13 @@ paths=(
   "$HOME/Library/Haskell/bin"
   "$GOPATH/bin"
   "$HOME/.cabal/bin"
+  "$HOME/.bun/bin"
   "$HOME/.node/bin"
   "$HOME/.local/bin"
   "$HOME/.cargo/bin"
   "$HOME/.lean/bin"
   "$HOME/.antigravity/antigravity/bin"
+  "$HOME/.flutter/bin"
 )
 for new_path in "${paths[@]}"; do
   safe_prepend_path "$new_path"
