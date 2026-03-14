@@ -191,9 +191,10 @@ export FZF_ALT_C_OPTS="
 safe_prepend_path() {
   local new_path=$1
   if [[ -d $new_path ]]; then
-    if [[ -n $TMUX ]] || grep -vq "$new_path" <<<"$PATH"; then
-      export PATH=$new_path:$PATH
-    fi
+    PATH="${PATH/#$new_path:}"
+    PATH="${PATH/%:$new_path}"
+    PATH="${PATH//:$new_path:/:}"
+    export PATH=$new_path:$PATH
   fi
 }
 

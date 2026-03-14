@@ -8,6 +8,8 @@ fi
 declare -A ZINIT
 ZINIT[NO_ALIASES]=1
 
+typeset -U PATH path
+
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
