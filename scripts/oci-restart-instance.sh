@@ -1,7 +1,18 @@
 #!/usr/bin/env bash
+get_compartment_id() {
+  oci iam compartment list | jq -r '.data | .[0] | ."compartment-id"'
+}
+
+list_instances() {
+  compartment_id=$(get_compartment_id)
+  oci compute instance list --all --compartment-id "$compartment_id" \
+    | jq -r '.data[] | [."display-name", ."lifecycle-state", .region] | @tsv' \
+    | column -t -s $'\t'
+}
+
 get_instance() {
   instance_name=${1}
-  compartment_id=$(oci iam compartment list | jq -r '.data | .[0] | ."compartment-id"')
+  compartment_id=$(get_compartment_id)
   read -r -d '' query <<EOF
 .data
 | .[]
@@ -25,6 +36,12 @@ restart_instance() {
 }
 
 
-name=${1:?"no instance name specified"}
+if [[ -z ${1:-} ]]; then
+  echo "Available instances:"
+  list_instances
+  exit 0
+fi
+
+name=$1
 restart_instance "$(get_instance "$name")"
 get_instance "$name"
