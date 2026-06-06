@@ -98,8 +98,13 @@ zinit ice as"command" from"gh-r" lucid \
   src"init.zsh" nocompile'!'
 zinit light ajeetdsouza/zoxide
 
+
+
+
 ############ end of zinit ################
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
+zstyle ':completion:*:make::' tag-order 'targets'
+zstyle ':completion:*:make:*:targets' group-name targets
 
 source ~/.shrc
 
