@@ -4,23 +4,15 @@ BASE_DIR=$(dirname "$DIR")
 # shellcheck source=../utils.sh
 source "$BASE_DIR/utils.sh"
 
-if [[ -z $1 ]]
-then
-  user="$USER"
-else
-  user=$1
-fi
+user="${1:-$USER}"
 
 run() {
   sudo usermod -aG docker "$user"
+  sudo systemctl enable --now docker
 }
 
 check() {
-  sudo systemctl start docker
-  newgrp docker << EOF
-docker run hello-world
-EOF
+  id -nG "$user" 2>/dev/null | grep -qw "docker"
 }
-
 
 provision "$@"
