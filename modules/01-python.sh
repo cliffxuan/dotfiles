@@ -2,7 +2,7 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
-version=${PYTHON_VERSION:-3.13}
+version=${PYTHON_VERSION:-3.14}
 
 
 run() {
