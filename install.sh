@@ -8,12 +8,9 @@ run_os_specific_scripts() {
   echo "========= operating system $OS"
   shopt -s nocasematch
   local script_dir
-  if [[ $OS =~ ubuntu  ]]
+  if [[ $OS =~ (ubuntu|debian) ]]
   then
     script_dir=$DIR/modules/ubuntu
-  elif [[  $OS =~ centos ]]
-  then
-    script_dir=$DIR/modules/centos
   else
     echo "\$OS=$OS does not have os specific packages"
   fi
