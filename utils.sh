@@ -4,6 +4,7 @@ CONFIG_DIR=$(realpath "$ROOT/config")
 DOTFILE_DIR=$(realpath "$ROOT"/dotfiles)
 SCRIPT_DIR="$(realpath "$ROOT"/scripts)"
 export DOTFILE_DIR SCRIPT_DIR CONFIG_DIR
+export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.cargo/bin:$HOME/.go/bin:$PATH"
 
 get_os() {
   if [ -f /etc/os-release ]; then
