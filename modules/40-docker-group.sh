@@ -4,7 +4,7 @@ BASE_DIR=$(dirname "$DIR")
 # shellcheck source=../utils.sh
 source "$BASE_DIR/utils.sh"
 
-user="${1:-$USER}"
+user="${TARGET_USER:-$USER}"
 
 run() {
   sudo usermod -aG docker "$user"
