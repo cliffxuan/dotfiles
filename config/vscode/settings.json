@@ -37,7 +37,6 @@
     "typescript": "node -r ts-node/register"
   },
   "editor.tabSize": 8,
-  "editor.minimap.enabled": false,
   "workbench.iconTheme": "vscode-icons",
   "editor.wordWrap": "off",
   "git.ignoreMissingGitWarning": true,
@@ -284,5 +283,6 @@
   "vim.smartRelativeLine": true,
   "workbench.activityBar.location": "hidden",
   "github.copilot.nextEditSuggestions.enabled": true,
-  "security.promptForLocalFileProtocolHandling": false
+  "security.promptForLocalFileProtocolHandling": false,
+  "claudeCode.preferredLocation": "panel"
 }

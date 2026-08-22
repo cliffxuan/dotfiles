@@ -148,3 +148,6 @@ Cargo.lock
 
 # hypothesis
 .hypothesis/
+
+**/.claude/settings.local.json
+.antigravitycli/
