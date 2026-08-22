@@ -4,7 +4,7 @@ node = "lts"
 go = "latest"
 bun = "latest"
 
-# Editor & CLI tools
+# Editor & Core CLI
 neovim = "latest"
 ripgrep = "latest"
 fd = "latest"
@@ -16,5 +16,5 @@ shfmt = "latest"
 zoxide = "latest"
 lazygit = "latest"
 lazydocker = "latest"
-lf = "latest"
 stylua = "latest"
+"aqua:gokcehan/lf" = "latest"
