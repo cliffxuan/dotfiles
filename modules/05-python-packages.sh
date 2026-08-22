@@ -3,20 +3,22 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
-packages="virtualenv virtualenvwrapper pipenv flake8 black httpie pynvim autoflake pyright"
+# CLI tools installed as isolated apps via uv tool
+tools="httpie pynvim"
+
+# Linters/formatters — ruff replaces flake8, black, autoflake
+# pyright is installed via npm (see 70-npm-packages.sh)
 
 run() {
-  for pkg in $packages
+  for tool in $tools
   do
-    pip3 install "$pkg"
+    uv tool install "$tool"
   done
+  uv tool install ruff
 }
 
 check() {
-  for pkg in $packages
-  do
-    python3 -c "import $pkg" 2>/dev/null || return 1
-  done
+  command -v ruff > /dev/null 2>&1
 }
 
 provision "$@"
