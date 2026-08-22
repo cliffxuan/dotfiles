@@ -8,17 +8,18 @@ packages=(
   ["bt"]="github.com/cliffxuan/bt"
 )
 
-GOPATH=${GOPATH:-$HOME/.go}
-
 run() {
   for pkg in "${packages[@]}"; do
     go install "$pkg@latest"
   done
+  if command -v mise >/dev/null 2>&1; then
+    mise reshim
+  fi
 }
 
 check() {
   for exe in "${!packages[@]}"; do
-    [ -x "$GOPATH/bin/$exe" ] || return 1
+    command -v "$exe" >/dev/null 2>&1 || return 1
   done
 }
 
