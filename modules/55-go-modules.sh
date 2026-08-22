@@ -5,11 +5,7 @@ source "$DIR/../utils.sh"
 
 declare -A packages
 packages=(
-  ["lf"]="github.com/gokcehan/lf"
-  ["lazygit"]="github.com/jesseduffield/lazygit"
   ["bt"]="github.com/cliffxuan/bt"
-  ["lazydocker"]="github.com/jesseduffield/lazydocker"
-  ["shfmt"]="mvdan.cc/sh/v3/cmd/shfmt"
 )
 
 GOPATH=${GOPATH:-$HOME/.go}

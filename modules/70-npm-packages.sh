@@ -6,7 +6,6 @@ source "$DIR/../utils.sh"
 declare -A packages
 packages=(
   ["prettier"]="prettier"
-  ["bun"]="bun"
   ["tsc"]="typescript"
   ["eslint"]="eslint"
 )
@@ -20,7 +19,7 @@ run() {
 
 check() {
   for exe in "${!packages[@]}"; do
-    [ -x "$LOCAL/bin/$exe" ] || return 1
+    command -v "$exe" >/dev/null 2>&1 || [ -x "$LOCAL/bin/$exe" ] || return 1
   done
 }
 

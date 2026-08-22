@@ -1,0 +1,21 @@
+[tools]
+# Runtimes
+node = "lts"
+go = "latest"
+bun = "latest"
+
+# Editor & CLI tools
+neovim = "latest"
+ripgrep = "latest"
+fd = "latest"
+bat = "latest"
+fzf = "latest"
+jq = "latest"
+tree = "latest"
+shellcheck = "latest"
+shfmt = "latest"
+zoxide = "latest"
+lazygit = "latest"
+lazydocker = "latest"
+lf = "latest"
+stylua = "latest"

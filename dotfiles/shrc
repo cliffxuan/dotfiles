@@ -146,11 +146,6 @@ function venv {
 
 alias h="python3 -m http.server"
 
-NIX_SH=$HOME/.nix-profile/etc/profile.d/nix.sh
-if [ -f "$NIX_SH" ]; then
-  # shellcheck source=/dev/null
-  source "$NIX_SH"
-fi
 # bun completions
 if [[ -s "$HOME/.bun/_bun" ]]; then
   source "$HOME/.bun/_bun"
@@ -212,6 +207,7 @@ paths=(
   "$HOME/.bun/bin"
   "$HOME/.node/bin"
   "$HOME/.local/bin"
+  "$HOME/.local/share/mise/shims"
   "$HOME/.cargo/bin"
   "$HOME/.lean/bin"
   "$HOME/.antigravity/antigravity/bin"
