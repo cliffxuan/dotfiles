@@ -8,7 +8,8 @@ fi
 declare -A ZINIT
 ZINIT[NO_ALIASES]=1
 
-typeset -U PATH path
+typeset -U PATH path fpath
+fpath=("$HOME/.zfunc" "${fpath[@]}")
 
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
@@ -124,4 +125,3 @@ zle -N _sgpt_zsh
 bindkey -M emacs '^O' _sgpt_zsh
 bindkey -M vicmd '^O' _sgpt_zsh
 bindkey -M viins '^O' _sgpt_zsh
-# Shell-GPT integration ZSH v0.2

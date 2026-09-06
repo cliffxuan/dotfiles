@@ -100,7 +100,7 @@ setup_logging() {
     seed="$(date "+%Y%m%d%H%M%S").$$"
     export LOG_PATH="/tmp/install.${seed}.log"
   fi
-  if ! { true >&4; } 2<> /dev/null
+  if ! [ -w /dev/fd/4 ] 2>/dev/null
   then
     exec 4<> "$LOG_PATH" # open the log file at fd 4
     if [ "$VERBOSE" = true ]
