@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 # shellcheck source=/dev/null
@@ -30,6 +30,5 @@ check() {
   hash ormolu 2>/dev/null || return 1
   ghc-pkg list | grep -q haskell-say
 }
-
 
 provision "$@"

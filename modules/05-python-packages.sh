@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
@@ -10,15 +10,14 @@ tools="httpie pynvim"
 # pyright is installed via npm (see 70-npm-packages.sh)
 
 run() {
-  for tool in $tools
-  do
+  for tool in $tools; do
     uv tool install "$tool"
   done
   uv tool install ruff
 }
 
 check() {
-  command -v ruff > /dev/null 2>&1
+  command -v ruff >/dev/null 2>&1
 }
 
 provision "$@"

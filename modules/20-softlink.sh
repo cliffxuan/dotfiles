@@ -23,8 +23,19 @@ run() {
   mkdir -p "$HOME/.config"
   for ff in "$CONFIG_DIR"/*; do
     name=$(basename "$ff")
-    echo "symlink $CONFIG_DIR/$name$HOME/.config/$name"
-    ln -fns "$CONFIG_DIR/$name" "$HOME/.config/$name"
+    if [ -d "$HOME/.config/$name" ] && [ ! -L "$HOME/.config/$name" ]; then
+      (
+        shopt -s dotglob nullglob
+        for sub in "$ff"/*; do
+          subname=$(basename "$sub")
+          echo "symlink $sub $HOME/.config/$name/$subname"
+          ln -fs "$sub" "$HOME/.config/$name/$subname"
+        done
+      )
+    else
+      echo "symlink $CONFIG_DIR/$name $HOME/.config/$name"
+      ln -fns "$CONFIG_DIR/$name" "$HOME/.config/$name"
+    fi
   done
 
   mkdir -p "$HOME/.local/bin"
@@ -36,7 +47,9 @@ run() {
 }
 
 check() {
-  run
+  [ -L "$HOME/.zshrc" ] &&
+    [ -L "$HOME/.tmux.conf" ] &&
+    [ -L "$HOME/.shrc" ]
 }
 
 provision "$@"

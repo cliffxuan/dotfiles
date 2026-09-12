@@ -1,27 +1,26 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=./utils.sh
 source "$DIR/utils.sh"
 
 run_os_specific_scripts() {
-  get_os  # set $OS
+  get_os # set $OS
   echo "========= operating system $OS"
   shopt -s nocasematch
   local script_dir
-  if [[ $OS =~ (ubuntu|debian) ]]
-  then
+  if [[ $OS =~ (ubuntu|debian) || $DIST_ID =~ (ubuntu|debian) || $DIST_ID_LIKE =~ (ubuntu|debian) ]]; then
     script_dir=$DIR/modules/ubuntu
+  elif [[ $OS =~ (omarchy|arch) || $DIST_ID =~ (omarchy|arch) || $DIST_ID_LIKE =~ (omarchy|arch) ]]; then
+    script_dir=$DIR/modules/omarchy
   else
     echo "\$OS=$OS does not have os specific packages"
   fi
   [ -n "$script_dir" ] && run_sh_scripts "$script_dir"
 }
 
-
 run_common_scripts() {
   run_sh_scripts "$DIR/modules"
 }
-
 
 parse_args "$@"
 setup_logging

@@ -21,3 +21,14 @@ stylua = "latest"
 herdr = "latest"
 antigravity-cli = "latest"
 yazi = "latest"
+
+# Omarchy & AI tools
+codex = "latest"
+gemini = { version = "latest", allow_builds = ["@github/keytar", "node-pty"] }
+gh = "latest"
+"pipx:hermes-agent" = { version = "latest", extras = "all" }
+uv = "latest"
+
+[settings.upgrade]
+auto_prune = false
+

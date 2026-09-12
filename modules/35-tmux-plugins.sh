@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 BASE_DIR=$(dirname "$DIR")
 # shellcheck source=../utils.sh
 source "$BASE_DIR/utils.sh"
 
 run() {
-  if [ ! -d "$HOME/.tmux/plugins/tpm" ]
-  then
+  if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
     echo "clone tmux plugin manager"
     mkdir -p "$HOME"/.tmux/plugins
     cd "$HOME"/.tmux/plugins || exit 1
@@ -16,8 +15,7 @@ run() {
 }
 
 check() {
-  run
+  [ -d "$HOME/.tmux/plugins/tpm" ]
 }
-
 
 provision "$@"

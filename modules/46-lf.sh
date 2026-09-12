@@ -4,7 +4,8 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/../utils.sh"
 
 run() {
-  ln -sf "$CONFIG_DIR/lf" "$HOME/.config"
+  mkdir -p "$HOME/.config"
+  ln -sfn "$CONFIG_DIR/lf" "$HOME/.config/lf"
 }
 
 check() {

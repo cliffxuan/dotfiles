@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CONFIG_DIR=$(realpath "$ROOT/config")
 DOTFILE_DIR=$(realpath "$ROOT"/dotfiles)
 SCRIPT_DIR="$(realpath "$ROOT"/scripts)"
@@ -8,43 +8,43 @@ export PATH="$HOME/.local/bin:$HOME/.local/share/mise/shims:$HOME/.cargo/bin:$HO
 
 get_os() {
   if [ -f /etc/os-release ]; then
-      # freedesktop.org and systemd
-      . /etc/os-release
-      OS=$NAME
-      VER=$VERSION_ID
+    # freedesktop.org and systemd
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+    DIST_ID=${ID:-}
+    DIST_ID_LIKE=${ID_LIKE:-}
   elif type lsb_release >/dev/null 2>&1; then
-      # linuxbase.org
-      OS=$(lsb_release -si)
-      VER=$(lsb_release -sr)
+    # linuxbase.org
+    OS=$(lsb_release -si)
+    VER=$(lsb_release -sr)
   elif [ -f /etc/lsb-release ]; then
-      # For some versions of Debian/Ubuntu without lsb_release command
-      # shellcheck source=/dev/null
-      . /etc/lsb-release
-      OS=$DISTRIB_ID
-      VER=$DISTRIB_RELEASE
+    # For some versions of Debian/Ubuntu without lsb_release command
+    # shellcheck source=/dev/null
+    . /etc/lsb-release
+    OS=$DISTRIB_ID
+    VER=$DISTRIB_RELEASE
   elif [ -f /etc/debian_version ]; then
-      # Older Debian/Ubuntu/etc.
-      OS=Debian
-      VER=$(cat /etc/debian_version)
+    # Older Debian/Ubuntu/etc.
+    OS=Debian
+    VER=$(cat /etc/debian_version)
   elif [ -f /etc/SuSe-release ]; then
-      # Older SuSE/etc.
-      ...
+    # Older SuSE/etc.
+    OS=SuSE
   elif [ -f /etc/redhat-release ]; then
-      # Older Red Hat, CentOS, etc.
-      ...
+    # Older Red Hat, CentOS, etc.
+    OS=RedHat
   else
-      # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
-      OS=$(uname -s)
-      VER=$(uname -r)
+    # Fall back to uname, e.g. "Linux <version>", also works for BSD, etc.
+    OS=$(uname -s)
+    VER=$(uname -r)
   fi
-  export OS VER
+  export OS VER DIST_ID DIST_ID_LIKE
 }
-
 
 parse_args() {
   VERBOSE=false
-  while getopts ":v" opt
-  do
+  while getopts ":v" opt; do
     case "$opt" in
       v)
         VERBOSE=true
@@ -61,11 +61,10 @@ parse_args() {
   done
 }
 
-
 provision() {
   parse_args "$@"
   local module=$0
-  if ! command -v run >/dev/null 2>&1 ;then
+  if ! command -v run >/dev/null 2>&1; then
     echo "function run not provided"
     return 1
   fi
@@ -74,8 +73,7 @@ provision() {
     return 1
   fi
   setup_logging
-  if check >&4 2>&1
-  then
+  if check >&4 2>&1; then
     echo "'$module' already provisioned. do nothing!"
   else
     echo "'$module' has not been applied. applying..."
@@ -84,8 +82,7 @@ provision() {
     #   show_spinner
     # fi
     run >&4 2>&1
-    if check >&4 2>&1
-    then
+    if check >&4 2>&1; then
       echo succeed!
     else
       echo fail! >&2
@@ -93,18 +90,14 @@ provision() {
   fi
 }
 
-
 setup_logging() {
-  if [ -z "$LOG_PATH" ]
-  then
+  if [ -z "$LOG_PATH" ]; then
     seed="$(date "+%Y%m%d%H%M%S").$$"
     export LOG_PATH="/tmp/install.${seed}.log"
   fi
-  if ! [ -w /dev/fd/4 ] 2>/dev/null
-  then
-    exec 4<> "$LOG_PATH" # open the log file at fd 4
-    if [ "$VERBOSE" = true ]
-    then
+  if ! [ -w /dev/fd/4 ] 2>/dev/null; then
+    exec 4<>"$LOG_PATH" # open the log file at fd 4
+    if [ "$VERBOSE" = true ]; then
       echo "verbose mode on"
       echo "log=$LOG_PATH"
       tail -f "$LOG_PATH" &
@@ -114,19 +107,15 @@ setup_logging() {
   fi
 }
 
-
 run_sh_scripts() {
   local script_dir=$1
-  for script in $(find "$script_dir" -maxdepth 1 -type f -name "*.sh" -exec basename {} \; | sort | grep -Ev '^_')
-  do
+  for script in $(find "$script_dir" -maxdepth 1 -type f -name "*.sh" -exec basename {} \; | sort | grep -Ev '^_'); do
     echo "========= run install $script_dir/$script"
     "$script_dir/$script"
   done
 }
 
-
-show_spinner()
-{
+show_spinner() {
   _show_spinner() {
     local -r delay='0.75'
     local spinstr='\|/-'

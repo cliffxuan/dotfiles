@@ -22,7 +22,8 @@ check() {
   local mise_bin
   mise_bin="$(command -v mise 2>/dev/null || echo "$HOME/.local/bin/mise")"
   [ -x "$mise_bin" ] &&
-    [ -e "$HOME/.config/mise/config.toml" ] &&
+    [ -L "$HOME/.config/mise/config.toml" ] &&
+    [ "$(readlink -f "$HOME/.config/mise/config.toml")" = "$(readlink -f "$CONFIG_DIR/mise/config.toml")" ] &&
     [ "$("$mise_bin" ls --missing --json 2>/dev/null)" = "{}" ]
 }
 
