@@ -1,5 +1,5 @@
-# Starship Prompt Configuration
-# Default: Modern, sleek prompt styled with Tokyo Night accents
+# Starship Prompt Configuration - Ubuntu Flavour
+# Canonical Yaru palette: Warm Orange (#E95420) & Aubergine (#77216F)
 
 add_newline = true
 command_timeout = 500
@@ -21,48 +21,46 @@ right_format = """$cmd_duration$os$username$hostname$time"""
 
 [os]
 disabled = false
-style = "bold #7aa2f7"
+style = "bold #e95420"
 
 [os.symbols]
-Arch = "󰣇 "
-Linux = "󰣇 "
-Macos = " "
 Ubuntu = " "
 Debian = " "
+Linux = " "
 
 [username]
 show_always = true
 format = "[$user]($style)@"
-style_user = "bold #7dcfff"
-style_root = "bold #f7768e"
+style_user = "bold #e95420"
+style_root = "bold #df382c"
 
 [hostname]
 ssh_only = false
 format = "[$hostname]($style) "
-style = "bold #e0af68"
+style = "bold #aea79f"
 
 [character]
-success_symbol = "[❯](bold #7aa2f7)"
-error_symbol = "[❯](bold #f7768e)"
-vimcmd_symbol = "[❮](bold #9ece6a)"
+success_symbol = "[❯](bold #e95420)"
+error_symbol = "[❯](bold #df382c)"
+vimcmd_symbol = "[❮](bold #38b44a)"
 
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bold #7dcfff"
+style = "bold #e95420"
 read_only = " 󰌾"
-read_only_style = "#f7768e"
-repo_root_style = "bold #7aa2f7"
+read_only_style = "#df382c"
+repo_root_style = "bold #aea79f"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
 symbol = " "
 format = "[$symbol$branch]($style) "
-style = "bold #bb9af7"
+style = "bold #77216f"
 
 [git_status]
 format = '([$all_status$ahead_behind]($style) )'
-style = "#e0af68"
+style = "#efb73e"
 conflicted = "🏳 "
 ahead = "⇡${count} "
 behind = "⇣${count} "
@@ -77,40 +75,40 @@ deleted = "✘${count} "
 [cmd_duration]
 min_time = 2000
 format = "[$duration]($style) "
-style = "bold #e0af68"
+style = "bold #efb73e"
 
 [time]
 disabled = false
 format = "[$time]($style)"
 time_format = "%T"
-style = "dimmed #565f89"
+style = "dimmed #aea79f"
 
 [package]
 symbol = "󰏗 "
-style = "#7dcfff"
+style = "#e95420"
 format = "via [$symbol$version]($style) "
 
 [python]
 symbol = "󰌠 "
-style = "#ff9e64"
+style = "#efb73e"
 format = "via [${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
 
 [nodejs]
 symbol = "󰎙 "
-style = "#9ece6a"
+style = "#38b44a"
 format = "via [$symbol($version )]($style)"
 
 [golang]
 symbol = "󰟓 "
-style = "#7dcfff"
+style = "#00a3e0"
 format = "via [$symbol($version )]($style)"
 
 [rust]
 symbol = "󱘗 "
-style = "#ff9e64"
+style = "#e95420"
 format = "via [$symbol($version )]($style)"
 
 [docker_context]
 symbol = "󰡨 "
-style = "#7aa2f7"
+style = "#00a3e0"
 format = "via [$symbol$context]($style) "

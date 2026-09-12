@@ -1,5 +1,5 @@
-# Starship Prompt Configuration
-# Default: Modern, sleek prompt styled with Tokyo Night accents
+# Starship Prompt Configuration - Omarchy / Arch Flavour
+# Sleek Tokyo Night / Omarchy cyan & green accents with Arch icon
 
 add_newline = true
 command_timeout = 500
@@ -26,9 +26,6 @@ style = "bold #7aa2f7"
 [os.symbols]
 Arch = "󰣇 "
 Linux = "󰣇 "
-Macos = " "
-Ubuntu = " "
-Debian = " "
 
 [username]
 show_always = true

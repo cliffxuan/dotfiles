@@ -70,12 +70,32 @@ fi
 if [[ -f $HOME/.theme.zsh ]]; then
   source "$HOME/.theme.zsh"
 elif command -v starship >/dev/null 2>&1; then
+  if [[ -z $STARSHIP_CONFIG ]]; then
+    if [[ -f $HOME/.config/starship.local.toml ]]; then
+      export STARSHIP_CONFIG="$HOME/.config/starship.local.toml"
+    else
+      typeset _os_flavor=""
+      if [[ "$OSTYPE" == darwin* ]]; then
+        _os_flavor="mac"
+      elif [[ -r /etc/os-release ]]; then
+        typeset _os_info="$(</etc/os-release)"
+        if [[ "$_os_info" == *omarchy* || "$_os_info" == *ID=arch* || "$_os_info" == *ID_LIKE=*arch* ]]; then
+          _os_flavor="omarchy"
+        elif [[ "$_os_info" == *ubuntu* ]]; then
+          _os_flavor="ubuntu"
+        fi
+      fi
+
+      if [[ -n $_os_flavor && -f $HOME/.config/starship.$_os_flavor.toml ]]; then
+        export STARSHIP_CONFIG="$HOME/.config/starship.$_os_flavor.toml"
+      else
+        export STARSHIP_CONFIG="$HOME/.config/starship.toml"
+      fi
+    fi
+  fi
   starship_cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship-init.zsh"
-  starship_cfg="${STARSHIP_CONFIG:-$HOME/.config/starship.local.toml}"
-  [[ -f $starship_cfg ]] || starship_cfg="$HOME/.config/starship.toml"
-  if [[ ! -f $starship_cache || $starship_cfg -nt $starship_cache ]]; then
+  if [[ ! -f $starship_cache || $STARSHIP_CONFIG -nt $starship_cache ]]; then
     mkdir -p "${starship_cache:h}"
-    [[ -f $HOME/.config/starship.local.toml ]] && export STARSHIP_CONFIG="$HOME/.config/starship.local.toml"
     starship init zsh > "$starship_cache"
   fi
   [[ -f $starship_cache ]] && source "$starship_cache"
