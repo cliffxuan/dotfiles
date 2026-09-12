@@ -1,0 +1,7 @@
+romkatv/zsh-defer
+zsh-users/zsh-completions
+jeffreytse/zsh-vi-mode
+zsh-users/zsh-history-substring-search
+ohmyzsh/ohmyzsh path:plugins/docker-compose
+zsh-users/zsh-autosuggestions kind:defer
+zsh-users/zsh-syntax-highlighting kind:defer

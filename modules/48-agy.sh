@@ -24,18 +24,12 @@ run() {
   mkdir -p "$HOME/.zfunc"
   ln -sf "$BASE_DIR/completions/_agy" "$HOME/.zfunc/_agy"
   ln -sf "$BASE_DIR/completions/_agy" "$HOME/.zfunc/_antigravity"
-
-  mkdir -p "$HOME/.zinit/completions"
-  ln -sf "$HOME/.zfunc/_agy" "$HOME/.zinit/completions/_agy"
-  ln -sf "$HOME/.zfunc/_agy" "$HOME/.zinit/completions/_antigravity"
 }
 
 check() {
   command -v agy >/dev/null 2>&1 &&
     [ -s "$HOME/.zfunc/_agy" ] &&
-    [ -e "$HOME/.zinit/completions/_agy" ] &&
-    [ -s "$HOME/.zfunc/_antigravity" ] &&
-    [ -e "$HOME/.zinit/completions/_antigravity" ]
+    [ -s "$HOME/.zfunc/_antigravity" ]
 }
 
 provision "$@"

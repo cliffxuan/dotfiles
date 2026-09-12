@@ -1,15 +1,32 @@
-
-declare -A ZINIT
-ZINIT[NO_ALIASES]=1
-
+# Environment paths
 typeset -U PATH path fpath
 fpath=("$HOME/.zfunc" "${fpath[@]}")
 path=("$HOME/.local/bin" "$HOME/.local/share/mise/shims" "$HOME/.cargo/bin" "${path[@]}")
 
-source "$HOME/.zinit/bin/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps[zinit]=_zinit
+# History configuration
+HISTFILE="${ZDOTDIR:-$HOME}/.zsh_history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt EXTENDED_HISTORY
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_VERIFY
+setopt SHARE_HISTORY
 
+# Directory options
+setopt AUTO_CD
+setopt AUTO_PUSHD
+setopt PUSHD_IGNORE_DUPS
+setopt PUSHD_SILENT
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+
+# History substring search keybindings
 bindkeyHistorySubstringSearch() {
   if [[ "$OSTYPE" == "linux-gnu" ]]; then
     bindkey '^[OA' history-substring-search-up
@@ -20,92 +37,83 @@ bindkeyHistorySubstringSearch() {
   fi
   HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
 }
+bindkeyHistorySubstringSearch
 
-# automatically run by zsh-vi-mode
+# Automatically run by zsh-vi-mode after init
 function zvm_after_init() {
-  [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+  bindkeyHistorySubstringSearch
+  command -v fzf >/dev/null 2>&1 && eval "$(fzf --zsh 2>/dev/null)"
 }
 
+# Antidote plugin loading with static caching (loads plugins & updates fpath before compinit)
+zsh_plugins=${ZDOTDIR:-$HOME}/.zsh_plugins.txt
+zsh_plugins_cache=${ZDOTDIR:-$HOME}/.zsh_plugins.zsh
+if [[ ! -f $zsh_plugins_cache || $zsh_plugins -nt $zsh_plugins_cache ]]; then
+  [[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
+  source ~/.antidote/antidote.zsh
+  antidote bundle < "$zsh_plugins" > "$zsh_plugins_cache"
+  zcompile "$zsh_plugins_cache" 2>/dev/null || true
+fi
+[[ -f $zsh_plugins_cache ]] && source "$zsh_plugins_cache"
 
-zinit wait lucid light-mode for \
-  atinit"zicompinit; zicdreplay" \
-    zsh-users/zsh-syntax-highlighting \
-  atload"_zsh_autosuggest_start; bindkeyHistorySubstringSearch" \
-    zsh-users/zsh-autosuggestions \
-    zsh-users/zsh-history-substring-search \
-  blockf atpull'zinit creinstall -q .' \
-    zsh-users/zsh-completions
+# Fast compinit with daily cache check
+setopt EXTENDED_GLOB
+autoload -Uz compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit -d "${ZDOTDIR:-$HOME}/.zcompdump"
+  zcompile "${ZDOTDIR:-$HOME}/.zcompdump" 2>/dev/null || true
+else
+  compinit -C -d "${ZDOTDIR:-$HOME}/.zcompdump"
+fi
 
-zinit wait lucid for \
-  OMZL::git.zsh \
-  OMZL::history.zsh \
-  OMZL::completion.zsh \
-  OMZL::clipboard.zsh \
-  OMZL::directories.zsh \
-  OMZL::theme-and-appearance.zsh \
-  OMZP::docker-compose/docker-compose.plugin.zsh \
-  https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker \
-  jeffreytse/zsh-vi-mode
-
+# Starship prompt (cached for speed)
 if [[ -f $HOME/.theme.zsh ]]; then
   source "$HOME/.theme.zsh"
 elif command -v starship >/dev/null 2>&1; then
-  [[ -f $HOME/.config/starship.local.toml ]] && export STARSHIP_CONFIG="$HOME/.config/starship.local.toml"
-  eval "$(starship init zsh)"
-else
-  zinit ice as"command" from"gh-r" \
-    atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-    atpull"%atclone" src"init.zsh"
-  zinit light starship/starship
+  starship_cache="${XDG_CACHE_HOME:-$HOME/.cache}/starship-init.zsh"
+  starship_cfg="${STARSHIP_CONFIG:-$HOME/.config/starship.local.toml}"
+  [[ -f $starship_cfg ]] || starship_cfg="$HOME/.config/starship.toml"
+  if [[ ! -f $starship_cache || $starship_cfg -nt $starship_cache ]]; then
+    mkdir -p "${starship_cache:h}"
+    [[ -f $HOME/.config/starship.local.toml ]] && export STARSHIP_CONFIG="$HOME/.config/starship.local.toml"
+    starship init zsh > "$starship_cache"
+  fi
+  [[ -f $starship_cache ]] && source "$starship_cache"
 fi
 
-# fzf
-zinit ice wait lucid \
-  atclone'"$PWD"/install --key-bindings --completion --no-update-rc --no-bash --no-fish' \
-  atpull"%atclone" \
-  atinit'export PATH="$PWD/bin:$PATH"'
-zinit light junegunn/fzf
+# Tool integrations (cached for speed)
+if command -v zoxide >/dev/null 2>&1; then
+  zoxide_cache="${XDG_CACHE_HOME:-$HOME/.cache}/zoxide-init.zsh"
+  zoxide_bin="$(command -v zoxide)"
+  if [[ ! -f $zoxide_cache || $zoxide_bin -nt $zoxide_cache ]]; then
+    mkdir -p "${zoxide_cache:h}"
+    zoxide init zsh > "$zoxide_cache"
+  fi
+  [[ -f $zoxide_cache ]] && source "$zoxide_cache"
+fi
 
-# bottom
-zinit ice as"command" from"gh-r"
-zinit light ClementTsang/bottom
-
-# exa
-zinit ice as"command" from"gh-r" pick"/bin/exa" atclone"mv completions/exa.zsh completions/_exa"
-zinit light ogham/exa
-
-# zoxide
-zinit ice as"command" from"gh-r" lucid \
-  mv"zoxide*/zoxide -> zoxide" \
-  atclone"./zoxide init zsh > init.zsh" \
-  src"init.zsh" nocompile'!'
-zinit light ajeetdsouza/zoxide
-
-
-
-
-############ end of zinit ################
+# Completion styling
 zstyle ':completion:*:*:git*:*' ignored-patterns '*ORIG_HEAD'
 zstyle ':completion:*:make::' tag-order 'targets'
 zstyle ':completion:*:make:*:targets' group-name targets
 
+# Common environment & aliases
 source ~/.shrc
 
-# TODO lazy load
-if [ -x gcloud ]
-then
+# gcloud completion
+if command -v gcloud >/dev/null 2>&1 && [ -f ~/dev/dotfiles/config/gcloud/completion.zsh.inc ]; then
   source ~/dev/dotfiles/config/gcloud/completion.zsh.inc
 fi
 
 # Shell-GPT integration ZSH v0.2
 _sgpt_zsh() {
-if [[ -n "$BUFFER" ]]; then
+  if [[ -n "$BUFFER" ]]; then
     _sgpt_prev_cmd=$BUFFER
     BUFFER+="⌛"
     zle -I && zle redisplay
     BUFFER=$(sgpt --shell <<< "$_sgpt_prev_cmd" --no-interaction)
     zle end-of-line
-fi
+  fi
 }
 zle -N _sgpt_zsh
 

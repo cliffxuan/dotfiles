@@ -5,12 +5,12 @@ BASE_DIR=$(dirname "$DIR")
 source "$BASE_DIR/utils.sh"
 
 run() {
-  mkdir -p "$HOME/.zinit"
-  if [ -d "$HOME/.zinit/bin" ]; then
-    echo "zinit already exists"
+  if [ -d "$HOME/.antidote" ]; then
+    echo "antidote already exists"
   else
-    git clone https://github.com/zdharma-continuum/zinit.git "$HOME/.zinit/bin"
+    git clone --depth=1 https://github.com/mattmc3/antidote.git "$HOME/.antidote"
   fi
+
   if ! grep -qE "^$(whoami):.*zsh" /etc/passwd 2>/dev/null; then
     if command -v zsh >/dev/null 2>&1 && sudo chsh -s "$(command -v zsh)" "$(whoami)"; then
       echo "changed default shell to zsh"
@@ -18,13 +18,16 @@ run() {
       echo "unable to change default shell to zsh"
     fi
   fi
-  if command -v zsh >/dev/null 2>&1 && [ -f "$HOME/.zshrc" ]; then
-    zsh -c "source $HOME/.zshrc"
+
+  # Compile plugins if antidote and plugins list are present
+  if command -v zsh >/dev/null 2>&1 && [ -f "$HOME/.zsh_plugins.txt" ]; then
+    zsh -c 'source "$HOME/.antidote/antidote.zsh" && antidote bundle < "$HOME/.zsh_plugins.txt" > "$HOME/.zsh_plugins.zsh" && zcompile "$HOME/.zsh_plugins.zsh"'
   fi
 }
 
 check() {
-  [ -d "$HOME/.zinit/bin" ] &&
+  [ -d "$HOME/.antidote" ] &&
+    [ -f "$HOME/.antidote/antidote.zsh" ] &&
     command -v zsh >/dev/null 2>&1 &&
     grep -qE "^$(whoami):.*zsh" /etc/passwd 2>/dev/null
 }

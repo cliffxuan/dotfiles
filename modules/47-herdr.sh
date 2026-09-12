@@ -26,9 +26,6 @@ run() {
   mkdir -p "$HOME/.zfunc"
   herdr completion zsh >"$HOME/.zfunc/_herdr"
 
-  mkdir -p "$HOME/.zinit/completions"
-  ln -sf "$HOME/.zfunc/_herdr" "$HOME/.zinit/completions/_herdr"
-
   if command -v agy >/dev/null 2>&1 || [ -d "$HOME/.gemini" ]; then
     herdr integration install antigravity-cli
   fi
@@ -38,7 +35,6 @@ check() {
   [ ! -f "$HOME/.local/bin/herdr" ] &&
     command -v herdr >/dev/null 2>&1 &&
     [ -s "$HOME/.zfunc/_herdr" ] &&
-    [ -e "$HOME/.zinit/completions/_herdr" ] &&
     (! { command -v agy >/dev/null 2>&1 || [ -d "$HOME/.gemini" ]; } ||
       herdr integration status 2>/dev/null | grep -Eq '^antigravity-cli:[[:space:]]+current')
 }

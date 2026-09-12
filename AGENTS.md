@@ -18,7 +18,7 @@ When a new tool requires shell completion, post-install steps, or configuration 
    - Conclude with `provision "$@"`.
 2. **Installation in `run()`**:
    - Run `mise install <tool>` and `mise reshim`.
-   - Generate any shell completions into `~/.zfunc/_<tool>` and symlink to `~/.zinit/completions/_<tool>`.
+   - Generate any shell completions into `~/.zfunc/_<tool>`.
 3. **Verification in `check()`**:
    - Check `command -v <tool>` (or `mise which <tool>`) and verify completion files exist and are non-empty.
 4. **Code Quality**:
