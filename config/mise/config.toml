@@ -21,6 +21,7 @@ stylua = "latest"
 herdr = "latest"
 antigravity-cli = "latest"
 yazi = "latest"
+starship = "latest"
 
 # Omarchy & AI tools
 codex = "latest"

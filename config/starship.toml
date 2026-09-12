@@ -1,0 +1,105 @@
+# Starship Prompt Configuration
+# Modern, sleek prompt styled with Tokyo Night accents
+
+add_newline = true
+command_timeout = 500
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$package\
+$golang\
+$nodejs\
+$rust\
+$python\
+$docker_context\
+$line_break\
+$character"""
+
+right_format = """$cmd_duration$username$hostname$time"""
+
+[username]
+show_always = true
+format = "[$user]($style)@"
+style_user = "bold #7dcfff"
+style_root = "bold #f7768e"
+
+[hostname]
+ssh_only = false
+format = "[$hostname]($style) "
+style = "bold #e0af68"
+
+[character]
+success_symbol = "[❯](bold #7aa2f7)"
+error_symbol = "[❯](bold #f7768e)"
+vimcmd_symbol = "[❮](bold #9ece6a)"
+
+[directory]
+truncation_length = 3
+truncation_symbol = "…/"
+style = "bold #7dcfff"
+read_only = " 󰌾"
+read_only_style = "#f7768e"
+repo_root_style = "bold #7aa2f7"
+repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+
+[git_branch]
+symbol = " "
+format = "[$symbol$branch]($style) "
+style = "bold #bb9af7"
+
+[git_status]
+format = '([$all_status$ahead_behind]($style) )'
+style = "#e0af68"
+conflicted = "🏳 "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "📦 "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+[cmd_duration]
+min_time = 2000
+format = "[$duration]($style) "
+style = "bold #e0af68"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+time_format = "%T"
+style = "dimmed #565f89"
+
+[package]
+symbol = "󰏗 "
+style = "#7dcfff"
+format = "via [$symbol$version]($style) "
+
+[python]
+symbol = "󰌠 "
+style = "#ff9e64"
+format = "via [${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
+
+[nodejs]
+symbol = "󰎙 "
+style = "#9ece6a"
+format = "via [$symbol($version )]($style)"
+
+[golang]
+symbol = "󰟓 "
+style = "#7dcfff"
+format = "via [$symbol($version )]($style)"
+
+[rust]
+symbol = "󱘗 "
+style = "#ff9e64"
+format = "via [$symbol($version )]($style)"
+
+[docker_context]
+symbol = "󰡨 "
+style = "#7aa2f7"
+format = "via [$symbol$context]($style) "

@@ -1,15 +1,10 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
 
 declare -A ZINIT
 ZINIT[NO_ALIASES]=1
 
 typeset -U PATH path fpath
 fpath=("$HOME/.zfunc" "${fpath[@]}")
+path=("$HOME/.local/bin" "$HOME/.local/share/mise/shims" "$HOME/.cargo/bin" "${path[@]}")
 
 source "$HOME/.zinit/bin/zinit.zsh"
 autoload -Uz _zinit
@@ -53,23 +48,15 @@ zinit wait lucid for \
   jeffreytse/zsh-vi-mode
 
 if [[ -f $HOME/.theme.zsh ]]; then
-  source $HOME/.theme.zsh
-elif [[ "$OSTYPE" == "linux-gnu" ]]; then
-  zinit ice src"powerlevel10k.zsh-theme"; zinit light romkatv/powerlevel10k
-  POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(context dir vcs virtualenv newline)
-  if [[ -f $HOME/.p10k.zsh ]]; then
-    source "$HOME/.p10k.zsh"
-  else
-    source $HOME/dev/dotfiles/zsh/p10k.zsh
-  fi
-elif [[ "$OSTYPE" == "darwin"* ]]; then
+  source "$HOME/.theme.zsh"
+elif command -v starship >/dev/null 2>&1; then
+  [[ -f $HOME/.config/starship.local.toml ]] && export STARSHIP_CONFIG="$HOME/.config/starship.local.toml"
+  eval "$(starship init zsh)"
+else
   zinit ice as"command" from"gh-r" \
     atclone"./starship init zsh > init.zsh; ./starship completions zsh > _starship" \
-    atpull"%atclone" src"init.zsh" # pull behavior same as clone, source init.zsh
+    atpull"%atclone" src"init.zsh"
   zinit light starship/starship
-else
-  zinit ice pick"async.zsh" src"pure.zsh"; zinit light sindresorhus/pure
-  zstyle :prompt:pure:path color 039
 fi
 
 # fzf
