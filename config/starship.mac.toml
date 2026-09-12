@@ -1,10 +1,11 @@
 # Starship Prompt Configuration - macOS Flavour
-# Sleek Apple Cupertino palette: Apple Blue (#007AFF), Teal (#5AC8FA), Silver (#A0A0A0)
+# Base Theme: Catppuccin Macchiato with sleek Cupertino styling
 
 add_newline = true
 command_timeout = 500
 
 format = """
+$os\
 $directory\
 $git_branch\
 $git_status\
@@ -17,96 +18,98 @@ $docker_context\
 $line_break\
 $character"""
 
-right_format = """$cmd_duration$os$username$hostname$time"""
+right_format = """$cmd_duration$username$hostname$time"""
 
 [os]
 disabled = false
-style = "bold #a0a0a0"
+style = "bold #8aadf4"
+format = "[$symbol]($style) "
 
 [os.symbols]
 Macos = " "
+Linux = " "
 
 [username]
 show_always = true
 format = "[$user]($style)@"
-style_user = "bold #5ac8fa"
-style_root = "bold #ff3b30"
+style_user = "bold #7dc4e4"
+style_root = "bold #ed8796"
 
 [hostname]
 ssh_only = false
 format = "[$hostname]($style) "
-style = "bold #a0a0a0"
+style = "bold #b7bdf8"
 
 [character]
-success_symbol = "[❯](bold #007aff)"
-error_symbol = "[❯](bold #ff3b30)"
-vimcmd_symbol = "[❮](bold #34c759)"
+success_symbol = "[❯](bold #c6a0f6)"
+error_symbol = "[❯](bold #ed8796)"
+vimcmd_symbol = "[❮](bold #a6da95)"
 
 [directory]
 truncation_length = 3
 truncation_symbol = "…/"
-style = "bold #007aff"
+style = "bold #8bd5ca"
 read_only = " 󰌾"
-read_only_style = "#ff3b30"
-repo_root_style = "bold #5ac8fa"
+read_only_style = "#ed8796"
+repo_root_style = "bold #7dc4e4"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 
 [git_branch]
-symbol = " "
+symbol = " "
 format = "[$symbol$branch]($style) "
-style = "bold #af52de"
+style = "bold #c6a0f6"
 
 [git_status]
 format = '([$all_status$ahead_behind]($style) )'
-style = "#ffcc00"
-conflicted = "🏳 "
+style = "bold #eed49f"
+conflicted = "󰞇 "
 ahead = "⇡${count} "
 behind = "⇣${count} "
-diverged = "⇕⇡${ahead_count}⇣${behind_count} "
-untracked = "?${count} "
-stashed = "📦 "
-modified = "!${count} "
-staged = "+${count} "
-renamed = "»${count} "
-deleted = "✘${count} "
+diverged = "󰦚 ⇡${ahead_count}⇣${behind_count} "
+untracked = "󰄱 "
+stashed = "󰏖 "
+modified = "󰏫 "
+staged = "󰐖 "
+renamed = "󰑕 "
+deleted = "󰅖 "
 
 [cmd_duration]
 min_time = 2000
 format = "[$duration]($style) "
-style = "bold #ffcc00"
+style = "bold #eed49f"
 
 [time]
 disabled = false
 format = "[$time]($style)"
 time_format = "%T"
-style = "dimmed #8e8e93"
+style = "dimmed #a5adcb"
 
 [package]
 symbol = "󰏗 "
-style = "#5ac8fa"
+style = "#f5bde6"
 format = "via [$symbol$version]($style) "
 
 [python]
 symbol = "󰌠 "
-style = "#ff9500"
+style = "#f5a97f"
 format = "via [${symbol}${pyenv_prefix}(${version} )(\\($virtualenv\\) )]($style)"
 
 [nodejs]
 symbol = "󰎙 "
-style = "#34c759"
+style = "#a6da95"
 format = "via [$symbol($version )]($style)"
 
 [golang]
 symbol = "󰟓 "
-style = "#5ac8fa"
+style = "#8bd5ca"
 format = "via [$symbol($version )]($style)"
 
 [rust]
 symbol = "󱘗 "
-style = "#ff9500"
+style = "#ee99a0"
 format = "via [$symbol($version )]($style)"
 
 [docker_context]
 symbol = "󰡨 "
-style = "#007aff"
+style = "#8aadf4"
 format = "via [$symbol$context]($style) "

@@ -1,10 +1,14 @@
 # Starship Prompt Configuration - Ubuntu Flavour
-# Canonical Yaru palette: Warm Orange (#E95420) & Aubergine (#77216F)
+# Base Theme: Ubuntu Yaru / Canonical (Aubergine #77216F & Warm Orange #E95420)
+# Structure: Classic Ubuntu user@host prominent segment layout
 
 add_newline = true
 command_timeout = 500
 
 format = """
+$os\
+$username\
+$hostname\
 $directory\
 $git_branch\
 $git_status\
@@ -17,11 +21,12 @@ $docker_context\
 $line_break\
 $character"""
 
-right_format = """$cmd_duration$os$username$hostname$time"""
+right_format = """$cmd_duration$time"""
 
 [os]
 disabled = false
 style = "bold #e95420"
+format = "[$symbol]($style) "
 
 [os.symbols]
 Ubuntu = " "
@@ -36,13 +41,13 @@ style_root = "bold #df382c"
 
 [hostname]
 ssh_only = false
-format = "[$hostname]($style) "
+format = "[$hostname]($style):"
 style = "bold #aea79f"
 
 [character]
-success_symbol = "[❯](bold #e95420)"
-error_symbol = "[❯](bold #df382c)"
-vimcmd_symbol = "[❮](bold #38b44a)"
+success_symbol = "[➜](bold #e95420) "
+error_symbol = "[➜](bold #df382c) "
+vimcmd_symbol = "[❮](bold #38b44a) "
 
 [directory]
 truncation_length = 3
@@ -50,25 +55,26 @@ truncation_symbol = "…/"
 style = "bold #e95420"
 read_only = " 󰌾"
 read_only_style = "#df382c"
-repo_root_style = "bold #aea79f"
+repo_root_style = "bold #ffffff"
 repo_root_format = "[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+format = "[$path]($style) "
 
 [git_branch]
 symbol = " "
-format = "[$symbol$branch]($style) "
+format = "on [$symbol$branch]($style) "
 style = "bold #77216f"
 
 [git_status]
 format = '([$all_status$ahead_behind]($style) )'
-style = "#efb73e"
-conflicted = "🏳 "
+style = "bold #efb73e"
+conflicted = "✖ "
 ahead = "⇡${count} "
 behind = "⇣${count} "
 diverged = "⇕⇡${ahead_count}⇣${behind_count} "
-untracked = "?${count} "
-stashed = "📦 "
-modified = "!${count} "
-staged = "+${count} "
+untracked = "…${count} "
+stashed = "⚑ "
+modified = "✚${count} "
+staged = "●${count} "
 renamed = "»${count} "
 deleted = "✘${count} "
 
