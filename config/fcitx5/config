@@ -3,3 +3,7 @@
 0=Super+Shift+I
 1=Zenkaku_Hankaku
 2=Hangul
+
+[Behavior]
+OverrideXkbOption=True
+CustomXkbOption=caps:escape

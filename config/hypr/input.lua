@@ -10,6 +10,8 @@ hl.config({
     kb_layout = "us",
     kb_variant = "mac-iso",
     kb_model = "apple",
+    -- Remap Caps Lock to Escape
+    kb_options = "caps:escape",
 
     touchpad = {
       -- Use natural (inverse) scrolling.
