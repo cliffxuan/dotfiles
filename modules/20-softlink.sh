@@ -47,9 +47,34 @@ run() {
 }
 
 check() {
-  [ -L "$HOME/.zshrc" ] &&
-    [ -L "$HOME/.tmux.conf" ] &&
-    [ -L "$HOME/.shrc" ]
+  local ff dotfile name sub subname script
+  for ff in "$DOTFILE_DIR"/*; do
+    if [ ! -d "$ff" ]; then
+      dotfile=$(basename "$ff")
+      [ ! -L "$HOME/.$dotfile" ] && return 1
+    fi
+  done
+
+  for ff in "$CONFIG_DIR"/*; do
+    name=$(basename "$ff")
+    if [ -d "$HOME/.config/$name" ] && [ ! -L "$HOME/.config/$name" ]; then
+      for sub in "$ff"/*; do
+        [ -e "$sub" ] || continue
+        subname=$(basename "$sub")
+        [ ! -L "$HOME/.config/$name/$subname" ] && return 1
+      done
+    else
+      [ ! -L "$HOME/.config/$name" ] && return 1
+    fi
+  done
+
+  for ff in "$SCRIPT_DIR"/*; do
+    [ -f "$ff" ] || continue
+    script=$(basename "$ff")
+    [ ! -L "$HOME/.local/bin/$script" ] && return 1
+  done
+
+  return 0
 }
 
 provision "$@"
