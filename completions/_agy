@@ -1,0 +1,304 @@
+#compdef agy antigravity
+
+_agy() {
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  local -a common_options
+  common_options=(
+    '--add-dir=[Add directory to workspace (repeatable)]:directory:_files -/'
+    '--agent=[Agent for CLI session]:agent:->agents'
+    '(-c --continue)'{-c,--continue}'[Continue most recent conversation]'
+    '--conversation=[Resume previous conversation by ID]:conversation ID:->conversations'
+    '--dangerously-skip-permissions[Auto-approve all tool permission requests without prompting]'
+    '--disable-slash-commands[Disable slash command and skill expansion in print mode]'
+    '--effort=[Reasoning effort for CLI session]:effort:(low medium high)'
+    '(-i --prompt-interactive)'{-i,--prompt-interactive}'[Run initial prompt interactively and continue session]'
+    '--input-format=[Input format for print mode]:format:(text stream-json)'
+    '--json-schema=[JSON schema string or path to schema file]:schema file:_files'
+    '--log-file=[Override CLI log file path]:log file:_files'
+    '--mode=[Set agent execution mode]:mode:(accept-edits plan)'
+    '--model=[Model for CLI session]:model:->models'
+    '--new-project[Create a new project for this session]'
+    '--output-format=[Output format for print mode]:format:(text json stream-json)'
+    '(-p --print --prompt)'{-p,--print,--prompt}'[Run single prompt non-interactively and print response]'
+    '--print-timeout=[Timeout for print mode wait]:duration:'
+    '--project=[Project ID or name for CLI session]:project:'
+    '--sandbox[Run in sandbox with terminal restrictions enabled]'
+    '(-h --help)'{-h,--help}'[Show help]'
+  )
+
+  local -a subcommands
+  subcommands=(
+    'agent:List available agents'
+    'agents:List available agents'
+    'changelog:Show changelog and release notes'
+    'help:Show help for subcommands'
+    'install:Configure environment paths and shell settings'
+    'mcp:Manage MCP servers (add, remove, list, enable, disable)'
+    'mic-serve:Serve machine microphone to a CLI on another host'
+    'models:List available models'
+    'plugin:Manage plugins (install, uninstall, list, enable, disable)'
+    'plugins:Manage plugins (alias for plugin)'
+    'remote-control:Manage the remote-control background daemon'
+    'update:Update CLI'
+  )
+
+  _arguments -C -s \
+    $common_options \
+    '1: :->command' \
+    '*:: :->args' && ret=0
+
+  case "$state" in
+    command)
+      _describe -t commands 'agy subcommands' subcommands && ret=0
+      ;;
+    agents)
+      local -a agents
+      agents=(${${(f)"$(agy agent 2>/dev/null)"}:#[[:space:]]*})
+      if (( ${#agents} )); then
+        _describe -t agents 'available agents' agents && ret=0
+      fi
+      ;;
+    conversations)
+      local -a convs
+      local brain_dir="$HOME/.gemini/antigravity-cli/brain"
+      if [[ -d "$brain_dir" ]]; then
+        convs=(${${(f)"$(ls -1 "$brain_dir" 2>/dev/null)"}:#.*})
+        if (( ${#convs} )); then
+          _describe -t conversations 'previous conversations' convs && ret=0
+        fi
+      fi
+      ;;
+    models)
+      local -a models
+      models=(
+        'gemini-3.8-flash-high:Gemini 3.8 Flash (High)'
+        'gemini-3.8-flash-medium:Gemini 3.8 Flash (Medium)'
+        'gemini-3.8-flash-low:Gemini 3.8 Flash (Low)'
+        'gemini-3.7-flash-high:Gemini 3.7 Flash (High)'
+        'gemini-3.7-flash-medium:Gemini 3.7 Flash (Medium)'
+        'gemini-3.7-flash-low:Gemini 3.7 Flash (Low)'
+        'gemini-3.6-flash-high:Gemini 3.6 Flash (High)'
+        'gemini-3.6-flash-medium:Gemini 3.6 Flash (Medium)'
+        'gemini-3.6-flash-low:Gemini 3.6 Flash (Low)'
+        'gemini-3.1-pro-high:Gemini 3.1 Pro (High)'
+        'gemini-3.1-pro-low:Gemini 3.1 Pro (Low)'
+        'claude-sonnet-4-6:Claude Sonnet 4.6 (Thinking)'
+        'claude-opus-4-6-thinking:Claude Opus 4.6 (Thinking)'
+        'gpt-oss-120b-medium:GPT-OSS 120B (Medium)'
+      )
+      _describe -t models 'models' models && ret=0
+      ;;
+    args)
+      local subcmd="${line[1]:-$words[1]}"
+      case "$subcmd" in
+        agent|agents|changelog|models|update)
+          _arguments \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+        help)
+          local -a help_cmds
+          help_cmds=(
+            'agent:List available agents'
+            'agents:List available agents'
+            'changelog:Show changelog and release notes'
+            'install:Configure environment paths and shell settings'
+            'mcp:Manage MCP servers'
+            'mic-serve:Serve microphone'
+            'models:List available models'
+            'plugin:Manage plugins'
+            'plugins:Manage plugins'
+            'remote-control:Manage remote-control daemon'
+            'update:Update CLI'
+          )
+          _describe -t subcommands 'commands' help_cmds && ret=0
+          ;;
+        install)
+          _arguments \
+            '--dir=[Custom directory target to configure PATH for]:directory:_files -/' \
+            '--skip-aliases[Bypasses shell profile alias purging]' \
+            '--skip-path[Bypasses shell profile PATH appending]' \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+        mic-serve)
+          _arguments \
+            '--addr=[Address to listen on]:address:' \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+        remote-control)
+          _agy_remote_control && ret=0
+          ;;
+        mcp)
+          _agy_mcp && ret=0
+          ;;
+        plugin|plugins)
+          _agy_plugin && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+_agy_mcp() {
+  local -a mcp_subcmds
+  mcp_subcmds=(
+    'add:Add or update an MCP server configuration'
+    'remove:Remove an MCP server configuration'
+    'list:List all configured MCP servers'
+    'enable:Enable an MCP server'
+    'disable:Disable an MCP server'
+  )
+
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  _arguments -C \
+    '1: :->mcp_cmd' \
+    '*:: :->mcp_args' && ret=0
+
+  case "$state" in
+    mcp_cmd)
+      _describe -t mcp-commands 'mcp subcommands' mcp_subcmds && ret=0
+      ;;
+    mcp_args)
+      local mcp_cmd="${line[1]:-$words[1]}"
+      case "$mcp_cmd" in
+        add)
+          _arguments \
+            '(-H --header)'{-H,--header}'=[HTTP header Key: Value (repeatable)]:header:' \
+            '(-e --env)'{-e,--env}'=[Environment variable KEY=value (repeatable)]:env:' \
+            '(-t --type)'{-t,--type}'=[Server type]:type:(stdio http)' \
+            '(-h --help)'{-h,--help}'[Show help]' \
+            '1:server name:' \
+            '2:command or URL:_files' \
+            '*:arguments:_files' && ret=0
+          ;;
+        remove|enable|disable)
+          local -a servers
+          servers=(${${(f)"$(agy mcp list 2>/dev/null)"}:#No MCP*})
+          servers=(${servers##[[:space:]]#})
+          servers=(${servers%%:*})
+          servers=(${servers%%[[:space:]]*})
+          _arguments \
+            '(-h --help)'{-h,--help}'[Show help]' \
+            '1:server name:compadd -a servers' && ret=0
+          ;;
+        list)
+          _arguments \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+_agy_plugin() {
+  local -a plugin_cmds
+  plugin_cmds=(
+    'list:List imported plugins'
+    'import:Import plugins from gemini or claude'
+    'install:Install a plugin (supports plugin@marketplace)'
+    'uninstall:Uninstall a plugin'
+    'enable:Enable a plugin'
+    'disable:Disable a plugin'
+    'validate:Validate a plugin'
+    'link:Generate link to a marketplace'
+    'help:Show help'
+  )
+
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  _arguments -C \
+    '1: :->plugin_cmd' \
+    '*:: :->plugin_args' && ret=0
+
+  case "$state" in
+    plugin_cmd)
+      _describe -t plugin-commands 'plugin commands' plugin_cmds && ret=0
+      ;;
+    plugin_args)
+      local plugin_cmd="${line[1]:-$words[1]}"
+      case "$plugin_cmd" in
+        import)
+          _arguments \
+            '1:source:((gemini\:"Import from gemini" claude\:"Import from claude"))' \
+            '*:path:_files' && ret=0
+          ;;
+        install)
+          _arguments \
+            '1:target:_files -/' && ret=0
+          ;;
+        uninstall|enable|disable)
+          local -a plugins
+          plugins=(${${(f)"$(agy plugin list 2>/dev/null)"}:#No imported*})
+          plugins=(${plugins##[[:space:]]#})
+          plugins=(${plugins%%[[:space:]]*})
+          _arguments \
+            '1:plugin name:compadd -a plugins' && ret=0
+          ;;
+        validate)
+          _arguments \
+            '1:plugin path:_files -/' && ret=0
+          ;;
+        link)
+          _arguments \
+            '1:marketplace:' \
+            '2:target:_files -/' && ret=0
+          ;;
+        list|help)
+          _arguments \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+_agy_remote_control() {
+  local -a rc_subcmds
+  rc_subcmds=(
+    'start:Register and start the remote-control daemon'
+    'status:Show the daemon status'
+    'stop:Stop the daemon and unregister it'
+  )
+
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  _arguments -C \
+    '1: :->rc_cmd' \
+    '*:: :->rc_args' && ret=0
+
+  case "$state" in
+    rc_cmd)
+      _describe -t remote-control-commands 'remote-control subcommands' rc_subcmds && ret=0
+      ;;
+    rc_args)
+      local rc_cmd="${line[1]:-$words[1]}"
+      case "$rc_cmd" in
+        start)
+          _arguments \
+            '--name=[Set machine instance name shown in Remote Control]:instance name:' \
+            '--session[Register daemon login-scoped instead of boot]' \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+        status|stop)
+          _arguments \
+            '(-h --help)'{-h,--help}'[Show help]' && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+_agy "$@"
