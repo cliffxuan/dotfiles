@@ -95,6 +95,13 @@ EOF
 }
 
 function update_ssh_auth_sock {
+  if [ -z "$SSH_AUTH_SOCK" ]; then
+    if [ -n "$XDG_RUNTIME_DIR" ] && [ -S "$XDG_RUNTIME_DIR/ssh-agent.socket" ]; then
+      export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+    elif [ -S "/tmp/ssh-agent-$USER-screen" ]; then
+      export SSH_AUTH_SOCK="/tmp/ssh-agent-$USER-screen"
+    fi
+  fi
   # Predictable SSH authentication socket location.
   SOCK="/tmp/ssh-agent-$USER-screen"
   if test "$SSH_AUTH_SOCK" && [ "$SSH_AUTH_SOCK" != "$SOCK" ]; then
