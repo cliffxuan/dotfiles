@@ -1,17 +1,26 @@
 #!/usr/bin/env bash
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BASE_DIR=$(dirname "$DIR")
-# shellcheck source=../utils.sh
-source "$BASE_DIR/utils.sh"
+# shellcheck source=utils.sh
+source "$DIR/../utils.sh"
 
 user="${TARGET_USER:-$USER}"
 
 run() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    return 0
+  fi
+
   sudo usermod -aG docker "$user"
-  sudo systemctl enable --now docker
+  if command -v systemctl >/dev/null 2>&1; then
+    sudo systemctl enable --now docker
+  fi
 }
 
 check() {
+  if [[ "$(uname -s)" == "Darwin" ]]; then
+    return 0
+  fi
+
   id -nG "$user" 2>/dev/null | grep -qw "docker"
 }
 
