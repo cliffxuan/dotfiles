@@ -1,0 +1,17 @@
+[Unit]
+Description=Headless Sway Wayland Compositor
+Documentation=man:sway(5)
+After=default.target
+
+[Service]
+Type=simple
+Environment=WLR_BACKENDS=headless
+Environment=WLR_LIBINPUT_NO_DEVICES=1
+ExecStart=/usr/bin/sway -c %h/.config/sway/headless.conf
+ExecStartPost=/bin/sh -c 'sleep 0.5 && [ -S %t/wayland-1 ] && [ ! -e %t/wayland-0 ] && ln -s %t/wayland-1 %t/wayland-0 || true'
+ExecStopPost=/bin/sh -c '[ -L %t/wayland-0 ] && rm -f %t/wayland-0 || true'
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target
