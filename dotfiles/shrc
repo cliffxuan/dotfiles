@@ -114,6 +114,9 @@ function update_ssh_auth_sock {
 update_ssh_auth_sock
 
 function update_wayland_display {
+  if [ -n "$ZSH_VERSION" ]; then
+    setopt local_options null_glob
+  fi
   if [ -n "$XDG_RUNTIME_DIR" ]; then
     if [ -z "$WAYLAND_DISPLAY" ] || [ ! -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
       for sock in "$XDG_RUNTIME_DIR"/wayland-[0-9]*; do
