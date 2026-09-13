@@ -44,6 +44,12 @@ run() {
     echo "symlink $SCRIPT_DIR/$script $HOME/.local/bin/$script"
     ln -fs "$SCRIPT_DIR/$script" "$HOME/.local/bin/$script"
   done
+
+  if [[ "$OSTYPE" == darwin* ]] && [ -f "$CONFIG_DIR/ghostty/mac.conf" ]; then
+    mkdir -p "$HOME/Library/Application Support/com.mitchellh.ghostty"
+    echo "symlink $CONFIG_DIR/ghostty/mac.conf $HOME/Library/Application Support/com.mitchellh.ghostty/mac.conf"
+    ln -fs "$CONFIG_DIR/ghostty/mac.conf" "$HOME/Library/Application Support/com.mitchellh.ghostty/mac.conf"
+  fi
 }
 
 check() {
@@ -73,6 +79,10 @@ check() {
     script=$(basename "$ff")
     [ ! -L "$HOME/.local/bin/$script" ] && return 1
   done
+
+  if [[ "$OSTYPE" == darwin* ]] && [ -f "$CONFIG_DIR/ghostty/mac.conf" ]; then
+    [ ! -L "$HOME/Library/Application Support/com.mitchellh.ghostty/mac.conf" ] && return 1
+  fi
 
   return 0
 }

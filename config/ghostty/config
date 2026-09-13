@@ -42,3 +42,9 @@ async-backend = epoll
 
 # macOS settings
 macos-option-as-alt = true
+
+# macOS-specific overrides (silently ignored on Linux because ~/Library only exists on macOS)
+config-file = ?"~/Library/Application Support/com.mitchellh.ghostty/mac.conf"
+
+# Machine-local overrides (optional)
+config-file = ?"~/.config/ghostty/config.local"
