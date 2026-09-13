@@ -34,12 +34,10 @@ def find_bin(name: str, fallbacks: list[str]) -> str:
 
 
 HERDR_BIN = find_bin("herdr", [
-    "/Users/cliff/.local/share/mise/installs/herdr/latest/herdr",
     os.path.expanduser("~/.local/share/mise/installs/herdr/latest/herdr"),
 ])
 
 FZF_BIN = find_bin("fzf", [
-    "/Users/cliff/.local/share/mise/installs/fzf/latest/fzf",
     os.path.expanduser("~/.local/share/mise/installs/fzf/latest/fzf"),
 ])
 
