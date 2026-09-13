@@ -42,21 +42,42 @@ get_os() {
   export OS VER DIST_ID DIST_ID_LIKE
 }
 
+has_gui() {
+  if [ -n "${WAYLAND_DISPLAY:-}" ]; then
+    return 0
+  fi
+  if [ -n "${DISPLAY:-}" ] && [ -z "${SSH_CONNECTION:-}" ] && [ -z "${SSH_CLIENT:-}" ]; then
+    return 0
+  fi
+  if [ -d /usr/share/xsessions ] && [ -n "$(ls -A /usr/share/xsessions 2>/dev/null)" ]; then
+    return 0
+  fi
+  if [ -d /usr/share/wayland-sessions ] && [ -n "$(ls -A /usr/share/wayland-sessions 2>/dev/null)" ]; then
+    return 0
+  fi
+  command -v gnome-shell >/dev/null 2>&1 ||
+    command -v hyprland >/dev/null 2>&1 ||
+    command -v sway >/dev/null 2>&1 ||
+    command -v xfce4-session >/dev/null 2>&1 ||
+    command -v plasmashell >/dev/null 2>&1 ||
+    command -v Xorg >/dev/null 2>&1
+}
+
 parse_args() {
   VERBOSE=false
   while getopts ":v" opt; do
     case "$opt" in
-      v)
-        VERBOSE=true
-        ;;
-      \?)
-        echo "Invalid option: -$OPTARG" >&2
-        exit 1
-        ;;
-      :)
-        echo "Option -$OPTARG requires an argument." >&2
-        exit 1
-        ;;
+    v)
+      VERBOSE=true
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
     esac
   done
 }

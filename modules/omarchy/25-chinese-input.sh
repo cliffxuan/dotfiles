@@ -15,6 +15,10 @@ packages=(
 )
 
 run() {
+  if ! has_gui; then
+    return 0
+  fi
+
   sudo env OMARCHY_ALLOW_DIRECT_PACMAN=1 pacman -S --noconfirm --needed "${packages[@]}"
 
   if command -v yay >/dev/null 2>&1; then
@@ -36,6 +40,10 @@ run() {
 }
 
 check() {
+  if ! has_gui; then
+    return 0
+  fi
+
   pacman -Q "${packages[@]}" >/dev/null 2>&1 &&
     [ -f "$HOME/.config/fcitx5/profile" ] &&
     grep -q "pinyin" "$HOME/.config/fcitx5/profile"
