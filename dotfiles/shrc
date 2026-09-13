@@ -38,7 +38,7 @@ alias gf="git fetch origin"
 alias gp="git push origin"
 alias gs="git status"
 alias gl="git log"
-alias wo=workon
+alias l="ls -l"
 
 function ga {
   if [ -z "$1" ]; then
