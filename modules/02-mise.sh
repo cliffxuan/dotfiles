@@ -8,7 +8,10 @@ run() {
     curl https://mise.run | sh
   fi
 
-  # Ensure ~/.config/mise/config.toml is linked/available before running install
+  # Ensure ~/.config/mise is a directory, not a directory symlink
+  if [ -L "$HOME/.config/mise" ]; then
+    rm -f "$HOME/.config/mise"
+  fi
   mkdir -p "$HOME/.config/mise"
   ln -sf "$CONFIG_DIR/mise/config.toml" "$HOME/.config/mise/config.toml"
 

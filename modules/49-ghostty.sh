@@ -4,6 +4,9 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/../utils.sh"
 
 run() {
+  if [ -L "$HOME/.config/ghostty" ]; then
+    rm -f "$HOME/.config/ghostty"
+  fi
   mkdir -p "$HOME/.config/ghostty"
   ln -sf "$CONFIG_DIR/ghostty/config" "$HOME/.config/ghostty/config"
 
