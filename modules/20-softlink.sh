@@ -1,22 +1,16 @@
 #!/usr/bin/env bash
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-echo "\$DIR=$DIR"
 # shellcheck source=../utils.sh
 source "$DIR/../utils.sh"
 
 run() {
-  DOTFILE_DIR=$(realpath "$DIR"/../dotfiles)
-  SCRIPT_DIR="$(realpath "$DIR"/../scripts)"
-  CONFIG_DIR=$(realpath "$DIR"/../config)
-  echo "\$DIR=$DIR"
-  echo "\$DOTFILE_DIR=$DOTFILE_DIR"
-  echo "\$SCRIPT_DIR=$SCRIPT_DIR"
+  local ff dotfile name sub subname script
 
   for ff in "$DOTFILE_DIR"/*; do
     if [ ! -d "$ff" ]; then
       dotfile=$(basename "$ff")
-      echo "symlink $DOTFILE_DIR/$dotfile $HOME/.$dotfile"
-      ln -fs "$DOTFILE_DIR/$dotfile" "$HOME/.$dotfile"
+      echo "symlink $ff $HOME/.$dotfile"
+      ln -fs "$ff" "$HOME/.$dotfile"
     fi
   done
 
@@ -24,30 +18,30 @@ run() {
   for ff in "$CONFIG_DIR"/*; do
     name=$(basename "$ff")
     if [ -d "$HOME/.config/$name" ] && [ ! -L "$HOME/.config/$name" ]; then
-      (
-        shopt -s dotglob nullglob
-        for sub in "$ff"/*; do
-          subname=$(basename "$sub")
-          echo "symlink $sub $HOME/.config/$name/$subname"
-          ln -fs "$sub" "$HOME/.config/$name/$subname"
-        done
-      )
+      shopt -s dotglob nullglob
+      for sub in "$ff"/*; do
+        subname=$(basename "$sub")
+        echo "symlink $sub $HOME/.config/$name/$subname"
+        ln -fs "$sub" "$HOME/.config/$name/$subname"
+      done
+      shopt -u dotglob nullglob
     else
-      echo "symlink $CONFIG_DIR/$name $HOME/.config/$name"
-      ln -fns "$CONFIG_DIR/$name" "$HOME/.config/$name"
+      echo "symlink $ff $HOME/.config/$name"
+      ln -fns "$ff" "$HOME/.config/$name"
     fi
   done
 
   mkdir -p "$HOME/.local/bin"
   for ff in "$SCRIPT_DIR"/*; do
     script=$(basename "$ff")
-    echo "symlink $SCRIPT_DIR/$script $HOME/.local/bin/$script"
-    ln -fs "$SCRIPT_DIR/$script" "$HOME/.local/bin/$script"
+    echo "symlink $ff $HOME/.local/bin/$script"
+    ln -fs "$ff" "$HOME/.local/bin/$script"
   done
 }
 
 check() {
   local ff dotfile name sub subname script
+
   for ff in "$DOTFILE_DIR"/*; do
     if [ ! -d "$ff" ]; then
       dotfile=$(basename "$ff")
@@ -58,11 +52,16 @@ check() {
   for ff in "$CONFIG_DIR"/*; do
     name=$(basename "$ff")
     if [ -d "$HOME/.config/$name" ] && [ ! -L "$HOME/.config/$name" ]; then
+      shopt -s dotglob nullglob
       for sub in "$ff"/*; do
         [ -e "$sub" ] || continue
         subname=$(basename "$sub")
-        [ ! -L "$HOME/.config/$name/$subname" ] && return 1
+        if [ ! -L "$HOME/.config/$name/$subname" ]; then
+          shopt -u dotglob nullglob
+          return 1
+        fi
       done
+      shopt -u dotglob nullglob
     else
       [ ! -L "$HOME/.config/$name" ] && return 1
     fi
