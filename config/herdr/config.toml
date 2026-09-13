@@ -54,12 +54,12 @@ new_tab = "prefix+c"
 rename_tab = "prefix+r"
 close_tab = "prefix+k"
 switch_tab = ["prefix+1..9", "alt+1..9"]
-previous_tab = ["prefix+p", "alt+left"]
-next_tab = ["prefix+n", "alt+right"]
+previous_tab = ["prefix+p", "prefix+left", "alt+left", "alt+j"]
+next_tab = ["prefix+n", "prefix+right", "alt+right", "alt+k"]
 
 # Like swap-window -t -1/+1 on M-S-Left/Right
-move_tab_previous = "alt+shift+left"
-move_tab_next = "alt+shift+right"
+move_tab_previous = ["alt+shift+left", "prefix+shift+left"]
+move_tab_next = ["alt+shift+right", "prefix+shift+right"]
 
 # Sessions -> workspaces
 new_workspace = "prefix+shift+c"

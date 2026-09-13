@@ -113,6 +113,23 @@ function update_ssh_auth_sock {
 
 update_ssh_auth_sock
 
+function update_wayland_display {
+  if [ -n "$XDG_RUNTIME_DIR" ]; then
+    if [ -z "$WAYLAND_DISPLAY" ] || [ ! -S "$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY" ]; then
+      for sock in "$XDG_RUNTIME_DIR"/wayland-[0-9]*; do
+        if [ -S "$sock" ]; then
+          export WAYLAND_DISPLAY="${sock##*/}"
+          if command -v wl-paste >/dev/null 2>&1 && wl-paste --list-types >/dev/null 2>&1; then
+            break
+          fi
+        fi
+      done
+    fi
+  fi
+}
+
+update_wayland_display
+
 # c
 function c {
   exe=/tmp/${1%.*}
