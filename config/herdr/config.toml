@@ -25,6 +25,7 @@ detach = "prefix+d"
 
 # Copy mode
 copy_mode = "prefix+["
+remote_image_paste = "ctrl+v"
 
 # Panes
 split_horizontal = ["prefix+h", "alt+enter"]
