@@ -29,6 +29,11 @@ run() {
   mkdir -p "$HOME/.config/herdr"
   [ -f "$HOME/.config/herdr/config.toml" ] || ln -sf "$CONFIG_DIR/herdr/config.toml" "$HOME/.config/herdr/config.toml"
 
+  mkdir -p "$HOME/.local/bin"
+  ln -sf "$SCRIPT_DIR/herdr-quickselect" "$HOME/.local/bin/herdr-quickselect"
+  ln -sf "$SCRIPT_DIR/herdr-paste-image" "$HOME/.local/bin/herdr-paste-image"
+  ln -sf "$SCRIPT_DIR/herdr-paste-image" "$HOME/.local/bin/paste-image"
+
   if command -v agy >/dev/null 2>&1 || [ -d "$HOME/.gemini" ]; then
     herdr integration install antigravity-cli
   fi
@@ -39,6 +44,8 @@ check() {
     command -v herdr >/dev/null 2>&1 &&
     [ -s "$HOME/.zfunc/_herdr" ] &&
     [ -L "$HOME/.config/herdr/config.toml" ] &&
+    [ -L "$HOME/.local/bin/herdr-quickselect" ] &&
+    [ -L "$HOME/.local/bin/herdr-paste-image" ] &&
     (! { command -v agy >/dev/null 2>&1 || [ -d "$HOME/.gemini" ]; } ||
       herdr integration status 2>/dev/null | grep -Eq '^antigravity-cli:[[:space:]]+current')
 }

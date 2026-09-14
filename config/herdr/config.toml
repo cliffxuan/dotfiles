@@ -111,3 +111,14 @@ command = "herdr-quickselect"
 width = "80%"
 height = "60%"
 
+# Remote/SSH clipboard image paste into focused pane
+[[keys.command]]
+key = "prefix+i"
+type = "shell"
+command = "herdr-paste-image"
+
+[[keys.command]]
+key = "prefix+ctrl+v"
+type = "shell"
+command = "herdr-paste-image"
+

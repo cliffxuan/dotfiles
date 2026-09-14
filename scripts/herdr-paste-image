@@ -1,0 +1,178 @@
+#!/usr/bin/env python3
+"""
+herdr-paste-image: Extract clipboard image from Wayland or X11, save to disk,
+and paste its path into the active Herdr pane.
+"""
+
+import json
+import os
+import shutil
+import subprocess
+import sys
+import time
+
+LOG_FILE = "/tmp/herdr-paste-image.log"
+
+
+def log(msg: str):
+    try:
+        with open(LOG_FILE, "a", encoding="utf-8") as f:
+            f.write(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] {msg}\n")
+    except Exception:
+        pass
+
+
+def find_bin(name: str, fallbacks: list[str]) -> str:
+    found = shutil.which(name)
+    if found:
+        return found
+    for fb in fallbacks:
+        if os.path.exists(fb):
+            return fb
+    return name
+
+
+HERDR_BIN = find_bin("herdr", [
+    os.path.expanduser("~/.local/share/mise/installs/herdr/latest/herdr"),
+])
+WL_PASTE_BIN = find_bin("wl-paste", ["/usr/bin/wl-paste"])
+XCLIP_BIN = find_bin("xclip", ["/usr/bin/xclip"])
+
+
+def notify_herdr(title: str, body: str):
+    try:
+        subprocess.run(
+            [HERDR_BIN, "notification", "show", title, "--body", body, "--sound", "none", "--position", "bottom-right"],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            timeout=2.0,
+        )
+    except Exception as e:
+        log(f"Notification error: {e}")
+
+
+def get_image_data() -> tuple[bytes, str]:
+    """
+    Attempt to read image data from wl-paste or xclip across common image types.
+    Returns (data, extension) or (b"", "").
+    """
+    mimes = [
+        ("image/png", ".png"),
+        ("image/jpeg", ".jpg"),
+        ("image/webp", ".webp"),
+        ("image/gif", ".gif"),
+    ]
+
+    # 1. Try wl-paste if available
+    for mime, ext in mimes:
+        try:
+            res = subprocess.run(
+                [WL_PASTE_BIN, "--type", mime],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.DEVNULL,
+                timeout=2.0,
+            )
+            if res.returncode == 0 and len(res.stdout) > 0:
+                log(f"Extracted {len(res.stdout)} bytes via wl-paste ({mime})")
+                return res.stdout, ext
+        except Exception:
+            pass
+
+    # 2. Try xclip if DISPLAY is set
+    display = os.environ.get("DISPLAY")
+    if display:
+        for mime, ext in mimes:
+            try:
+                res = subprocess.run(
+                    [XCLIP_BIN, "-selection", "clipboard", "-t", mime, "-o"],
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.DEVNULL,
+                    timeout=2.0,
+                )
+                if res.returncode == 0 and len(res.stdout) > 0:
+                    log(f"Extracted {len(res.stdout)} bytes via xclip ({mime}) on DISPLAY={display}")
+                    return res.stdout, ext
+            except Exception:
+                pass
+
+    return b"", ""
+
+
+def detect_extension(data: bytes, fallback: str) -> str:
+    if data.startswith(b"\x89PNG\r\n\x1a\n"):
+        return ".png"
+    if data.startswith(b"\xff\xd8\xff"):
+        return ".jpg"
+    if data.startswith(b"RIFF") and len(data) > 12 and data[8:12] == b"WEBP":
+        return ".webp"
+    if data.startswith(b"GIF87a") or data.startswith(b"GIF89a"):
+        return ".gif"
+    return fallback
+
+
+def get_focused_pane_id() -> str | None:
+    try:
+        out = subprocess.check_output([HERDR_BIN, "pane", "list"], stderr=subprocess.DEVNULL, timeout=2.0).decode("utf-8")
+        data = json.loads(out)
+        panes = data.get("result", {}).get("panes", [])
+        for p in panes:
+            if p.get("focused"):
+                return p.get("pane_id")
+    except Exception as e:
+        log(f"Error querying pane list: {e}")
+
+    try:
+        out = subprocess.check_output([HERDR_BIN, "pane", "current"], stderr=subprocess.DEVNULL, timeout=2.0).decode("utf-8")
+        data = json.loads(out)
+        return data.get("result", {}).get("pane", {}).get("pane_id")
+    except Exception as e:
+        log(f"Error querying pane current: {e}")
+
+    return None
+
+
+def main():
+    data, ext = get_image_data()
+    if not data:
+        log("No image data found in clipboard")
+        notify_herdr("Clipboard", "No image found in clipboard")
+        print("No image found in clipboard", file=sys.stderr)
+        sys.exit(1)
+
+    ext = detect_extension(data, ext or ".png")
+    uid = os.getuid()
+    out_dir = f"/tmp/herdr-clipboard-images-{uid}"
+    os.makedirs(out_dir, mode=0o700, exist_ok=True)
+
+    timestamp = int(time.time() * 1000)
+    dest_file = os.path.join(out_dir, f"clipboard-{timestamp}{ext}")
+
+    with open(dest_file, "wb") as f:
+        f.write(data)
+    log(f"Saved {len(data)} bytes to {dest_file}")
+
+    # Only send-text to focused pane if we are run in background / keybind mode (not interactive pipe)
+    # If explicitly passed --print-only, skip send-text
+    print_only = "--print-only" in sys.argv
+    if not print_only:
+        target_pane = get_focused_pane_id()
+        if target_pane:
+            log(f"Sending image path to focused pane {target_pane}")
+            try:
+                subprocess.run(
+                    [HERDR_BIN, "pane", "send-text", target_pane, dest_file],
+                    check=True,
+                    timeout=2.0,
+                )
+                notify_herdr("Image Pasted", dest_file)
+            except Exception as e:
+                log(f"Error sending text to pane {target_pane}: {e}")
+        else:
+            log("No focused pane detected")
+            notify_herdr("Image Saved", dest_file)
+
+    print(dest_file)
+
+
+if __name__ == "__main__":
+    main()
