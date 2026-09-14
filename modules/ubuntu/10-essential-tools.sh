@@ -7,6 +7,7 @@ packages=(
   zsh
   curl
   xsel
+  xclip
   git-lfs
   x11-apps
   xauth
@@ -26,6 +27,7 @@ check() {
     command -v tmux >/dev/null 2>&1 &&
     command -v xauth >/dev/null 2>&1 &&
     command -v xsel >/dev/null 2>&1 &&
+    command -v xclip >/dev/null 2>&1 &&
     command -v xeyes >/dev/null 2>&1
 }
 
