@@ -1,0 +1,5 @@
+# Skip global compinit in /etc/zsh/zshrc on Debian/Ubuntu so that compinit in
+# ~/.zshrc runs with the user's complete fpath (including ~/.zfunc and plugins).
+skip_global_compinit=1
+
+[[ -f "$HOME/.cargo/env" ]] && . "$HOME/.cargo/env"
