@@ -1,0 +1,689 @@
+#compdef paseo
+
+_paseo() {
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  local -a global_options
+  global_options=(
+    '(-v --version)'{-v,--version}'[Output the version number]'
+    '(-o --format)'{-o,--format}'[Output format]:format:(table json yaml)'
+    '--json[Output in JSON format]'
+    '(-q --quiet)'{-q,--quiet}'[Minimal output (IDs only)]'
+    '--no-headers[Omit table headers]'
+    '--no-color[Disable colored output]'
+    '--host=[Daemon host target (host:port, tcp://host:port, or ssh://user@host)]:host:'
+    '(-h --help)'{-h,--help}'[Display help for command]'
+  )
+
+  local -a subcommands
+  subcommands=(
+    'ls:List agents (excludes archived agents by default)'
+    'run:Create and start an agent with a task'
+    'import:Import an existing provider session as a Paseo agent'
+    'clone:Clone a GitHub repo and register it as a Paseo workspace'
+    'attach:Attach to a running agent output stream'
+    'logs:View agent activity/timeline'
+    'stop:Interrupt an agent if it is running'
+    'delete:Delete an agent'
+    'send:Send a message/task to an existing agent'
+    'inspect:Show detailed information about an agent'
+    'wait:Wait for an agent to become idle'
+    'archive:Archive an agent (soft-delete)'
+    'onboard:Run first-time setup, start daemon, and print pairing instructions'
+    'start:Start the local Paseo daemon'
+    'hooks:Record agent hook activity'
+    'status:Show local daemon status'
+    'reload:Reload daemon config'
+    'restart:Restart local daemon'
+    'agent:Manage agents (advanced operations)'
+    'daemon:Manage the Paseo daemon'
+    'hub:Manage Paseo Hub'
+    'terminal:Manage workspace terminals'
+    'script:Manage configured workspace scripts'
+    'schedule:Manage recurring schedules'
+    'heartbeat:Manage this agent heartbeats'
+    'permit:Manage permission requests'
+    'provider:Manage agent providers'
+    'plugin:Manage trusted, unsandboxed plugins'
+    'speech:Speech commands'
+    'project:Manage projects'
+    'workspace:Manage workspaces'
+    'help:Display help for command'
+  )
+
+  _arguments -C -s \
+    $global_options \
+    '1: :->command' \
+    '*:: :->args' && ret=0
+
+  case "$state" in
+    command)
+      _describe -t commands 'paseo subcommands' subcommands && ret=0
+      ;;
+    args)
+      local subcmd="${line[1]:-$words[1]}"
+      curcontext="${curcontext%:*:*}:paseo-$subcmd:"
+
+      case "$subcmd" in
+        run)
+          _arguments -s \
+            $global_options \
+            '(-d --background)'{-d,--background}'[Run in background]' \
+            '--title=[Assign a title to the agent]:title:' \
+            '--provider=[Agent provider, or provider/model]:provider:->providers' \
+            '--model=[Model to use]:model:' \
+            '--thinking=[Thinking option ID to use for this run]:thinking ID:' \
+            '--mode=[Provider-specific mode]:mode:(plan default bypass)' \
+            '--new-workspace=[Create a separate local or worktree workspace]:isolation:(local worktree)' \
+            '--worktree-mode=[Worktree mode]:mode:(branch-off checkout-branch checkout-pr)' \
+            '--worktree-slug=[Managed worktree path slug]:slug:' \
+            '--new-branch=[New branch name for branch-off mode]:branch:' \
+            '--base=[Base ref for branch-off mode]:ref:' \
+            '--branch=[Existing branch for checkout-branch mode]:branch:' \
+            '--pr-number=[Pull request number for checkout-pr mode]:PR number:' \
+            '--forge=[Forge for checkout-pr mode]:forge:' \
+            '--workspace=[Run in an existing workspace]:workspace ID:->workspaces' \
+            '*-image=[Attach image to initial prompt]:image file:_files' \
+            '--cwd=[Working directory]:directory:_files -/' \
+            '*--env=[Set environment variable (key=value)]:env var:' \
+            '*--label=[Add label (key=value)]:label:' \
+            '--wait-timeout=[Maximum time to wait for agent to finish]:duration:' \
+            '--output-schema=[JSON schema file path or inline JSON schema]:schema:_files' \
+            '1:prompt:' && ret=0
+          ;;
+        ls)
+          _arguments -s \
+            $global_options \
+            '--all[Include archived agents]' \
+            '--workspace=[Filter by workspace ID]:workspace ID:->workspaces' \
+            '--project=[Filter by project ID]:project ID:->projects' && ret=0
+          ;;
+        attach|logs|wait|archive)
+          _arguments -s \
+            $global_options \
+            '1:agent ID:->agents' && ret=0
+          ;;
+        stop|delete)
+          _arguments -s \
+            $global_options \
+            '1::agent ID:->agents' && ret=0
+          ;;
+        send)
+          _arguments -s \
+            $global_options \
+            '1:agent ID:->agents' \
+            '2::prompt:' && ret=0
+          ;;
+        inspect)
+          _arguments -s \
+            $global_options \
+            '1:agent ID:->agents' && ret=0
+          ;;
+        import)
+          _arguments -s \
+            $global_options \
+            '1:session ID:' && ret=0
+          ;;
+        clone)
+          _arguments -s \
+            $global_options \
+            '1:repository URL:' && ret=0
+          ;;
+        onboard|speech)
+          _arguments -s \
+            $global_options && ret=0
+          ;;
+        start)
+          _arguments -s \
+            $global_options \
+            '--listen=[Listen target (host:port, port, or unix socket)]:target:' \
+            '--port=[Port to listen on (default: 6767)]:port:' \
+            '--home=[Paseo home directory (default: ~/.paseo)]:directory:_files -/' \
+            '--foreground[Run in foreground (do not daemonize)]' \
+            '--relay[Enable relay connection]' \
+            '--no-relay[Disable relay connection]' \
+            '--relay-use-tls[Use wss:// for relay]' \
+            '--no-mcp[Disable Agent MCP HTTP endpoint]' \
+            '--no-inject-mcp[Disable auto-injecting Paseo MCP into agents]' \
+            '--web-ui[Enable bundled daemon web UI]' \
+            '--no-web-ui[Disable bundled daemon web UI]' \
+            '--hostnames=[Daemon hostnames]:hosts:' && ret=0
+          ;;
+        status|reload)
+          _arguments -s \
+            $global_options && ret=0
+          ;;
+        restart)
+          _arguments -s \
+            $global_options \
+            '--timeout=[Wait timeout before force step]:seconds:' \
+            '--force[Send SIGKILL if graceful stop times out]' \
+            '--listen=[Listen target for restarted daemon]:target:' \
+            '--port=[Port for restarted daemon]:port:' \
+            '--relay[Enable relay on restarted daemon]' \
+            '--no-relay[Disable relay on restarted daemon]' \
+            '--no-mcp[Disable Agent MCP on restarted daemon]' \
+            '--no-inject-mcp[Disable auto-injecting Paseo MCP into agents]' \
+            '--web-ui[Enable bundled web UI]' \
+            '--no-web-ui[Disable bundled web UI]' \
+            '--hostnames=[Daemon hostnames]:hosts:' && ret=0
+          ;;
+        daemon)
+          local -a daemon_subcmds
+          daemon_subcmds=(
+            'start:Start the local Paseo daemon'
+            'pair:Print daemon pairing QR code and link'
+            'reload:Reload config.json without restarting daemon'
+            'status:Show local daemon status'
+            'stop:Stop the local daemon'
+            'restart:Restart the local daemon'
+            'set-password:Prompt for and save a hashed daemon password to config.json'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->daemon_cmd' \
+            '*:: :->daemon_args' && ret=0
+
+          case "$state" in
+            daemon_cmd)
+              _describe -t daemon_cmds 'daemon subcommands' daemon_subcmds && ret=0
+              ;;
+            daemon_args)
+              case "${line[1]:-$words[1]}" in
+                start)
+                  _arguments -s \
+                    $global_options \
+                    '--listen=[Listen target]:target:' \
+                    '--port=[Port to listen on]:port:' \
+                    '--home=[Paseo home directory]:directory:_files -/' \
+                    '--foreground[Run in foreground]' \
+                    '--relay[Enable relay]' \
+                    '--no-relay[Disable relay]' \
+                    '--relay-use-tls[Use wss:// for relay]' \
+                    '--no-mcp[Disable MCP]' \
+                    '--no-inject-mcp[Disable MCP auto-inject]' \
+                    '--web-ui[Enable web UI]' \
+                    '--no-web-ui[Disable web UI]' \
+                    '--hostnames=[Daemon hostnames]:hosts:' && ret=0
+                  ;;
+                status)
+                  _arguments -s \
+                    $global_options \
+                    '--home=[Paseo home directory]:directory:_files -/' && ret=0
+                  ;;
+                restart)
+                  _arguments -s \
+                    $global_options \
+                    '--timeout=[Wait timeout]:seconds:' \
+                    '--force[Force kill on timeout]' \
+                    '--home=[Paseo home directory]:directory:_files -/' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        workspace)
+          local -a ws_subcmds
+          ws_subcmds=(
+            'setup:Allow and run setup for a workspace'
+            'create:Create a workspace'
+            'ls:List active workspaces'
+            'rename:Set workspace title'
+            'archive:Archive a workspace and everything it owns'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->ws_cmd' \
+            '*:: :->ws_args' && ret=0
+
+          case "$state" in
+            ws_cmd)
+              _describe -t ws_cmds 'workspace subcommands' ws_subcmds && ret=0
+              ;;
+            ws_args)
+              case "${line[1]:-$words[1]}" in
+                create)
+                  _arguments -s \
+                    $global_options \
+                    '--isolation=[Workspace isolation]:isolation:(local worktree)' \
+                    '--path=[Local directory or source checkout]:directory:_files -/' \
+                    '--project=[Existing project ID]:project ID:->projects' \
+                    '--title=[Workspace title]:title:' \
+                    '--mode=[Worktree mode]:mode:(branch-off checkout-branch checkout-pr)' \
+                    '--worktree-slug=[Managed worktree path slug]:slug:' \
+                    '--new-branch=[New branch name]:branch:' \
+                    '--base=[Base ref]:ref:' \
+                    '--branch=[Existing branch]:branch:' \
+                    '--pr-number=[Pull request number]:PR number:' \
+                    '--forge=[Forge for checkout-pr]:forge:' && ret=0
+                  ;;
+                rename)
+                  _arguments -s \
+                    $global_options \
+                    '--reset[Reset title back to branch or directory name]' \
+                    '1:workspace ID:->workspaces' \
+                    '2::title:' && ret=0
+                  ;;
+                archive|setup)
+                  _arguments -s \
+                    $global_options \
+                    '1:workspace ID:->workspaces' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        project)
+          local -a proj_subcmds
+          proj_subcmds=(
+            'create:Register a project directory'
+            'ls:List projects'
+            'rename:Set project user-visible name'
+            'delete:Delete a project and its workspaces'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->proj_cmd' \
+            '*:: :->proj_args' && ret=0
+
+          case "$state" in
+            proj_cmd)
+              _describe -t proj_cmds 'project subcommands' proj_subcmds && ret=0
+              ;;
+            proj_args)
+              case "${line[1]:-$words[1]}" in
+                create)
+                  _arguments -s \
+                    $global_options \
+                    '1::project path:_files -/' && ret=0
+                  ;;
+                rename)
+                  _arguments -s \
+                    $global_options \
+                    '--reset[Reset name derived from project directory]' \
+                    '1:project ID:->projects' \
+                    '2::name:' && ret=0
+                  ;;
+                delete)
+                  _arguments -s \
+                    $global_options \
+                    '1:project ID:->projects' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        provider)
+          local -a prov_subcmds
+          prov_subcmds=(
+            'ls:List available providers and status'
+            'models:List models for a provider'
+            'diagnostic:Show provider installation, environment, and availability diagnostics'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->prov_cmd' \
+            '*:: :->prov_args' && ret=0
+
+          case "$state" in
+            prov_cmd)
+              _describe -t prov_cmds 'provider subcommands' prov_subcmds && ret=0
+              ;;
+            prov_args)
+              case "${line[1]:-$words[1]}" in
+                models|diagnostic)
+                  _arguments -s \
+                    $global_options \
+                    '1:provider:->providers' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        terminal)
+          local -a term_subcmds
+          term_subcmds=(
+            'ls:List terminals'
+            'create:Create a terminal'
+            'kill:Kill a terminal'
+            'capture:Capture terminal output'
+            'send-keys:Send keys to a terminal'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->term_cmd' \
+            '*:: :->term_args' && ret=0
+
+          case "$state" in
+            term_cmd)
+              _describe -t term_cmds 'terminal subcommands' term_subcmds && ret=0
+              ;;
+            term_args)
+              case "${line[1]:-$words[1]}" in
+                create)
+                  _arguments -s \
+                    $global_options \
+                    '--workspace=[Workspace ID]:workspace ID:->workspaces' \
+                    '--name=[Terminal name]:name:' && ret=0
+                  ;;
+                kill|capture)
+                  _arguments -s \
+                    $global_options \
+                    '1:terminal ID:' && ret=0
+                  ;;
+                send-keys)
+                  _arguments -s \
+                    $global_options \
+                    '1:terminal ID:' \
+                    '*:keys:' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        script)
+          local -a script_subcmds
+          script_subcmds=(
+            'ls:List configured workspace scripts'
+            'start:Start a configured workspace script'
+            'stop:Stop a running workspace script'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->script_cmd' \
+            '*:: :->script_args' && ret=0
+
+          case "$state" in
+            script_cmd)
+              _describe -t script_cmds 'script subcommands' script_subcmds && ret=0
+              ;;
+            script_args)
+              case "${line[1]:-$words[1]}" in
+                start|stop)
+                  _arguments -s \
+                    $global_options \
+                    '1:script name:' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        schedule)
+          local -a sched_subcmds
+          sched_subcmds=(
+            'create:Create a schedule'
+            'ls:List schedules'
+            'inspect:Inspect a schedule'
+            'logs:Show recent schedule run logs'
+            'pause:Pause a schedule'
+            'resume:Resume a paused schedule'
+            'delete:Delete a schedule'
+            'run-once:Manually trigger a single run without affecting cadence'
+            'update:Update an existing schedule in place'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->sched_cmd' \
+            '*:: :->sched_args' && ret=0
+
+          case "$state" in
+            sched_cmd)
+              _describe -t sched_cmds 'schedule subcommands' sched_subcmds && ret=0
+              ;;
+            sched_args)
+              case "${line[1]:-$words[1]}" in
+                create)
+                  _arguments -s \
+                    $global_options \
+                    '--cron=[Cron expression]:cron expression:' \
+                    '1:prompt:' && ret=0
+                  ;;
+                inspect|logs|pause|resume|delete|run-once|update)
+                  _arguments -s \
+                    $global_options \
+                    '1:schedule ID:' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        permit)
+          local -a permit_subcmds
+          permit_subcmds=(
+            'ls:List all pending permissions'
+            'allow:Allow a permission request'
+            'deny:Deny a permission request'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->permit_cmd' \
+            '*:: :->permit_args' && ret=0
+
+          case "$state" in
+            permit_cmd)
+              _describe -t permit_cmds 'permit subcommands' permit_subcmds && ret=0
+              ;;
+            permit_args)
+              case "${line[1]:-$words[1]}" in
+                allow|deny)
+                  _arguments -s \
+                    $global_options \
+                    '1:agent ID:->agents' \
+                    '2::request ID:' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        plugin)
+          local -a plugin_subcmds
+          plugin_subcmds=(
+            'init:Create a typecheckable local plugin'
+            'ls:List configured plugins'
+            'logs:Show recent plugin output'
+            'install:Trust and install a plugin from a directory or Git repo'
+            'add:Alias for install'
+            'update:Fetch and install Git-managed plugin updates'
+            'reload:Reload a plugin'
+            'enable:Enable a plugin'
+            'disable:Disable a plugin'
+            'remove:Remove plugin configuration'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->plugin_cmd' \
+            '*:: :->plugin_args' && ret=0
+
+          case "$state" in
+            plugin_cmd)
+              _describe -t plugin_cmds 'plugin subcommands' plugin_subcmds && ret=0
+              ;;
+            plugin_args)
+              case "${line[1]:-$words[1]}" in
+                init|install|add)
+                  _arguments -s \
+                    $global_options \
+                    '1:source:_files -/' && ret=0
+                  ;;
+                logs|update|reload|enable|disable|remove)
+                  _arguments -s \
+                    $global_options \
+                    '1:plugin ID:' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        hub)
+          local -a hub_subcmds
+          hub_subcmds=(
+            'login:Log in to a Paseo Hub for CLI access'
+            'init:Create and optionally deploy a safe starter Hub trigger'
+            'connect:Enroll this daemon with a Paseo Hub'
+            'status:Show Hub status'
+            'disconnect:Disconnect from Hub'
+            'permissions:Manage Hub daemon permissions'
+            'projects:List projects for authenticated Hub organization'
+            'export:Export active Hub triggers as YAML files'
+            'deploy:Deploy organization triggers or project bundle'
+            'logout:Remove active stored Hub CLI login'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->hub_cmd' \
+            '*:: :->hub_args' && ret=0
+
+          case "$state" in
+            hub_cmd)
+              _describe -t hub_cmds 'hub subcommands' hub_subcmds && ret=0
+              ;;
+            hub_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        agent)
+          local -a agent_subcmds
+          agent_subcmds=(
+            'ls:List agents'
+            'inspect:Show detailed information about an agent'
+            'stop:Interrupt an agent if it is running'
+            'delete:Delete an agent'
+            'send:Send a message/task to an existing agent'
+            'wait:Wait for an agent to become idle'
+            'mode:Change agent operational mode'
+            'archive:Archive an agent (soft-delete)'
+            'reload:Reload an agent process'
+            'detach:Make a subagent independent'
+            'update:Update agent settings or metadata'
+            'help:Display help for command'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->agent_cmd' \
+            '*:: :->agent_args' && ret=0
+
+          case "$state" in
+            agent_cmd)
+              _describe -t agent_cmds 'agent subcommands' agent_subcmds && ret=0
+              ;;
+            agent_args)
+              case "${line[1]:-$words[1]}" in
+                inspect|wait|archive|reload|detach|update)
+                  _arguments -s \
+                    $global_options \
+                    '1:agent ID:->agents' && ret=0
+                  ;;
+                stop|delete)
+                  _arguments -s \
+                    $global_options \
+                    '1::agent ID:->agents' && ret=0
+                  ;;
+                send)
+                  _arguments -s \
+                    $global_options \
+                    '1:agent ID:->agents' \
+                    '2::prompt:' && ret=0
+                  ;;
+                mode)
+                  _arguments -s \
+                    $global_options \
+                    '1:agent ID:->agents' \
+                    '2::mode:(plan default bypass)' && ret=0
+                  ;;
+                *)
+                  _arguments -s $global_options && ret=0
+                  ;;
+              esac
+              ;;
+          esac
+          ;;
+        *)
+          _arguments -s $global_options && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  case "$state" in
+    providers)
+      local -a providers
+      providers=(
+        'claude:Anthropic Claude Code'
+        'codex:OpenAI Codex'
+        'copilot:GitHub Copilot CLI'
+        'opencode:OpenCode'
+        'pi:Pi Agent'
+        'gemini:Google Gemini CLI'
+      )
+      _describe -t providers 'providers' providers && ret=0
+      ;;
+    agents)
+      local -a agents
+      agents=(${${(f)"$(paseo ls -q 2>/dev/null)"}:#[[:space:]]*})
+      if (( ${#agents} )); then
+        _describe -t agents 'running agents' agents && ret=0
+      fi
+      ;;
+    workspaces)
+      local -a workspaces
+      workspaces=(${${(f)"$(paseo workspace ls --json 2>/dev/null | jq -r '.[].id' 2>/dev/null)"}:#[[:space:]]*})
+      if (( ${#workspaces} )); then
+        _describe -t workspaces 'workspaces' workspaces && ret=0
+      fi
+      ;;
+    projects)
+      local -a projects
+      projects=(${${(f)"$(paseo project ls --json 2>/dev/null | jq -r '.[].id' 2>/dev/null)"}:#[[:space:]]*})
+      if (( ${#projects} )); then
+        _describe -t projects 'projects' projects && ret=0
+      fi
+      ;;
+  esac
+
+  return ret
+}
+
+if [ "$funcstack[1]" = "_paseo" ]; then
+  _paseo "$@"
+else
+  compdef _paseo paseo
+fi
