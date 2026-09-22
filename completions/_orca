@@ -1,0 +1,1246 @@
+#compdef orca orca-ide orca.AppImage
+
+_orca() {
+  local curcontext="$curcontext" state line ret=1
+  typeset -A opt_args
+
+  local -a global_options
+  global_options=(
+    '(-v --version)'{-v,--version}'[Output the version number]'
+    '--json[Output in JSON format]'
+    '(-h --help)'{-h,--help}'[Display help for command]'
+  )
+
+  local -a subcommands
+  subcommands=(
+    'account:Manage Claude and Codex accounts'
+    'agent:agent commands'
+    'agent-context:Print the machine-readable command schema for agents'
+    'artifacts:Manage shared artifacts'
+    'automations:Manage scheduled automations'
+    'back:Navigate back in browser history'
+    'capture:capture commands'
+    'check:Check a checkbox/radio by ref'
+    'claude-teams:Start Claude Code Agent Teams'
+    'clear:Clear an input element by ref'
+    'click:Click a browser element by ref'
+    'clipboard:Read and write clipboard contents'
+    'computer:Computer-use actions and accessibility inspect'
+    'console:Show captured console log entries'
+    'cookie:cookie commands'
+    'dblclick:Double-click element by ref'
+    'diagnostics:Collect diagnostics and memory snapshots'
+    'dialog:dialog commands'
+    'download:Download a file by clicking a selector'
+    'drag:Drag from one element to another'
+    'emulator:Control mobile emulators'
+    'environment:environment commands'
+    'eval:Evaluate JavaScript in the browser page context'
+    'exec:Run any agent-browser command against the active browser tab'
+    'file:file commands'
+    'fill:Clear and fill a browser input by ref'
+    'find:Find element by semantic locator and perform action'
+    'focus:Focus a browser element by ref'
+    'forward:Navigate forward in browser history'
+    'full-screenshot:Capture a full-page screenshot (beyond viewport)'
+    'geolocation:Override browser geolocation'
+    'get:Get element property (text, html, value, url, title, count, box)'
+    'goto:Navigate the active browser tab to a URL'
+    'highlight:Highlight an element by selector'
+    'host:Manage and inspect targetable hosts'
+    'hover:Hover over a browser element by ref'
+    'inserttext:Insert text without key events'
+    'intercept:intercept commands'
+    'is:Check element state (visible, enabled, checked)'
+    'keypress:Press a key (Enter, Tab, Escape, ArrowDown, etc.)'
+    'linear:Integrate with Linear tickets and workflows'
+    'mouse:mouse commands'
+    'network:Show captured network requests'
+    'open:Launch Orca and wait for the runtime to be reachable'
+    'open-url:Open a URL on the paired client that hosts this terminal'
+    'orchestration:Orchestrate agents across tasks'
+    'pdf:Export the active browser tab as PDF'
+    'project:Manage Orca projects and directory registration'
+    'reload:Reload the active browser tab'
+    'repo:Inspect and manage repositories'
+    'screenshot:Capture a viewport screenshot of the active browser tab'
+    'scroll:Scroll the browser viewport'
+    'scrollintoview:Scroll element into view'
+    'select:Select a dropdown option by ref'
+    'select-all:Select all text in an input by ref'
+    'serve:Start a headless Orca runtime server'
+    'set:set commands'
+    'skills:Manage version-matched skill guides and agent skills'
+    'snapshot:Capture an accessibility snapshot of the active browser tab'
+    'status:Show app/runtime/graph readiness'
+    'storage:storage commands'
+    'tab:tab commands'
+    'terminal:Manage workspace terminals and PTY sessions'
+    'type:Type text at the current browser focus'
+    'uncheck:Uncheck a checkbox/radio by ref'
+    'upload:Upload files to a file input element'
+    'viewport:Set browser viewport size'
+    'vm:Inspect and manage virtual machines'
+    'wait:Wait for element, text, URL, load state, JS condition, or timeout'
+    'worktree:Manage git worktrees and isolated branches'
+  )
+
+  _arguments -C -s \
+    $global_options \
+    '1: :->command' \
+    '*:: :->args' && ret=0
+
+  case "$state" in
+    command)
+      _describe -t commands 'orca subcommands' subcommands && ret=0
+      ;;
+    args)
+      local subcmd="${line[1]:-$words[1]}"
+      curcontext="${curcontext%:*:*}:orca-$subcmd:"
+      case "$subcmd" in
+        account)
+          local -a account_subcmds
+          account_subcmds=(
+            'add:Add a managed Claude or Codex account by signing in on this Orca host'
+            'list:List managed Claude and Codex accounts on this Orca host'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->account_cmd' \
+            '*:: :->account_args' && ret=0
+
+          case "$state" in
+            account_cmd)
+              _describe -t account_cmds 'account subcommands' account_subcmds && ret=0
+              ;;
+            account_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        agent)
+          local -a agent_subcmds
+          agent_subcmds=(
+            'hooks:Disable Orca-managed agent status hooks and remove local hook entries'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->agent_cmd' \
+            '*:: :->agent_args' && ret=0
+
+          case "$state" in
+            agent_cmd)
+              _describe -t agent_cmds 'agent subcommands' agent_subcmds && ret=0
+              ;;
+            agent_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        agent-context)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' && ret=0
+          ;;
+        artifacts)
+          local -a artifacts_subcmds
+          artifacts_subcmds=(
+            'delete:Delete an artifact owned by the signed-in Orca account'
+            'list:List artifacts owned by the signed-in Orca account'
+            'share:Share an HTML or Markdown file with your Orca account'
+            'unshare:Delete the artifact associated with a previously shared file'
+            'update:Update a file previously shared from this Orca profile'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->artifacts_cmd' \
+            '*:: :->artifacts_args' && ret=0
+
+          case "$state" in
+            artifacts_cmd)
+              _describe -t artifacts_cmds 'artifacts subcommands' artifacts_subcmds && ret=0
+              ;;
+            artifacts_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        automations)
+          local -a automations_subcmds
+          automations_subcmds=(
+            'create:Create a scheduled Orca automation'
+            'edit:Edit an Orca automation'
+            'list:List scheduled Orca automations'
+            'remove:Remove an Orca automation and its run history'
+            'run:Run an Orca automation now'
+            'runs:List automation run history'
+            'show:Show one Orca automation'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->automations_cmd' \
+            '*:: :->automations_args' && ret=0
+
+          case "$state" in
+            automations_cmd)
+              _describe -t automations_cmds 'automations subcommands' automations_subcmds && ret=0
+              ;;
+            automations_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        back)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        capture)
+          local -a capture_subcmds
+          capture_subcmds=(
+            'start:Start capturing console and network events'
+            'stop:Stop capturing console and network events'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->capture_cmd' \
+            '*:: :->capture_args' && ret=0
+
+          case "$state" in
+            capture_cmd)
+              _describe -t capture_cmds 'capture subcommands' capture_subcmds && ret=0
+              ;;
+            capture_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        check)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        claude-teams)
+          _arguments -s $global_options && ret=0
+          ;;
+        clear)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        click)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        clipboard)
+          local -a clipboard_subcmds
+          clipboard_subcmds=(
+            'read:Read clipboard contents'
+            'write:Write text to clipboard'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->clipboard_cmd' \
+            '*:: :->clipboard_args' && ret=0
+
+          case "$state" in
+            clipboard_cmd)
+              _describe -t clipboard_cmds 'clipboard subcommands' clipboard_subcmds && ret=0
+              ;;
+            clipboard_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        computer)
+          local -a computer_subcmds
+          computer_subcmds=(
+            'capabilities:Show computer-use provider capabilities'
+            'click:Click an app element or window coordinate, optionally with modifiers'
+            'drag:Drag between app elements or window coordinates'
+            'get-app-state:Capture a compact accessibility snapshot of an app'
+            'hotkey:Press a platform-aware key combination'
+            'list-apps:List running apps available to computer-use'
+            'list-windows:List windows for an app available to computer-use'
+            'paste-text:Paste exact text at the current app focus'
+            'perform-secondary-action:Perform an advertised secondary accessibility action'
+            'permissions:Open computer-use permission setup'
+            'press-key:Press a single key such as Return or Escape'
+            'scroll:Scroll an app element or window coordinate'
+            'set-value:Set the value of a settable app element'
+            'type-text:Type literal text at the current app focus'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->computer_cmd' \
+            '*:: :->computer_args' && ret=0
+
+          case "$state" in
+            computer_cmd)
+              _describe -t computer_cmds 'computer subcommands' computer_subcmds && ret=0
+              ;;
+            computer_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        console)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--limit=[limit]:limit:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        cookie)
+          local -a cookie_subcmds
+          cookie_subcmds=(
+            'delete:Delete a cookie by name'
+            'get:Get cookies for the active tab (optionally filter by URL)'
+            'set:Set a cookie'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->cookie_cmd' \
+            '*:: :->cookie_args' && ret=0
+
+          case "$state" in
+            cookie_cmd)
+              _describe -t cookie_cmds 'cookie subcommands' cookie_subcmds && ret=0
+              ;;
+            cookie_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        dblclick)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        diagnostics)
+          local -a diagnostics_subcmds
+          diagnostics_subcmds=(
+            'memory:Collect a memory snapshot for Orca and managed terminals'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->diagnostics_cmd' \
+            '*:: :->diagnostics_args' && ret=0
+
+          case "$state" in
+            diagnostics_cmd)
+              _describe -t diagnostics_cmds 'diagnostics subcommands' diagnostics_subcmds && ret=0
+              ;;
+            diagnostics_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        dialog)
+          local -a dialog_subcmds
+          dialog_subcmds=(
+            'accept:Accept a browser dialog'
+            'dismiss:Dismiss a browser dialog'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->dialog_cmd' \
+            '*:: :->dialog_args' && ret=0
+
+          case "$state" in
+            dialog_cmd)
+              _describe -t dialog_cmds 'dialog subcommands' dialog_subcmds && ret=0
+              ;;
+            dialog_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        download)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--selector=[selector]:selector:' \
+            '--path=[path]:path:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        drag)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--from=[from]:from:' \
+            '--to=[to]:to:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        emulator)
+          local -a emulator_subcmds
+          emulator_subcmds=(
+            'attach:Attach/start helper for a device and make it active for the worktree'
+            'ax:Dump the accessibility tree (Android uiautomator; iOS serve-sim AX, frames 0..1)'
+            'button:Hardware button (home, side_button, etc.)'
+            'devices:List all emulator devices/AVDs across iOS and Android'
+            'exec:Raw passthrough (e.g. orca emulator exec --command "tap 0.5 0.7" or "ca-debug blended on")'
+            'gesture:Send a multi-point gesture sequence'
+            'install:Install an APK onto the target Android device'
+            'kill:Stop helper for device'
+            'launch:Launch an Android app by package (and optional activity)'
+            'list:List available/running emulators (Orca-managed + raw serve-sim)'
+            'logcat:Capture a one-shot logcat dump from the Android device'
+            'permissions:Grant/revoke an Android runtime permission, or reset all runtime grants'
+            'rotate:Rotate device'
+            'shutdown:Stop helper and shut down the simulator device'
+            'tap:Tap at normalized 0..1 coords (preferred for single taps)'
+            'type:Type text (US ASCII only)'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->emulator_cmd' \
+            '*:: :->emulator_args' && ret=0
+
+          case "$state" in
+            emulator_cmd)
+              _describe -t emulator_cmds 'emulator subcommands' emulator_subcmds && ret=0
+              ;;
+            emulator_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        environment)
+          local -a environment_subcmds
+          environment_subcmds=(
+            'add:Save a remote Orca runtime environment from a pairing code'
+            'list:List saved Orca runtime environments'
+            'rm:Remove one saved Orca runtime environment'
+            'show:Show one saved Orca runtime environment'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->environment_cmd' \
+            '*:: :->environment_args' && ret=0
+
+          case "$state" in
+            environment_cmd)
+              _describe -t environment_cmds 'environment subcommands' environment_subcmds && ret=0
+              ;;
+            environment_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        eval)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--expression=[expression]:expression:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        exec)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--command=[command]:command:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        file)
+          local -a file_subcmds
+          file_subcmds=(
+            'diff:Open a workspace file diff in the Orca editor'
+            'open:Open a workspace file in the Orca editor'
+            'open-changed:Open all git-changed files for a workspace'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->file_cmd' \
+            '*:: :->file_args' && ret=0
+
+          case "$state" in
+            file_cmd)
+              _describe -t file_cmds 'file subcommands' file_subcmds && ret=0
+              ;;
+            file_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        fill)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--value=[value]:value:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        find)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--locator=[locator]:locator:' \
+            '--value=[value]:value:' \
+            '--action=[action]:action:' \
+            '--text=[text]:text:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        focus)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        forward)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        full-screenshot)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--format=[format]:format:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        geolocation)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--latitude=[latitude]:latitude:' \
+            '--longitude=[longitude]:longitude:' \
+            '--accuracy=[accuracy]:accuracy:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        get)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--what=[what]:what:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        goto)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--url=[url]:url:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        highlight)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--selector=[selector]:selector:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        host)
+          local -a host_subcmds
+          host_subcmds=(
+            'list:List every machine this Orca host can target, and how to name each one'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->host_cmd' \
+            '*:: :->host_args' && ret=0
+
+          case "$state" in
+            host_cmd)
+              _describe -t host_cmds 'host subcommands' host_subcmds && ret=0
+              ;;
+            host_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        hover)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        inserttext)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--text=[text]:text:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        intercept)
+          local -a intercept_subcmds
+          intercept_subcmds=(
+            'disable:Disable request interception'
+            'enable:Enable request interception (pause matching requests)'
+            'list:List paused (intercepted) requests'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->intercept_cmd' \
+            '*:: :->intercept_args' && ret=0
+
+          case "$state" in
+            intercept_cmd)
+              _describe -t intercept_cmds 'intercept subcommands' intercept_subcmds && ret=0
+              ;;
+            intercept_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        is)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--what=[what]:what:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        keypress)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--key=[key]:key:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        linear)
+          local -a linear_subcmds
+          linear_subcmds=(
+            'assignee:Clear a Linear issue assignee'
+            'attach:Attach a link to a Linear issue'
+            'comment:Add a comment to a Linear issue'
+            'create:Create a Linear issue'
+            'due-date:Clear a Linear issue due date'
+            'estimate:Clear a Linear issue estimate'
+            'issue:Read Linear issue context for agents'
+            'label:Add labels to a Linear issue'
+            'list:List Linear issues for task triage'
+            'list-issues:List Linear issues with MCP-compatible filters'
+            'priority:Clear a Linear issue priority'
+            'project:List connected Linear projects'
+            'relation:Add a Linear issue relation'
+            'save-issue:Create or update a Linear issue'
+            'search:Search connected Linear workspaces'
+            'status:Set a Linear issue status'
+            'team:List Linear team labels'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->linear_cmd' \
+            '*:: :->linear_args' && ret=0
+
+          case "$state" in
+            linear_cmd)
+              _describe -t linear_cmds 'linear subcommands' linear_subcmds && ret=0
+              ;;
+            linear_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        mouse)
+          local -a mouse_subcmds
+          mouse_subcmds=(
+            'down:Press mouse button'
+            'move:Move mouse to x,y coordinates'
+            'up:Release mouse button'
+            'wheel:Scroll wheel'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->mouse_cmd' \
+            '*:: :->mouse_args' && ret=0
+
+          case "$state" in
+            mouse_cmd)
+              _describe -t mouse_cmds 'mouse subcommands' mouse_subcmds && ret=0
+              ;;
+            mouse_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        network)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--limit=[limit]:limit:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        open)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' && ret=0
+          ;;
+        open-url)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--url=[url]:url:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        orchestration)
+          local -a orchestration_subcmds
+          orchestration_subcmds=(
+            'ask:Ask the coordinator a question and block until answered'
+            'check:Check messages for a terminal'
+            'coordinator-start:Retired\: load the current orchestration skill'
+            'coordinator-stop:Retired\: load the current orchestration skill'
+            'dispatch:Dispatch a task to a terminal'
+            'dispatch-show:Show dispatch context for a task'
+            'gate-create:Create a decision gate blocking a task'
+            'gate-list:List decision gates'
+            'gate-resolve:Resolve a pending decision gate'
+            'inbox:Show messages across (or for) recipients'
+            'reply:Reply to a message'
+            'request-show:Ask whether one orchestration mutation request already took effect'
+            'reset:Reset one explicit orchestration state scope'
+            'run-create:Create and bind a lightweight orchestration Run'
+            'run-current:Show the Run bound to this coordinator terminal'
+            'run-list:List lightweight orchestration Runs'
+            'run-show:Show one lightweight orchestration Run'
+            'run-use:Bind this coordinator terminal to an existing Run'
+            'send:Send an inter-agent message'
+            'task-create:Create an orchestration task'
+            'task-list:List orchestration tasks'
+            'task-update:Update a task status'
+            'worker-abandon:Fence a worker without claiming its process stopped'
+            'worker-list:List supervised worker terminal resource accounting'
+            'worker-read:Read bounded output from one supervised worker'
+            'worker-release:Release the terminal of one settled supervised worker'
+            'worker-retain:Keep one supervised worker terminal live for debugging'
+            'worker-show:Inspect one supervised worker Dispatch'
+            'worker-start:Start one supervised worker on the Run home or a connected Orca server'
+            'worker-stop:Fence one Dispatch and stop its supervised agent terminal'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->orchestration_cmd' \
+            '*:: :->orchestration_args' && ret=0
+
+          case "$state" in
+            orchestration_cmd)
+              _describe -t orchestration_cmds 'orchestration subcommands' orchestration_subcmds && ret=0
+              ;;
+            orchestration_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        pdf)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        project)
+          local -a project_subcmds
+          project_subcmds=(
+            'list:List durable projects known to Orca'
+            'setup-clone:Make a project available on a host by cloning a repository'
+            'setup-create:Create independent project host setup metadata'
+            'setup-delete:Remove a project host setup'
+            'setup-existing-folder:Make a project available on a host by importing an existing folder'
+            'setup-update:Update project host setup metadata'
+            'setups:List project host setups'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->project_cmd' \
+            '*:: :->project_args' && ret=0
+
+          case "$state" in
+            project_cmd)
+              _describe -t project_cmds 'project subcommands' project_subcmds && ret=0
+              ;;
+            project_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        reload)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        repo)
+          local -a repo_subcmds
+          repo_subcmds=(
+            'add:Add a project to Orca by filesystem path'
+            'list:List repos registered in Orca'
+            'search-refs:Search branch/tag refs within a repo'
+            'set-base-ref:Set the repo’s default base ref for future worktrees'
+            'show:Show one registered repo'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->repo_cmd' \
+            '*:: :->repo_args' && ret=0
+
+          case "$state" in
+            repo_cmd)
+              _describe -t repo_cmds 'repo subcommands' repo_subcmds && ret=0
+              ;;
+            repo_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        screenshot)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--format=[format]:format:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        scroll)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--direction=[direction]:direction:' \
+            '--amount=[amount]:amount:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        scrollintoview)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        select)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--value=[value]:value:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        select-all)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        serve)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--port=[port]:port:' \
+            '--pairing-address=[pairing-address]:pairing-address:' \
+            '--mobile-pairing=[mobile-pairing]:mobile-pairing:' \
+            '--no-pairing=[no-pairing]:no-pairing:' \
+            '--project-root=[project-root]:project-root:' \
+            '--recipe-json=[recipe-json]:recipe-json:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        set)
+          local -a set_subcmds
+          set_subcmds=(
+            'credentials:Set HTTP auth credentials'
+            'device:Emulate a device'
+            'headers:Set extra HTTP headers'
+            'media:Set color scheme and reduced motion preferences'
+            'offline:Toggle offline mode'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->set_cmd' \
+            '*:: :->set_args' && ret=0
+
+          case "$state" in
+            set_cmd)
+              _describe -t set_cmds 'set subcommands' set_subcmds && ret=0
+              ;;
+            set_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        skills)
+          local -a skills_subcmds
+          skills_subcmds=(
+            'get:Print a version-matched skill guide as Markdown'
+            'install:Install bundled Orca skills via the community skills CLI'
+            'installed:List installed skill selectors'
+            'list:List version-matched skill guides bundled with this Orca CLI'
+            'share:Publish explicitly selected installed skills behind one unlisted link'
+            'update:Update already-installed Orca skills via the community skills CLI'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->skills_cmd' \
+            '*:: :->skills_args' && ret=0
+
+          case "$state" in
+            skills_cmd)
+              _describe -t skills_cmds 'skills subcommands' skills_subcmds && ret=0
+              ;;
+            skills_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        snapshot)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        status)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' && ret=0
+          ;;
+        storage)
+          local -a storage_subcmds
+          storage_subcmds=(
+            'local:Clear all localStorage'
+            'session:Clear all sessionStorage'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->storage_cmd' \
+            '*:: :->storage_args' && ret=0
+
+          case "$state" in
+            storage_cmd)
+              _describe -t storage_cmds 'storage subcommands' storage_subcmds && ret=0
+              ;;
+            storage_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        tab)
+          local -a tab_subcmds
+          tab_subcmds=(
+            'close:Close a browser tab'
+            'create:Create a new browser tab in the current worktree'
+            'current:Show the current browser tab'
+            'list:List open browser tabs'
+            'profile:Clone a browser tab into a different browser profile'
+            'show:Show one browser tab by page id'
+            'switch:Switch the active browser tab'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->tab_cmd' \
+            '*:: :->tab_args' && ret=0
+
+          case "$state" in
+            tab_cmd)
+              _describe -t tab_cmds 'tab subcommands' tab_subcmds && ret=0
+              ;;
+            tab_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        terminal)
+          local -a terminal_subcmds
+          terminal_subcmds=(
+            'close:Close one terminal, its whole tab, or every terminal in a workspace'
+            'create:Create a terminal session in the current worktree'
+            'list:List live Orca-managed terminals'
+            'read:Read bounded terminal output'
+            'rename:Set or clear the title of a terminal tab'
+            'send:Send input to a live terminal'
+            'show:Show terminal metadata and preview'
+            'split:Split an existing terminal pane'
+            'stop:Deprecated compatibility command for stopping terminal processes'
+            'switch:Switch to a terminal tab in the UI'
+            'wait:Wait for a terminal condition'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->terminal_cmd' \
+            '*:: :->terminal_args' && ret=0
+
+          case "$state" in
+            terminal_cmd)
+              _describe -t terminal_cmds 'terminal subcommands' terminal_subcmds && ret=0
+              ;;
+            terminal_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        type)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--input=[input]:input:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        uncheck)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        upload)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--element=[element]:element:' \
+            '--files=[files]:files:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        viewport)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--width=[width]:width:' \
+            '--height=[height]:height:' \
+            '--scale=[scale]:scale:' \
+            '--mobile=[mobile]:mobile:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        vm)
+          local -a vm_subcmds
+          vm_subcmds=(
+            'recipe:Validate a per-workspace environment recipe without provisioning by default'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->vm_cmd' \
+            '*:: :->vm_args' && ret=0
+
+          case "$state" in
+            vm_cmd)
+              _describe -t vm_cmds 'vm subcommands' vm_subcmds && ret=0
+              ;;
+            vm_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        wait)
+          _arguments -s \
+            $global_options \
+            '(-h --help)'{-h,--help}'[Display help]' \
+            '--json[Output in JSON format]' \
+            '--pairing-code=[pairing-code]:pairing-code:' \
+            '--environment=[environment]:environment:' \
+            '--selector=[selector]:selector:' \
+            '--timeout=[timeout]:timeout:' \
+            '--text=[text]:text:' \
+            '--url=[url]:url:' \
+            '--load=[load]:load:' \
+            '--fn=[fn]:fn:' \
+            '--state=[state]:state:' \
+            '--worktree=[worktree]:worktree:' \
+            '--page=[page]:page:' && ret=0
+          ;;
+        worktree)
+          local -a worktree_subcmds
+          worktree_subcmds=(
+            'create:Create a new Orca-managed worktree'
+            'current:Show the Orca-managed worktree for the current directory'
+            'list:List Orca-managed worktrees'
+            'ps:Show a compact orchestration summary across worktrees'
+            'rm:Remove a worktree from Orca and git'
+            'set:Update Orca metadata for a worktree'
+            'show:Show one worktree'
+          )
+          _arguments -C -s \
+            $global_options \
+            '1: :->worktree_cmd' \
+            '*:: :->worktree_args' && ret=0
+
+          case "$state" in
+            worktree_cmd)
+              _describe -t worktree_cmds 'worktree subcommands' worktree_subcmds && ret=0
+              ;;
+            worktree_args)
+              _arguments -s $global_options && ret=0
+              ;;
+          esac
+          ;;
+        *)
+          _arguments -s $global_options && ret=0
+          ;;
+      esac
+      ;;
+  esac
+
+  return ret
+}
+
+if [ "$funcstack[1]" = "_orca" ]; then
+  _orca "$@"
+else
+  compdef _orca orca orca-ide orca.AppImage
+fi

@@ -1,0 +1,122 @@
+#!/usr/bin/env python3
+import argparse
+import base64
+import json
+import os
+import subprocess
+import sys
+import time
+
+DEVICES_FILE = os.path.expanduser("~/.config/orca/orca-devices.json")
+KEYS_FILE = os.path.expanduser("~/.config/orca/orca-e2ee-keypair.json")
+
+
+def get_pairing_ip():
+  try:
+    out = (
+        subprocess.check_output(
+            ["tailscale", "ip", "-4"], stderr=subprocess.DEVNULL
+        )
+        .decode()
+        .strip()
+    )
+    if out:
+      return out
+  except Exception:
+    pass
+  try:
+    out = (
+        subprocess.check_output(["hostname", "-I"], stderr=subprocess.DEVNULL)
+        .decode()
+        .split()
+    )
+    if out:
+      return out[0]
+  except Exception:
+    pass
+  return "127.0.0.1"
+
+
+def show_pair(args):
+  if args.new:
+    print("Minting a fresh pairing code via orca-server...")
+    subprocess.run(
+        ["systemctl", "--user", "restart", "orca-server.service"], check=True
+    )
+    time.sleep(1.5)
+
+  if not os.path.exists(DEVICES_FILE) or not os.path.exists(KEYS_FILE):
+    print(
+        "Orca configuration not found. Is orca-server running?", file=sys.stderr
+    )
+    sys.exit(1)
+
+  with open(DEVICES_FILE) as f:
+    devices = json.load(f)
+  with open(KEYS_FILE) as f:
+    keys = json.load(f)
+
+  scope = "mobile" if not args.desktop else "runtime"
+  matched = [d for d in devices if d.get("scope") == scope]
+  pending = [d for d in matched if d.get("lastSeenAt") == 0]
+
+  target = pending[-1] if pending else (matched[-1] if matched else None)
+  if not target:
+    print(
+        f"No {scope} pairing offer found. Try running with --new",
+        file=sys.stderr,
+    )
+    sys.exit(1)
+
+  ip = get_pairing_ip()
+  port = args.port or 6768
+  payload = {
+      "v": 2,
+      "endpoint": f"ws://{ip}:{port}",
+      "deviceToken": target["token"],
+      "publicKeyB64": keys["publicKeyB64"],
+      "pairedDeviceId": target["deviceId"],
+      "scope": scope,
+  }
+  code = (
+      base64.b64encode(json.dumps(payload, separators=(",", ":")).encode())
+      .decode()
+      .rstrip("=")
+  )
+  url = f"orca://pair?code={code}"
+
+  print(f"== Orca {scope.capitalize()} Pairing ==")
+  print(
+      f"Device Name: {target.get('name', 'Device')} (ID: {target['deviceId']})"
+  )
+  print(f"Advertised Endpoint: ws://{ip}:{port}")
+  print(f"Pairing URL: {url}\n")
+
+  if scope == "mobile":
+    try:
+      p = subprocess.Popen(
+          ["uvx", "--from", "qrcode", "qr", "--ascii"],
+          stdin=subprocess.PIPE,
+          text=True,
+      )
+      p.communicate(input=url)
+    except Exception as e:
+      print(f"Could not render QR code: {e}")
+
+
+if __name__ == "__main__":
+  parser = argparse.ArgumentParser(description="Show Orca pairing code and QR")
+  parser.add_argument(
+      "--new",
+      action="store_true",
+      help="Mint a fresh pairing code by restarting server",
+  )
+  parser.add_argument(
+      "--desktop",
+      action="store_true",
+      help="Show desktop pairing code instead of mobile",
+  )
+  parser.add_argument(
+      "--port", type=int, default=6768, help="Server port (default: 6768)"
+  )
+  show_pair(parser.parse_args())

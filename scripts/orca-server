@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Find best pairing address: prefer Tailscale IP, fallback to primary LAN IP or localhost
+PAIRING_IP=$(tailscale ip -4 2>/dev/null || true)
+if [ -z "$PAIRING_IP" ]; then
+  PAIRING_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+fi
+
+exec "$HOME/.local/bin/orca" serve --port 6768 --pairing-address "${PAIRING_IP:-127.0.0.1}" --mobile-pairing "$@"

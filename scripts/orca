@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+if command -v orca.AppImage >/dev/null 2>&1; then
+  exec orca.AppImage "$@"
+elif [ -x "$HOME/.local/share/mise/installs/github-stablyai-orca/latest/orca.AppImage" ]; then
+  exec "$HOME/.local/share/mise/installs/github-stablyai-orca/latest/orca.AppImage" "$@"
+elif command -v mise >/dev/null 2>&1 && mise which orca.AppImage >/dev/null 2>&1; then
+  exec "$(mise which orca.AppImage)" "$@"
+else
+  echo "orca: orca.AppImage not found via mise" >&2
+  exit 1
+fi
