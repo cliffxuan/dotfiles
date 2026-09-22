@@ -151,3 +151,4 @@ Cargo.lock
 
 **/.claude/settings.local.json
 .antigravitycli/
+.codex/
