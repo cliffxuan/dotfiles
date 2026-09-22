@@ -19,6 +19,9 @@ export LC_TIME="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export LOCALE_ARCHIVE=/usr/lib/locale/locale-archive
 
+#herdr
+export HERDR_REMOTE_KEYBINDINGS="server"
+
 #tmux cannot remember why screen-256color-bce. this doesn't work on wsl
 # alias tmux="TERM=screen-256color-bce tmux"
 
@@ -188,10 +191,11 @@ alias h="python3 -m http.server"
 
 # bun completions
 if [[ -s "$HOME/.bun/_bun" ]]; then
+  # shellcheck disable=SC1091
   source "$HOME/.bun/_bun"
 fi
 if command -v fnm &>/dev/null; then
-  eval $(fnm env)
+  eval "$(fnm env)"
 fi
 export GOPATH=$HOME/.go
 
@@ -223,8 +227,8 @@ export FZF_ALT_C_OPTS="
 safe_prepend_path() {
   local new_path=$1
   if [[ -d $new_path ]]; then
-    PATH="${PATH/#$new_path:}"
-    PATH="${PATH/%:$new_path}"
+    PATH="${PATH/#$new_path:/}"
+    PATH="${PATH/%:$new_path/}"
     PATH="${PATH//:$new_path:/:}"
     export PATH=$new_path:$PATH
   fi
