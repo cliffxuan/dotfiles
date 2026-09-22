@@ -1,0 +1,13 @@
+[Unit]
+Description=VNC Authentication Proxy for macOS and Standard Clients
+After=wayvnc.service
+BindsTo=sway-headless.service
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/vnc-auth-proxy
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=sway-headless.service

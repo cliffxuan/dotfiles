@@ -1,0 +1,16 @@
+[Unit]
+Description=WayVNC Server for Headless Sway
+Documentation=man:wayvnc(1)
+After=sway-headless.service
+BindsTo=sway-headless.service
+
+[Service]
+Type=simple
+Environment=WAYLAND_DISPLAY=wayland-1
+ExecStartPre=/bin/sh -c 'rm -f %t/wayvncctl'
+ExecStart=/usr/bin/wayvnc --log-level=debug --render-cursor -C %h/.config/wayvnc/config
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=sway-headless.service

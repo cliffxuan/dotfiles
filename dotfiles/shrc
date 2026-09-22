@@ -131,6 +131,17 @@ function update_wayland_display {
       done
     fi
   fi
+  if [ -z "$DISPLAY" ] && [ -S "/tmp/.X11-unix/X0" ]; then
+    export DISPLAY=":0"
+  fi
+  if [ -z "$SWAYSOCK" ] || [ ! -S "$SWAYSOCK" ]; then
+    for sock in "$XDG_RUNTIME_DIR"/sway-ipc.*.sock; do
+      if [ -S "$sock" ]; then
+        export SWAYSOCK="$sock"
+        break
+      fi
+    done
+  fi
 }
 
 update_wayland_display

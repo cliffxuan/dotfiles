@@ -1,0 +1,13 @@
+[Unit]
+Description=noVNC Web Access Gateway for Headless Sway
+After=wayvnc.service
+BindsTo=sway-headless.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/websockify --web=/usr/share/novnc 6080 localhost:5901
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=sway-headless.service

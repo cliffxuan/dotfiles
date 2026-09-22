@@ -1,0 +1,229 @@
+#!/usr/bin/python3
+import asyncio
+import os
+import re
+import struct
+import sys
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
+
+DEFAULT_CONFIG_PATH = os.path.expanduser("~/.config/wayvnc/config")
+LISTEN_HOST = "0.0.0.0"
+LISTEN_PORT = 5900
+BACKEND_HOST = "127.0.0.1"
+BACKEND_PORT = 5901
+
+def load_password():
+    if os.path.isfile(DEFAULT_CONFIG_PATH):
+        with open(DEFAULT_CONFIG_PATH, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("#"):
+                    continue
+                m = re.match(r"^password\s*=\s*(.+)$", line)
+                if m:
+                    return m.group(1).strip()
+    return os.environ.get("VNC_PASSWORD", "xuan")
+
+def reverse_bits(b: int) -> int:
+    return int(f"{b:08b}"[::-1], 2)
+
+def get_des_key(password: str) -> bytes:
+    pw = password.encode("latin-1", errors="ignore")[:8].ljust(8, b"\x00")
+    return bytes(reverse_bits(b) for b in pw)
+
+async def pipe_backend_to_client(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, label: str):
+    try:
+        while not reader.at_eof():
+            data = await reader.read(65536)
+            if not data:
+                break
+            writer.write(data)
+            await writer.drain()
+    except (asyncio.IncompleteReadError, ConnectionResetError):
+        pass
+    except Exception as e:
+        print(f"[{label}] pipe error: {e}", flush=True)
+    finally:
+        try:
+            writer.close()
+            await writer.wait_closed()
+        except Exception:
+            pass
+
+async def pipe_client_to_backend(reader: asyncio.StreamReader, writer: asyncio.StreamWriter, label: str):
+    try:
+        # First 1 byte is ClientInit (shared-flag)
+        client_init = await reader.readexactly(1)
+        writer.write(client_init)
+        await writer.drain()
+
+        # Stream of standard client RFB messages
+        while not reader.at_eof():
+            msg_type_b = await reader.readexactly(1)
+            msg_type = msg_type_b[0]
+
+            if msg_type == 0:  # SetPixelFormat: 20 bytes total
+                rest = await reader.readexactly(19)
+                writer.write(msg_type_b + rest)
+            elif msg_type == 2:  # SetEncodings: 4 + 4*N bytes
+                hdr = await reader.readexactly(3)
+                num_encs = int.from_bytes(hdr[1:3], "big")
+                enc_bytes = await reader.readexactly(num_encs * 4)
+                encs = [struct.unpack(">i", enc_bytes[i*4 : (i+1)*4])[0] for i in range(num_encs)]
+                # Filter out ZRLE (16) and ZYWRLE (24) which crash macOS Screen Sharing
+                filtered = [e for e in encs if e not in (16, 24)]
+                new_msg = struct.pack(">BBH", 2, 0, len(filtered)) + b"".join(struct.pack(">i", e) for e in filtered)
+                print(f"[{label}] SetEncodings: stripped ZRLE/ZYWRLE ({num_encs} -> {len(filtered)})", flush=True)
+                writer.write(new_msg)
+            elif msg_type == 3:  # FramebufferUpdateRequest: 10 bytes total
+                rest = await reader.readexactly(9)
+                writer.write(msg_type_b + rest)
+            elif msg_type == 4:  # KeyEvent: 8 bytes total
+                rest = await reader.readexactly(7)
+                writer.write(msg_type_b + rest)
+            elif msg_type == 5:  # PointerEvent: 6 bytes total
+                rest = await reader.readexactly(5)
+                writer.write(msg_type_b + rest)
+            elif msg_type == 6:  # ClientCutText: 8 + len bytes
+                hdr = await reader.readexactly(7)
+                text_len = int.from_bytes(hdr[3:7], "big")
+                text = await reader.readexactly(text_len)
+                writer.write(msg_type_b + hdr + text)
+            else:
+                # Other messages: pass as is
+                writer.write(msg_type_b)
+            
+            await writer.drain()
+    except (asyncio.IncompleteReadError, ConnectionResetError):
+        pass
+    except Exception as e:
+        print(f"[{label}] pipe error: {e}", flush=True)
+    finally:
+        try:
+            writer.close()
+            await writer.wait_closed()
+        except Exception:
+            pass
+
+async def handle_client(client_reader: asyncio.StreamReader, client_writer: asyncio.StreamWriter):
+    client_addr = client_writer.get_extra_info("peername")
+    print(f"[{client_addr}] Client connected", flush=True)
+    backend_writer = None
+
+    try:
+        # 1. Send ProtocolVersion: RFB 003.008\n
+        client_writer.write(b"RFB 003.008\n")
+        await client_writer.drain()
+
+        # 2. Receive client ProtocolVersion (12 bytes)
+        client_ver = await client_reader.readexactly(12)
+        print(f"[{client_addr}] Client protocol version: {client_ver!r}", flush=True)
+
+        is_3_3 = b"003.003" in client_ver
+        is_3_7 = b"003.007" in client_ver
+
+        # 3. Security Type negotiation
+        if is_3_3:
+            # RFB 3.3: Server decides security type (Type 2 = VNC auth)
+            client_writer.write((2).to_bytes(4, "big"))
+            await client_writer.drain()
+        else:
+            # RFB 3.7 / 3.8: Server sends list of supported types
+            # Offer Type 2 (VNC Auth)
+            client_writer.write(bytes([1, 2]))
+            await client_writer.drain()
+            chosen = await client_reader.readexactly(1)
+            if chosen[0] != 2:
+                print(f"[{client_addr}] Unsupported security type chosen: {chosen[0]}", flush=True)
+                client_writer.close()
+                return
+
+        # 4. VNC Authentication Challenge-Response
+        challenge = os.urandom(16)
+        client_writer.write(challenge)
+        await client_writer.drain()
+
+        response = await client_reader.readexactly(16)
+
+        password = load_password()
+        des_key = get_des_key(password)
+        cipher = Cipher(algorithms.TripleDES(des_key * 3), modes.ECB())
+        encryptor = cipher.encryptor()
+        expected = encryptor.update(challenge) + encryptor.finalize()
+
+        if response != expected:
+            print(f"[{client_addr}] Authentication FAILED", flush=True)
+            client_writer.write((1).to_bytes(4, "big"))
+            if not is_3_3 and not is_3_7:
+                reason = b"Authentication failed\n"
+                client_writer.write(len(reason).to_bytes(4, "big") + reason)
+            await client_writer.drain()
+            client_writer.close()
+            return
+
+        # Authentication Succeeded
+        client_writer.write((0).to_bytes(4, "big"))
+        await client_writer.drain()
+        print(f"[{client_addr}] Authentication SUCCEEDED", flush=True)
+
+        # 5. Handshake with backend (wayvnc on 127.0.0.1:5901)
+        backend_reader, backend_writer = await asyncio.open_connection(BACKEND_HOST, BACKEND_PORT)
+        b_ver = await backend_reader.readexactly(12)
+        backend_writer.write(b_ver)
+        await backend_writer.drain()
+
+        num_types = (await backend_reader.readexactly(1))[0]
+        types = await backend_reader.readexactly(num_types)
+        if 1 not in types:
+            print(f"[{client_addr}] Backend does not support None security type", flush=True)
+            client_writer.close()
+            backend_writer.close()
+            return
+
+        # Choose Type 1 (None)
+        backend_writer.write(bytes([1]))
+        await backend_writer.drain()
+
+        b_result = await backend_reader.readexactly(4)
+        if int.from_bytes(b_result, "big") != 0:
+            print(f"[{client_addr}] Backend rejected auth", flush=True)
+            client_writer.close()
+            backend_writer.close()
+            return
+
+        print(f"[{client_addr}] Backend connected, bridging session", flush=True)
+
+        # 6. Pipe bidirectional traffic
+        await asyncio.gather(
+            pipe_client_to_backend(client_reader, backend_writer, f"{client_addr} -> wayvnc"),
+            pipe_backend_to_client(backend_reader, client_writer, f"wayvnc -> {client_addr}"),
+        )
+    except asyncio.IncompleteReadError:
+        print(f"[{client_addr}] Connection closed during handshake", flush=True)
+    except Exception as e:
+        print(f"[{client_addr}] Error: {e}", flush=True)
+    finally:
+        try:
+            client_writer.close()
+            await client_writer.wait_closed()
+        except Exception:
+            pass
+        if backend_writer:
+            try:
+                backend_writer.close()
+                await backend_writer.wait_closed()
+            except Exception:
+                pass
+        print(f"[{client_addr}] Session terminated", flush=True)
+
+async def main():
+    server = await asyncio.start_server(handle_client, LISTEN_HOST, LISTEN_PORT)
+    print(f"VNC Auth Proxy listening on {LISTEN_HOST}:{LISTEN_PORT} -> {BACKEND_HOST}:{BACKEND_PORT}", flush=True)
+    async with server:
+        await server.serve_forever()
+
+if __name__ == "__main__":
+    try:
+        asyncio.run(main())
+    except KeyboardInterrupt:
+        pass
