@@ -32,6 +32,7 @@ grok = "latest"
 "npm:@getpaseo/cli" = "latest"
 "pipx:hermes-agent" = { version = "latest", extras = "all" }
 uv = "latest"
+claude = "latest"
 
 [settings.upgrade]
 auto_prune = false
