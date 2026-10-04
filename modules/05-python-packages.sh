@@ -4,20 +4,26 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$DIR/../utils.sh"
 
 # CLI tools installed as isolated apps via uv tool
-tools="httpie pynvim"
-
-# Linters/formatters — ruff replaces flake8, black, autoflake
-# pyright is installed via npm (see 70-npm-packages.sh)
+# map executable -> package name
+declare -A tools
+tools=(
+  ["http"]="httpie"
+  ["pynvim-python"]="pynvim"
+  ["ruff"]="ruff"
+)
 
 run() {
-  for tool in $tools; do
-    uv tool install "$tool"
+  for exe in "${!tools[@]}"; do
+    local pkg="${tools[$exe]}"
+    uv tool install --force "$pkg"
   done
-  uv tool install ruff
 }
 
 check() {
-  command -v ruff >/dev/null 2>&1
+  command -v uv >/dev/null 2>&1 || return 1
+  for exe in "${!tools[@]}"; do
+    command -v "$exe" >/dev/null 2>&1 || [ -x "$HOME/.local/bin/$exe" ] || return 1
+  done
 }
 
 provision "$@"
